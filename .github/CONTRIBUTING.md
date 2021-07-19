@@ -10,9 +10,8 @@ Pull requests are the best way to propose changes to the codebase.
 1. Fork the repo and create your branch from `main`.
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+4. Make sure your code lints.
+5. Issue that pull request!
 
 ## Report bugs using Github's [issues](https://github.com/route1io/route1io-python-connectors/issues)
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/route1io/route1io-python-connectors/issues/new).
