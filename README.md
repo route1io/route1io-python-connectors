@@ -15,5 +15,5 @@ $ git clone https://github.com/route1io/route1io-python-connectors.git
 ## Sample usage
 
 <p align="center">
-  <img src="media/route1io.png" width="25px">
+  <img src="media/route1io.png" width="50px">
 </p>
