@@ -21,5 +21,5 @@ import route1io_connectors
 ---
 
 <p align="center">
-  <img src="media/route1io.png" width="25px">
+  <img src="media/route1io.png" width="50px">
 </p>
