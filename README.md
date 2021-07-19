@@ -11,6 +11,7 @@ Clone this repo locally with
 ```shell
 $ git clone https://github.com/route1io/route1io-python-connectors.git
 ```
+and then copy *route1io_connectors* into your projects directory
 
 ## Sample usage
 All connectors provided by the package are immediately available upon import using:
