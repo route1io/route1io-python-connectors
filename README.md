@@ -33,9 +33,9 @@ and then copy *route1io_connectors* into your projects directory
 ---
 
 ## Sample usage <a name="usage"></a>
-All connectors provided by the package are immediately available upon import using:
+All connectors provided by the package can be imported with Python's standard import syntax:
 ```python
-import route1io_connectors
+from route1io_connectors import aws, sa360, gsheets, slack
 ```
 
 ---
