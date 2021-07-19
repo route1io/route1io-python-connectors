@@ -14,7 +14,7 @@ This repository contains [route1.io](http://route1.io/index.html)'s official cod
 Below is a list of API's currently supported by our custom connectors
 * [AWS' s3](route1io_connectors/aws.py)
 * [Google Sheets](route1io_connectors/gsheets.py)
-* [Google Sheets](route1io_connectors/sa360.py)
+* [Search Ads 360](route1io_connectors/sa360.py)
 * [Slack](route1io_connectors/slack.py)
 
 ## Installation <a name="installation"></a>
