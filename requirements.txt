@@ -9,5 +9,4 @@ googleapis-common-protos==1.53.0
 mccabe==0.6.1
 numpy==1.21.0
 pandas==1.2.5
-pysftp==0.2.9
 requests==2.25.1
