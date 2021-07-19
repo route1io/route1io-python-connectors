@@ -7,6 +7,7 @@ This repository contains [route1.io](http://route1.io/index.html)'s official cod
 ## Table of Contents
 * [Installation](#installation)
 * [Sample usage](#usage)
+* [License](#license)
 
 ## Installation <a name="installation"></a>
 
@@ -22,6 +23,9 @@ All connectors provided by the package are immediately available upon import usi
 ```python
 import route1io_connectors
 ```
+
+## License <a name="license"></a>
+This library operates under the [GNU GPL v2.0](LICENSE) license.
 
 ---
 
