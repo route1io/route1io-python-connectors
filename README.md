@@ -13,6 +13,12 @@ $ git clone https://github.com/route1io/route1io-python-connectors.git
 ```
 
 ## Sample usage
+All connectors provided by the package are immediately available upon import using:
+```python
+import route1io_connectors
+```
+
+---
 
 <p align="center">
   <img src="media/route1io.png" width="25px">
