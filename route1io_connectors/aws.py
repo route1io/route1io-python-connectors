@@ -6,8 +6,8 @@ from pathlib import Path
 
 import boto3
 
-def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_name: str):
-    """Returns a connection to s3 bucket via AWS
+def connect_to_S3(aws_access_key_id: str, aws_secret_access_key: str, region_name: str):
+    """Returns a connection to S3 bucket via AWS
 
     Parameters
     ----------
@@ -21,7 +21,7 @@ def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     Returns
     -------
     s3
-        Connection to s3 bucket
+        Connection to S3 bucket
     """
     s3 = boto3.client(
         "s3",
@@ -31,7 +31,7 @@ def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     )
     return s3
 
-def upload_to_s3(
+def upload_to_S3(
         s3,
         bucket: str,
         local_fpath: str,
@@ -42,9 +42,9 @@ def upload_to_s3(
     Parameters
     ----------
     s3
-        Connection to s3 bucket
+        Connection to S3 bucket
     bucket : str
-        Name of s3 bucket to upload file to
+        Name of S3 bucket to upload file to
     filename : str
         Local filepath of file to be uploaded
     key : str (optional)
@@ -58,16 +58,16 @@ def upload_to_s3(
         Key=key
     )
 
-def download_from_s3(s3, bucket: str, key: str, local_fpath: str = None) -> str:
+def download_from_S3(s3, bucket: str, key: str, local_fpath: str = None) -> str:
     """
     Download file from an AWS s3 bucket and return the filepath to the local file
 
     Parameters
     ----------
     s3
-        Connection to s3 bucket
+        Connection to S3 bucket
     bucket : str
-        Name of s3 bucket to download file from
+        Name of S3 bucket to download file from
     key : str
         Remote filename to download from the bucket
     local_fpath : str (optional)
