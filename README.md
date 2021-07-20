@@ -46,7 +46,8 @@ All connectors provided by the package can be imported with Python's standard im
 from route1io_connectors import aws
 
 # Credentials 
-# NOTE: Storing credentials in source isn't secure in practice. It's recommended you store them in a more secure place.
+# NOTE: Storing credentials in source isn't secure in practice. 
+#       It's recommended you store them in a more secure place.
 AWS_ACCESS_KEY_ID = "YOUR_AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY = "YOUR_AWS_SECRET_ACCESS_KEY"
 REGION_NAME = "YOUR_DEFAULT_REGION_NAME"
