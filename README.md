@@ -8,7 +8,7 @@ This repository contains [route1.io](http://route1.io/index.html)'s official cod
 * [Supported API's](#supported)
 * [Installation](#installation)
 * [Sample usage](#usage)
-* [Documentation](#documentation)
+<!-- * [Documentation](#documentation) -->
 * [License](#license)
 
 ---
@@ -39,10 +39,10 @@ All connectors provided by the package can be imported with Python's standard im
 from route1io_connectors import aws, sa360, gsheets, slack
 ```
 
----
+<!-- ---
 
 ## Documentation <a name="documentation"></a>
-The official documentation can be found [here](docs/_build/html/index.html).
+The official documentation can be found [here](docs/_build/html/index.html). -->
 
 ---
 
