@@ -39,12 +39,33 @@ and then copy *route1io_connectors* into your projects directory
 ---
 
 ## Sample usage <a name="usage"></a>
-All connectors provided by the package can be imported with Python's standard import syntax:
-```python
-from route1io_connectors import aws, sa360, gsheets, slack
-```
+All connectors provided by the package can be imported with Python's standard import syntax. See our [wiki](https://github.com/route1io/route1io-python-connectors/wiki) for tutorials regarding specific platform connectors!
 
-See our [wiki](https://github.com/route1io/route1io-python-connectors/wiki) for tutorials regarding specific platform connectors!
+
+```python3
+from route1io_connectors import aws
+
+# Credentials 
+# NOTE: Storing credentials in source isn't secure in practice. It's recommended you store them in a more secure place.
+AWS_ACCESS_KEY_ID = "YOUR_AWS_ACCESS_KEY_ID"
+AWS_SECRET_ACCESS_KEY = "YOUR_AWS_SECRET_ACCESS_KEY"
+REGION_NAME = "YOUR_DEFAULT_REGION_NAME"
+
+# Connect to S3 
+s3 = aws.connect_to_S3(
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=REGION_NAME
+)
+
+# Download remote file from S3 bucket to local machine
+aws.download_from_S3(
+    s3=s3,
+    bucket="your.s3.bucket",
+    key="local_file.csv"
+    local_fpath="tmp/local_file.csv",
+)
+```
 
 <!-- ---
 
