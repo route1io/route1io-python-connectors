@@ -204,7 +204,6 @@ class SearchAds360:
         access_token = access_token_data["access_token"]
         return cls(access_token=access_token)
 
-
 class BaseColumn(ABC):
     """Abstract base class for column subclasses"""
     def __init__(self, name: str) -> None:
