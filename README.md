@@ -44,6 +44,8 @@ All connectors provided by the package can be imported with Python's standard im
 from route1io_connectors import aws, sa360, gsheets, slack
 ```
 
+See our [wiki](https://github.com/route1io/route1io-python-connectors/wiki) for tutorials regarding specific platform connectors!
+
 <!-- ---
 
 ## Documentation <a name="documentation"></a>
