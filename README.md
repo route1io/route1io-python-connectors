@@ -7,6 +7,8 @@
 
 This repository contains [route1.io](http://route1.io/index.html)'s official code, documentation, and tutorials for connecting to popular API's used in marketing analytics with Python.
 
+![Sample gif showing importing the connectors](media/route1io_import.gif)
+
 ## Table of Contents
 * [Supported API's](#supported)
 * [Installation](#installation)
