@@ -47,7 +47,7 @@ The official documentation can be found [here](docs/_build/html/index.html). -->
 ---
 
 ## License <a name="license"></a>
-This library operates under the [GNU GPL v2.0](LICENSE) license.
+This library operates under the [GNU GPL v3.0](LICENSE) license.
 
 ---
 
