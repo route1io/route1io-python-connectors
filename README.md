@@ -8,7 +8,6 @@ This repository contains [route1.io](http://route1.io/index.html)'s official cod
 * [Supported API's](#supported)
 * [Installation](#installation)
 * [Sample usage](#usage)
-<!-- * [Documentation](#documentation) -->
 * [License](#license)
 
 ---
@@ -19,6 +18,7 @@ Below is a list of API's currently supported by our custom connectors
 * [Google Sheets](route1io_connectors/gsheets.py)
 * [Search Ads 360](route1io_connectors/sa360.py)
 * [Slack](route1io_connectors/slack.py)
+* [Facebook](route1io_connectors/facebook.py)
 
 ---
 
@@ -47,7 +47,7 @@ The official documentation can be found [here](docs/_build/html/index.html). -->
 ---
 
 ## License <a name="license"></a>
-This library operates under the [GNU GPL v2.0](LICENSE) license.
+This library operates under the [GNU GPL v3.0](LICENSE) license.
 
 ---
 
