@@ -31,21 +31,20 @@ def upload_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resource
     """
     df = pd.read_csv(filename)
     df = df.fillna("")
-    if not env.DEBUG:
-        clear_google_sheet(
-            gsheets_conn=gsheets_conn,
-            spreadsheet_id=spreadsheet_id,
-            spreadsheet_name=spreadsheet_name
-        )
-        gsheets_conn.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id,
-            valueInputOption='USER_ENTERED',
-            range=f"{spreadsheet_name}!A1",
-            body={
-                "majorDimension": "ROWS",
-                "values": df.T.reset_index().T.values.tolist()
-            }
-        ).execute()
+    clear_google_sheet(
+        gsheets_conn=gsheets_conn,
+        spreadsheet_id=spreadsheet_id,
+        spreadsheet_name=spreadsheet_name
+    )
+    gsheets_conn.spreadsheets().values().update(
+        spreadsheetId=spreadsheet_id,
+        valueInputOption='USER_ENTERED',
+        range=f"{spreadsheet_name}!A1",
+        body={
+            "majorDimension": "ROWS",
+            "values": df.T.reset_index().T.values.tolist()
+        }
+    ).execute()
 
 def connect_to_gsheets(credentials: "google.oauth2.credentials.Credentials"
                        ) -> "googleapiclient.discovery.Resource":
