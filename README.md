@@ -29,6 +29,12 @@ Below is a list of API's currently supported by our custom connectors
 
 ## Installation <a name="installation"></a>
 
+### pip (recommended)
+Easily install to your environment from PyPI with 
+```shell
+$ pip install route1io-connectors
+```
+
 ### git
 Clone this repo locally with
 ```shell
