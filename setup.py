@@ -15,7 +15,7 @@ setup(
     author_email="developers@route1.io",
     license="GPLv3",
     classifiers=[
-        "OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python :: 3",
     ],
     packages=["route1io_connectors"],
