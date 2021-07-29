@@ -1,18 +1,18 @@
 import pathlib
-from setuptools import setup
+from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
 README = HERE.joinpath("README.md").read_text()
 
 setup(
-    name="route1io-python-connectors",
+    name="route1io-connectors",
     version="0.1.0",
     description="Connectors for interacting with popular API's used in marketing analytics using clean and concise Python code.",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/route1io/route1io-python-connectors",
     author="route1.io",
-    author_email="",
+    author_email="developers@route1.io",
     license="GPLv3",
     classifiers=[
         "OSI Approved :: GNU General Public License v3 (GPLv3)",
