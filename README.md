@@ -2,6 +2,7 @@
 
 [![Issues](https://img.shields.io/github/issues/route1io/route1io-python-connectors)](https://github.com/route1io/route1io-python-connectors/issues)
 [![License](https://img.shields.io/github/license/route1io/route1io-python-connectors)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Version](https://img.shields.io/pypi/v/route1io-connectors)](https://pypi.org/project/route1io-connectors/)
 
 ---
 
