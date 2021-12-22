@@ -3,9 +3,6 @@
 This module contains code for accessing data from Search Ads 360.
 """
 
-#Author: Chris Greening
-#Date: 08/30/2021
-#Purpose: Connectors for pulling data via Apple Search Ads
 # pylint: disable=invalid-name
 
 import datetime
@@ -16,7 +13,7 @@ import jwt
 import requests
 import pandas as pd
 
-from . import utils
+from .utils import date_range
 
 ACCESS_TOKEN_EXPIRY = 3600
 OAUTH2_API_ENDPOINT = "https://appleid.apple.com/auth/oauth2/token"
@@ -45,7 +42,7 @@ def get_apple_data(access_token: str, org_id: int, start_date: "datetime.datetim
         DataFrame containing search ad data between start and end date for the
         organization
     """
-    date_ranges = utils.calculate_date_ranges(start_date, end_date)
+    date_ranges = date_range.calculate_date_ranges(start_date, end_date)
     date_range_dfs = []
     for start_date, end_date in date_ranges:
         resp = requests.post(
@@ -88,7 +85,7 @@ def request_access_token(client_id: str, client_secret: str) -> dict:
         }
     )
 
-def validate_client_secret(client_secret: str, client_id: str, team_id: str, key_id: str) -> str:
+def validate_client_secret(client_secret: str, client_id: str, team_id: str, key_id: str, private_key: str) -> str:
     """Return client secret after being validated. If expired than create a
     new one
 
@@ -103,32 +100,14 @@ def validate_client_secret(client_secret: str, client_id: str, team_id: str, key
         Client secret validated and refreshed if necessary
     """
     token_payload = jwt.decode(client_secret, verify=False, algorithms="ES256")
-    if token_expired(token_payload["exp"]):
+    if _token_expired(token_payload["exp"]):
         client_secret = refresh_client_secret(
             client_id=client_id,
             team_id=team_id,
             key_id=key_id,
+            private_key=private_key
         )
     return client_secret
-
-def calculate_expiration_timestamp(expiration_offset: "datetime.datetime") -> Tuple[int, int]:
-    """Return a UNIX timestamp for the issued time and the expiration time in UTC
-
-    Parameters
-    ----------
-    expiration_offset : int
-        Time in seconds from issued timestamp to expire
-
-    Returns
-    -------
-    issued_at_timestamp : int
-        UNIX timestamp for time issued
-    expiration_timestmap : int
-        UNIX timestamp for expiration
-    """
-    issued_at_timestamp = int(datetime.datetime.utcnow().timestamp())
-    expiration_timestamp = issued_at_timestamp + expiration_offset
-    return issued_at_timestamp, expiration_timestamp
 
 def refresh_client_secret(client_id: str, team_id: str, key_id: str, private_key: str) -> str:
     """Return a refreshed client secret
@@ -153,7 +132,7 @@ def refresh_client_secret(client_id: str, team_id: str, key_id: str, private_key
     ALGORITHM = 'ES256'
 
     # Datetimes associated with JWT
-    issued_at_timestamp, expiration_timestamp = calculate_expiration_timestamp(86400*180)
+    issued_at_timestamp, expiration_timestamp = _calculate_expiration_timestamp(86400*180)
 
     # JWT payload
     headers = {
@@ -196,7 +175,7 @@ def refresh_access_token(client_id: str, client_secret: str) -> str:
     credentials_json
         Credentials JSON with valid access token
     """
-    issued_at_timestamp, expiration_timestamp = calculate_expiration_timestamp(ACCESS_TOKEN_EXPIRY)
+    issued_at_timestamp, expiration_timestamp = _calculate_expiration_timestamp(ACCESS_TOKEN_EXPIRY)
     resp = request_access_token(client_id=client_id, client_secret=client_secret)
 
     # Add issue and expiration dates to the created credentials
@@ -208,7 +187,7 @@ def refresh_access_token(client_id: str, client_secret: str) -> str:
 
     return credentials_json
 
-def token_expired(exp_timestamp: int, cushion: int = 0) -> bool:
+def _token_expired(exp_timestamp: int, cushion: int = 0) -> bool:
     """Return boolean checking if current UTC is equal to or greater than
     expiration timestamp
 
@@ -229,6 +208,25 @@ def token_expired(exp_timestamp: int, cushion: int = 0) -> bool:
 
     expired = datetime.datetime.utcnow() >= datetime.datetime.fromtimestamp(exp_timestamp - int(cushion))
     return expired
+
+def _calculate_expiration_timestamp(expiration_offset: "datetime.datetime") -> Tuple[int, int]:
+    """Return a UNIX timestamp for the issued time and the expiration time in UTC
+
+    Parameters
+    ----------
+    expiration_offset : int
+        Time in seconds from issued timestamp to expire
+
+    Returns
+    -------
+    issued_at_timestamp : int
+        UNIX timestamp for time issued
+    expiration_timestmap : int
+        UNIX timestamp for expiration
+    """
+    issued_at_timestamp = int(datetime.datetime.utcnow().timestamp())
+    expiration_timestamp = issued_at_timestamp + expiration_offset
+    return issued_at_timestamp, expiration_timestamp
 
 def _process_output_df(full_df: "pd.DataFrame") -> "pd.DataFrame":
     """Return output DataFrame after processing"""
