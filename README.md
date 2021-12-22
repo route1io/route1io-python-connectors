@@ -25,6 +25,7 @@ Below is a list of API's currently supported by our custom connectors
 * [Search Ads 360](route1io_connectors/sa360.py)
 * [Slack](route1io_connectors/slack.py)
 * [Facebook](route1io_connectors/facebook.py)
+* [Apple Search Ads](route1io_connectors/apple_search_ads.py)
 
 ---
 
