@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Author: Chris Greening
 # Date: 07/29/2021
 # Purpose: Upload the package to PyPI
