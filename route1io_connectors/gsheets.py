@@ -121,7 +121,7 @@ def download_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resour
     filename : str
         Name of the local filename to download to
     spreadsheet_id : str
-        ID of the Google Sheet to upload to
+        ID of the Google Sheet to download from
     spreadsheet_name : str
         Name of the specific Sheet to write to
     """
