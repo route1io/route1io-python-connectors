@@ -16,7 +16,7 @@ def upload_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resource
                                filename: str, spreadsheet_id: str,
                                spreadsheet_name: str
                                ) -> None:
-    """Upload a file to a specified Google Sheet
+    """Clears a Google Sheet and uploads from file to sheet
 
     Parameters
     ----------
