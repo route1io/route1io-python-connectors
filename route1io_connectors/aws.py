@@ -1,6 +1,6 @@
 """AWS
 
-This module contains functionality for working with AWS.
+This module contains convenience functionality for working with AWS.
 """
 import os
 from pathlib import Path
