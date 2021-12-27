@@ -26,6 +26,7 @@ Below is a list of API's currently supported by our custom connectors
 * [Slack](route1io_connectors/slack.py)
 * [Facebook](route1io_connectors/facebook.py)
 * [Apple Search Ads](route1io_connectors/apple_search_ads.py)
+* [TikTok](route1io_connectors/tiktok.py)
 
 ---
 
