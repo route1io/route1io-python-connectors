@@ -5,7 +5,7 @@ This module contains code for sending messages to TikTok.
 
 import datetime
 import json
-from typing import Dict
+from typing import Dict, List
 from six import string_types
 from urllib.parse import urlencode
 
@@ -18,10 +18,24 @@ from .utils import date_range
 ROOT_URL = "https://business-api.tiktok.com"
 REPORTING_ENDPOINT = f"{ROOT_URL}/open_api/v1.2/reports/integrated/get"
 
-def get_tiktok_data(access_token: str, advertiser_id: int, start_date: "datetime.datetime",
-                    end_date: "datetime.datetime") -> "pd.DataFrame":
-    """Return pd.DataFrame of TikTok Marketing API data for a given advertiser
-    between start and end dates (inclusive)
+def get_tiktok_data(
+        access_token: str, 
+        advertiser_id: int, 
+        data_level: str = "AUCTION_AD",
+        dimensions: List[str] = ['ad_id', 'stat_time_day'],
+        metrics: List[str] = [
+            'campaign_name',
+            'adgroup_name',
+            'ad_id',
+            'spend',
+            'impressions',
+            'reach',
+            'clicks',
+        ], 
+        start_date: "datetime.datetime" = None,
+        end_date: "datetime.datetime" = None,
+    ) -> "pd.DataFrame":
+    """Return pd.DataFrame of TikTok Marketing API data for an authorized advertiser.
 
     Parameters
     ----------
@@ -29,80 +43,68 @@ def get_tiktok_data(access_token: str, advertiser_id: int, start_date: "datetime
         Valid access token with permissions to access advertiser's ad account
         data via API
         https://ads.tiktok.com/marketing_api/docs?id=1701890912382977
-    advertiser_id: int
+    advertiser_id : int
         Ad account we want to pull data from
+    data_level : str
+        Level of data to pull from. Campaign ID grouping needs AUCTION_CAMPAIGN,
+        Adgroup ID grouping needs ADGROUP_ADGROUP, etc. Default is AUCTION_AD.
+    dimensions : List[str]
+        List of dimension(s) to group by. Each request can only have one ID dimension 
+        and one time dimension. ID dimensions include advertiser_id, campaign_id,
+        adgroup_id, and ad_id. Time dimensions include stat_time_day and stat_time_hour. 
+        Default is ['ad_id', 'stat_time_day']
+        https://ads.tiktok.com/marketing_api/docs?id=1707957200780290 
     start_date : datetime.date
-        Inclusive start date to pull data
+        Inclusive datetime object start date to pull data. Default is today.
     end_date : datetime.date
-        Inclusive end date to pull data
+        Inclusive datetime object end date to pull data. Default is seven days before end_date.
 
     Returns
     -------
-    full_df : pd.DataFrame
+    df : pd.DataFrame
         DataFrame containing search ad data between start and end date for the
         organization
     """
-    headers = {"Access-Token": access_token}
+    if end_date is None: 
+        end_date = datetime.datetime.today()
+    if start_date is None:
+        start_date = end_date - datetime.timedelta(days=7)
     date_ranges = date_range.calculate_date_ranges(start_date, end_date)
     date_range_dfs = []
     for start_date, end_date in date_ranges:
         query_param_str = _format_url_query_param_string(
             advertiser_id=advertiser_id,
+            data_level=data_level,
+            dimensions=dimensions,
+            metrics=metrics,
             start_date=start_date,
             end_date=end_date
         )
         url = f"{REPORTING_ENDPOINT}?{query_param_str}"
         resp = requests.get(
             url=url,
-            headers=headers
+            headers={"Access-Token": access_token}
         )
         date_range_dfs.append(_process_response(resp))
-    full_df = pd.concat(date_range_dfs)
-    full_df = _process_output_df(df=full_df)
-    return full_df
-
-def _process_output_df(df: "pd.DataFrame") -> "pd.DataFrame":
-    """Return DataFrame containing TikTok data pulled from the API"""
-    df = df[["campaign_name", "stat_time_day", "adgroup_name", "spend",
-             "impressions", "clicks", "total_on_web_order_value",
-             'total_complete_payment_rate', 'total_page_event_search_value', 'total_user_registration_value',
-             'total_consultation_value']]
-    df = df.rename(columns={
-        "campaign_name": "Campaign Name",
-        "adgroup_name": "Ad Group Name",
-        "stat_time_day": "Date",
-        "spend": "Cost",
-        "impressions": "Impression",
-        "clicks": "Click",
-        "total_on_web_order_value": "Place an Order",
-        'total_consultation_value': "Total Phone Consultation",
-        'total_complete_payment_rate': "Total Complete Payment",
-        'total_page_event_search_value': "Total Search",
-        'total_user_registration_value': "Total Registration",
-    })
-    df = df.astype({
-        "Campaign Name": str,
-        "Ad Group Name": str,
-        "Date": str,
-        "Cost": np.float32,
-        "Impression": np.float32,
-        "Click": np.float32,
-        "Place an Order": np.float32,
-        "Total Phone Consultation": np.float32,
-        "Total Complete Payment": np.float32,
-        "Total Search": np.float32,
-        "Total Registration": np.float32
-    })
-    df["Date"] = pd.to_datetime(df["Date"])
+    df = pd.concat(date_range_dfs)
     return df
 
-def _format_url_query_param_string(advertiser_id: int, start_date: "datetime.date",
-                             end_date: "datetime.date") -> str:
+def _format_url_query_param_string(
+        advertiser_id: int, 
+        data_level: str, 
+        dimensions: List[str], 
+        metrics: List[str], 
+        start_date: "datetime.date",                     
+        end_date: "datetime.date"
+    ) -> str:
     """Return a URL encoded query string with parameters to GET request from
     TikTok endpoint
     """
     query_param_dict = _format_query_param_dict(
         advertiser_id=advertiser_id,
+        data_level=data_level,
+        dimensions=dimensions,
+        metrics=metrics,
         start_date=start_date,
         end_date=end_date
     )
@@ -119,8 +121,14 @@ def _url_encoded_query_param(query_param_dict: Dict[str, str]) -> str:
     )
     return url
 
-def _format_query_param_dict(advertiser_id: int, start_date: "datetime.date",
-                             end_date: "datetime.date") -> Dict[str, str]:
+def _format_query_param_dict(
+        advertiser_id: int, 
+        data_level: str,
+        dimensions: List[str],
+        metrics: List[str],
+        start_date: "datetime.date",                         
+        end_date: "datetime.date"
+    ) -> Dict[str, str]:
     """Return dictionary with data we will request from TikTok Marketing API
     reporting endpoint
     """
@@ -128,22 +136,9 @@ def _format_query_param_dict(advertiser_id: int, start_date: "datetime.date",
         'advertiser_id': advertiser_id,
         'service_type': 'AUCTION',
         'report_type': 'BASIC',
-        'data_level': 'AUCTION_ADGROUP',
-        'dimensions': ['adgroup_id', 'stat_time_day'],
-        'metrics': [
-            'campaign_name',
-            'adgroup_name',
-            'spend',
-            'impressions',
-            'reach',
-            'clicks',
-            'conversion',
-            'time_attr_total_on_web_order_value',
-            'time_attr_total_shopping_value',
-            'time_attr_total_search_value',
-            "time_attr_total_on_web_register_value",
-            'time_attr_total_phone_value'
-        ],
+        'data_level': data_level,
+        'dimensions': dimensions,
+        'metrics': metrics,
         'start_date': start_date.strftime("%Y-%m-%d"),
         'end_date': end_date.strftime("%Y-%m-%d"),
         'page': 1,
