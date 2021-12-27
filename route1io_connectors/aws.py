@@ -23,8 +23,8 @@ def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
 
     Returns
     -------
-    str
-        Name of the most recently modified file
+    key
+        Name of the most recently modified file as it appears in S3 bucket
     """
     # pylint: disable=unsubscriptable-object
     paginator = s3.get_paginator("list_objects_v2")
@@ -35,7 +35,8 @@ def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
             latest_test = max(page["Contents"], key=lambda x: x["LastModified"])
             if latest is None or latest_test["LastModified"] > latest["LastModified"]:
                 latest = latest_test
-    return latest["Key"]
+    key = latest["Key"]
+    return key
 
 def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_name: str):
     """Returns a connection to s3 bucket via AWS
@@ -97,6 +98,8 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
     key : str
         Remote filename to download from the bucket
     """
+    if filename is None:
+        filename = key
     s3.download_file(
         Bucket=bucket,
         Key=key,
