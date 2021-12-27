@@ -2,9 +2,7 @@
 
 This module contains convenience functionality for working with AWS.
 """
-import os
 from pathlib import Path
-import datetime
 
 import boto3
 
