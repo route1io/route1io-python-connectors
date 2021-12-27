@@ -1,13 +1,44 @@
-"""route1.io AWS connectors
+"""AWS
 
-This module contains code for interacting with AWS S3 buckets via Python
+This module contains functionality for working with AWS.
 """
+import os
 from pathlib import Path
+import datetime
 
 import boto3
 
-def connect_to_S3(aws_access_key_id: str, aws_secret_access_key: str, region_name: str):
-    """Returns a connection to S3 bucket via AWS
+def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
+    """Return the key name as it appears in s3 bucket of the most recently modified
+    file in bucket
+
+    Parameters
+    ----------
+    s3
+        Connection to AWS S3 bucket
+    bucket : str
+        Name of the bucket that contains data we want
+    prefix : str, optional
+        Prefix to filter data
+
+    Returns
+    -------
+    str
+        Name of the most recently modified file
+    """
+    # pylint: disable=unsubscriptable-object
+    paginator = s3.get_paginator("list_objects_v2")
+    page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+    latest = None
+    for page in page_iterator:
+        if "Contents" in page:
+            latest_test = max(page["Contents"], key=lambda x: x["LastModified"])
+            if latest is None or latest_test["LastModified"] > latest["LastModified"]:
+                latest = latest_test
+    return latest["Key"]
+
+def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_name: str):
+    """Returns a connection to s3 bucket via AWS
 
     Parameters
     ----------
@@ -21,7 +52,7 @@ def connect_to_S3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     Returns
     -------
     s3
-        Connection to S3 bucket
+        Connection to s3 bucket via AWS
     """
     s3 = boto3.client(
         "s3",
@@ -31,54 +62,44 @@ def connect_to_S3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     )
     return s3
 
-def upload_to_S3(
-        s3,
-        bucket: str,
-        local_fpath: str,
-        key: str = None,
-    ) -> None:
+def upload_to_s3(s3, filename: str, bucket: str, key: str = None) -> None:
     """Uploads a file to AWS s3 bucket
 
     Parameters
     ----------
     s3
-        Connection to S3 bucket
-    bucket : str
-        Name of S3 bucket to upload file to
+        Connection to s3 bucket
     filename : str
         Local filepath of file to be uploaded
+    bucket : str
+        Name of s3 bucket to upload file to
     key : str (optional)
         Remote filename to upload file as
     """
     if key is None:
-        key=Path(local_fpath).name
+        key = Path(filename).name
     s3.upload_file(
-        Filename=local_fpath,
+        Filename=filename,
         Bucket=bucket,
         Key=key
     )
 
-def download_from_S3(s3, bucket: str, key: str, local_fpath: str = None) -> str:
+def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
     """
-    Download file from an AWS s3 bucket and return the filepath to the local file
+    Download file via AWS s3 bucket and return the fpath to the local file
 
     Parameters
     ----------
     s3
-        Connection to S3 bucket
+        Connection to s3 bucket
     bucket : str
-        Name of S3 bucket to download file from
+        Name of s3 bucket to download file from
     key : str
         Remote filename to download from the bucket
-    local_fpath : str (optional)
-        Local filepath to download the file to. Defaults to local directory 
-        with key as filename
     """
-    if local_fpath is None:
-        local_fpath=key
     s3.download_file(
         Bucket=bucket,
         Key=key,
-        Filename=local_fpath
+        Filename=filename
     )
-    return local_fpath
+    return filename
