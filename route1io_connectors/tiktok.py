@@ -1,6 +1,6 @@
 """TikTok
 
-This module contains code for sending messages to TikTok.
+This module contains code for pulling data via TikTok Marketing API.
 """
 
 import datetime
