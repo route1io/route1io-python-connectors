@@ -1,6 +1,6 @@
 """Apple Search Ads connectors
 
-This module contains code for accessing data from Search Ads 360.
+This module contains code for accessing data from Apple Search Ads.
 """
 
 # pylint: disable=invalid-name
