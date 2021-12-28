@@ -1,6 +1,7 @@
 """OneDrive
 
 The purpose of this module is for uploading/downloading files to/from OneDrive and SharePoint
+via the Microsoft Graph API
 """
 
 import webbrowser
@@ -46,6 +47,8 @@ def refresh_access_token(client_id: str, client_secret: str, refresh_token: str,
         ),
         url=_get_token_url(tenant_id=tenant_id)
     )
+
+def 
 
 def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
     """Return JSON response as dictionary after POST requesting token endpoint"""
