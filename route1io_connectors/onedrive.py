@@ -11,7 +11,7 @@ import json
 import requests 
 
 def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
-    """Upload file locally to OneDrive at specified URL. NOTE: URL must be 
+    """Upload file locally to OneDrive at specified URL. Note: URL must be 
     suffixed with /content to work
     
     Parameters
