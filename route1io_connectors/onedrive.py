@@ -4,12 +4,14 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 via the Microsoft Graph API
 """
 
+from os import access
 import webbrowser
 from typing import List, Dict
 import json
 
 import requests 
 import jwt
+from requests.api import request
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
@@ -48,7 +50,35 @@ def refresh_access_token(client_id: str, client_secret: str, refresh_token: str,
         url=_get_token_url(tenant_id=tenant_id)
     )
 
-def 
+def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
+    """Return results of find SharePoint site(s) by keyword search"""
+    resp = requests.get(
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
+    )
+    return json.loads(resp.text)
+
+def create_file_in_folder(access_token: str, drive_id: str, folder_id: str, filename: str) -> Dict[str, str]:
+    """Create file in folder"""
+    resp = requests.post(
+        json={
+            "name": filename,
+            "file": {}
+        },
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=f"https://graph.microsoft.com/v1.0/drives/{drive_id}/items/{folder_id}/children"
+    )
+    return json.loads(resp.text)
+
+def upload_file(access_token: str, url: str, local_fpath: str) -> Dict[str, str]:
+    with open(local_fpath, 'rb') as f:
+        data = f.read()
+    resp = requests.put(
+        data=data,
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    )
+    return json.loads(resp.text)
 
 def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
     """Return JSON response as dictionary after POST requesting token endpoint"""
@@ -72,9 +102,4 @@ def _encode_scope(scope: List[str]) -> str:
 if __name__ == "__main__":
     import dotenv
     env = dotenv.dotenv_values()
-    data = refresh_access_token(
-    tenant_id=env['tenant_id'],
-    client_id=env['client_id'],
-    refresh_token=env['refresh_token'],
-    scope=["user.read", "Sites.Read.All", "offline_access"],
-    client_secret=env['client_secret'])
+    
