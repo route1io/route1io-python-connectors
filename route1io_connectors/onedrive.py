@@ -4,26 +4,75 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 via the Microsoft Graph API
 """
 
-from os import access
 import webbrowser
 from typing import List, Dict
 import json
 
 import requests 
-import jwt
-from requests.api import request
+
+def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
+    """Upload file locally to OneDrive at specified URL. NOTE: URL must be 
+    suffixed with /content to work
+    
+    Parameters
+    ----------
+    access_token : str
+        Valid access token
+    url : str
+        Valid Microsoft Graph API URL of the file we are going to update 
+        and/or create
+    fpath : str
+        Local fpath of the file we will upload to OneDrive location specified
+        at url
+
+    Returns
+    -------
+    resp : Dict[str, str]
+        Dictionary of information pertaining to recently uploaded file
+    """
+    with open(fpath, 'rb') as f:
+        data = f.read()
+    resp = requests.put(
+        data=data,
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    )
+    return json.loads(resp.text)
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
     # NOTE: Microsoft's masl Python package seems to have some functionality
-    # for interactively opening browser and then returnign access token
+    # for interactively opening browser and then returning access token
     # after going through the flow
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&scope={'%20'.join(scope)}&prompt=consent"
     webbrowser.open(url)
 
 def request_access_token(code: str, tenant_id: str, client_id: str, scope: List[str],
-        redirect_uri: str, client_secret: str) -> Dict[str, str]:
-    """Return a dict of authentication information"""
+                         redirect_uri: str, client_secret: str) -> Dict[str, str]:
+    """Return a dict of authentication information using the code provided from
+    redirect URI
+    
+    Parameters
+    ----------
+    code : str
+        Code acquired after accepting app permissions request and redirecting
+        to redirect URI
+    tenant_id : str
+        User tenant ID
+    client_id : str
+        Client ID acquired after registering an app with Azure Active Directory
+    scope : str
+        List of scopes to acquire access token for
+    redirect_uri : str
+        Redirect URI
+    client_secret : str
+        Client secret for signing request
+        
+    Returns
+    -------
+    Dict[str, str]
+        Dictionary containing access credentials that were just requested
+    """
     return _request_token_endpoint(
         data=_encode_payload(
             client_id=client_id,
@@ -37,7 +86,7 @@ def request_access_token(code: str, tenant_id: str, client_id: str, scope: List[
     )
 
 def refresh_access_token(client_id: str, client_secret: str, refresh_token: str,
-        scope: List[str], tenant_id: str) -> Dict[str, str]:
+                         scope: List[str], tenant_id: str) -> Dict[str, str]:
     """Return dictionary of refreshed access token information"""
     return _request_token_endpoint(
         data=_encode_payload(
@@ -55,28 +104,6 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     resp = requests.get(
         headers={"Authorization": f"Bearer {access_token}"},
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
-    )
-    return json.loads(resp.text)
-
-def create_file_in_folder(access_token: str, drive_id: str, folder_id: str, filename: str) -> Dict[str, str]:
-    """Create file in folder"""
-    resp = requests.post(
-        json={
-            "name": filename,
-            "file": {}
-        },
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=f"https://graph.microsoft.com/v1.0/drives/{drive_id}/items/{folder_id}/children"
-    )
-    return json.loads(resp.text)
-
-def upload_file(access_token: str, url: str, local_fpath: str) -> Dict[str, str]:
-    with open(local_fpath, 'rb') as f:
-        data = f.read()
-    resp = requests.put(
-        data=data,
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=url
     )
     return json.loads(resp.text)
 
@@ -98,8 +125,3 @@ def _encode_payload(**kwargs) -> str:
 def _encode_scope(scope: List[str]) -> str:
     """Return scope encoded as a string for a URL query param"""
     return '%20'.join(scope)
-
-if __name__ == "__main__":
-    import dotenv
-    env = dotenv.dotenv_values()
-    
