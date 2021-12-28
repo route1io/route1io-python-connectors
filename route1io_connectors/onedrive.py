@@ -4,14 +4,17 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 """
 
 import webbrowser
-from typing import List
+from typing import List, Dict
 import json
 
 import requests 
 import jwt
 
-def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> str:
+def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
+    # NOTE: Microsoft's masl Python package seems to have some functionality
+    # for interactively opening browser and then returnign access token
+    # after going through the flow
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&scope={'%20'.join(scope)}&prompt=consent"
     webbrowser.open(url)
 
@@ -24,8 +27,8 @@ def request_access_token(
         client_secret: str
     ) -> dict:
     """Return a dict of authentication information"""
-    resp = requests.post(
-        data = _encode_payload(
+    return _request_token_endpoint(
+        data=_encode_payload(
             client_id=client_id,
             scope=_encode_scope(scope),
             code=code,
@@ -33,10 +36,8 @@ def request_access_token(
             grant_type="authorization_code",
             client_secret=client_secret
         ),        
-        url = _get_token_url(tenant_id=tenant_id)
+        url=_get_token_url(tenant_id=tenant_id)
     )
-    resp = json.loads(resp)
-    return resp
 
 def refresh_access_token(
         client_id: str, 
@@ -45,7 +46,8 @@ def refresh_access_token(
         scope: List[str], 
         tenant_id: str
     ):
-    resp = requests.post(
+    """Return dictionary of refreshed access token information"""
+    return _request_token_endpoint(
         data=_encode_payload(
             client_id=client_id,
             client_secret=client_secret,
@@ -55,8 +57,11 @@ def refresh_access_token(
         ),
         url=_get_token_url(tenant_id=tenant_id)
     )
-    resp = json.loads(resp.text)
-    return resp 
+
+def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
+    """Return JSON response as dictionary after POST requesting token endpoint"""
+    resp = requests.post(data=data, url=url)
+    return json.loads(resp.text)
 
 def _get_token_url(tenant_id: str) -> str:
     """Return token URL built form the given tenant ID"""
