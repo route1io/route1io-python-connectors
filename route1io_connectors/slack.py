@@ -19,7 +19,7 @@ def slack_message(message: str, webhook: str) -> None:
         WebHook for sending the message to
     """
     message_json = json.dumps({"text": message})
-    _post_slack(data=message_json)
+    _post_slack(data=message_json, webhook=webhook)
 
 def slack_block_message(message: Dict[str, str], webhook: str) -> None:
     """Send formatted block message to Slack
