@@ -18,14 +18,8 @@ def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&scope={'%20'.join(scope)}&prompt=consent"
     webbrowser.open(url)
 
-def request_access_token(
-        code: str, 
-        tenant_id: str, 
-        client_id: str, 
-        scope: List[str], 
-        redirect_uri: str, 
-        client_secret: str
-    ) -> dict:
+def request_access_token(code: str, tenant_id: str, client_id: str, scope: List[str],
+        redirect_uri: str, client_secret: str) -> Dict[str, str]:
     """Return a dict of authentication information"""
     return _request_token_endpoint(
         data=_encode_payload(
@@ -39,13 +33,8 @@ def request_access_token(
         url=_get_token_url(tenant_id=tenant_id)
     )
 
-def refresh_access_token(
-        client_id: str, 
-        client_secret: str, 
-        refresh_token: str, 
-        scope: List[str], 
-        tenant_id: str
-    ):
+def refresh_access_token(client_id: str, client_secret: str, refresh_token: str,
+        scope: List[str], tenant_id: str) -> Dict[str, str]:
     """Return dictionary of refreshed access token information"""
     return _request_token_endpoint(
         data=_encode_payload(
