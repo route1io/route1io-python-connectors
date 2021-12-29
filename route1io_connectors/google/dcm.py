@@ -92,12 +92,12 @@ def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report
     """
     credentials = get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
     dcm = connect_to_dcm(credentials=credentials)
-    request_response = request_report_run(
+    request_response = _request_report_run(
         dcm=dcm,
         profile_id=profile_id,
         report_id=report_id
     )
-    ready_response = wait_for_report(
+    ready_response = _wait_for_report(
         dcm=dcm,
         report_id=report_id,
         file_id=request_response['id']
@@ -120,7 +120,7 @@ def _report_url_from_response(resp: Dict[str, str]) -> str:
     """Return URL from report response"""
     return resp["urls"]["apiUrl"]
 
-def request_report_run(dcm: "googleapiclient.discovery.Resource",
+def _request_report_run(dcm: "googleapiclient.discovery.Resource",
                        profile_id: str, report_id: str) -> Dict[str, str]:
     """Return response after requesting a report begins processing a new file
 
@@ -142,7 +142,7 @@ def request_report_run(dcm: "googleapiclient.discovery.Resource",
     response = request.execute()
     return response
 
-def wait_for_report(dcm: "googleapiclient.discovery.Resource",
+def _wait_for_report(dcm: "googleapiclient.discovery.Resource",
                     report_id: str, file_id: str) -> None:
     """Block with exponential backoff until report status is completed
 
