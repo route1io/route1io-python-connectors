@@ -13,11 +13,9 @@ import jwt
 import requests
 import pandas as pd
 
-from .utils import date_range
+from .utils import date_range, endpoints
 
 ACCESS_TOKEN_EXPIRY = 3600
-OAUTH2_API_ENDPOINT = "https://appleid.apple.com/auth/oauth2/token"
-CAMPAIGN_API_ENDPOINT = "https://api.searchads.apple.com/api/v4/reports/campaigns"
 
 def get_apple_data(access_token: str, org_id: int, start_date: "datetime.datetime",
                    end_date: "datetime.datetime") -> "pd.DataFrame":
@@ -46,7 +44,7 @@ def get_apple_data(access_token: str, org_id: int, start_date: "datetime.datetim
     date_range_dfs = []
     for start_date, end_date in date_ranges:
         resp = requests.post(
-            url=CAMPAIGN_API_ENDPOINT,
+            url=endpoints.APPLE_CAMPAIGN_API_ENDPOINT,
             json=_post_json_data(start_date=start_date, end_date=end_date),
             headers=_post_request_header(access_token=access_token, org_id=org_id)
         )
@@ -72,7 +70,7 @@ def request_access_token(client_id: str, client_secret: str) -> dict:
         POST request response with refreshed access token
     """
     return requests.post(
-        url=OAUTH2_API_ENDPOINT,
+        url=endpoints.OAUTH2_API_ENDPOINT,
         headers={
             "Host": "appleid.apple.com",
             "Content-Type": "application/x-www-form-urlencoded"
