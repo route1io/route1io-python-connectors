@@ -13,10 +13,7 @@ import requests
 import pandas as pd
 import numpy as np
 
-from .utils import date_range
-
-ROOT_URL = "https://business-api.tiktok.com"
-REPORTING_ENDPOINT = f"{ROOT_URL}/open_api/v1.2/reports/integrated/get"
+from .utils import date_range, endpoints
 
 def get_tiktok_data(
         access_token: str, 
@@ -80,7 +77,7 @@ def get_tiktok_data(
             start_date=start_date,
             end_date=end_date
         )
-        url = f"{REPORTING_ENDPOINT}?{query_param_str}"
+        url = f"{endpoints.TIKTOK_REPORTING_ENDPOINT}?{query_param_str}"
         resp = requests.get(
             url=url,
             headers={"Access-Token": access_token}
