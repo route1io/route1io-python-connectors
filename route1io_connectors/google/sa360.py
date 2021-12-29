@@ -13,8 +13,7 @@ from typing import Dict
 import requests
 import pandas as pd
 
-GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
-GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT = "https://www.googleapis.com/doubleclicksearch/v2/reports"
+from ..utils import endpoints
 
 class SearchAds360:
     """High level Python connection to Search Ads 360"""
@@ -52,7 +51,7 @@ class SearchAds360:
             download_format
         )
         resp = requests.post(
-            GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT,
+            endpoints.GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT,
             headers={"Authorization": f"Bearer {self.access_token}"},
             data=json_payload
         )
@@ -66,7 +65,7 @@ class SearchAds360:
 
     def get_request_report(self, report_id: str) -> dict:
         """Return response from a given URL via GET request"""
-        report_url = f"{GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT}/{report_id}"
+        report_url = f"{endpoints.GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT}/{report_id}"
         return requests.get(report_url, headers={"Authorization": f"Bearer {self.access_token}"})
 
     def download_report(self, fpath: str, file_urls: list) -> None:
@@ -199,7 +198,7 @@ class SearchAds360:
             "client_secret": csc,
             "grant_type": "refresh_token"
         }
-        resp = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data)
+        resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
         access_token_data = json.loads(resp.text)
         access_token = access_token_data["access_token"]
         return cls(access_token=access_token)
