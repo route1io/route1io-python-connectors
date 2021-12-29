@@ -1,6 +1,11 @@
-"""API endpoints for all API's to connect to"""
+"""API endpoints"""
 
-# Google
+# NOTE: The motivation for keeping all endpoints in one place and not in respective
+# connector module's is for organization and reusability of various tokens
+# (i.e. the Google oauth token refresh endpoint as this gets reused in a lot of 
+# places)
+
+# Google token refresh
 GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
 
 # DCM API endpoints
