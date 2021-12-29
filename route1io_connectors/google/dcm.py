@@ -144,7 +144,7 @@ def request_report_run(dcm: "googleapiclient.discovery.Resource",
 
 def wait_for_report(dcm: "googleapiclient.discovery.Resource",
                     report_id: str, file_id: str) -> None:
-    """Block until report status is completed
+    """Block with exponential backoff until report status is completed
 
     Parameters
     ----------
