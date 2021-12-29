@@ -8,12 +8,10 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+from ..utils import endpoints
+
 # DCM API resource version
 DCM_API_RESOURCE_VERSION = "v3.4"
-
-# DCM API endpoints
-DCM_REPORTING_AUTHENTICATION_ENDPOINT = ["https://www.googleapis.com/auth/dfareporting"]
-GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
 
 def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
     """Return filepath to downloaded DCM fpath
@@ -78,7 +76,7 @@ def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oa
         "client_secret": csc,
         "grant_type": "refresh_token"
     }
-    resp = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data)
+    resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
     access_token_data = json.loads(resp.text)
     access_token = access_token_data["access_token"]
     dcm_credentials = Credentials(token=access_token)
@@ -102,7 +100,7 @@ def connect_to_dcm(credentials: "google.oauth2.credentials.Credentials") -> "goo
 
 def get_refresh_token(credentials_fpath: str) -> str:
     """Opens Google auth screen and returns a refresh token"""
-    flow = InstalledAppFlow.from_client_secrets_file(credentials_fpath, DCM_REPORTING_AUTHENTICATION_ENDPOINT)
+    flow = InstalledAppFlow.from_client_secrets_file(credentials_fpath, endpoints.DCM_REPORTING_AUTHENTICATION_ENDPOINT)
     creds = flow.run_local_server(port=8080)
     return creds.refresh_token
 

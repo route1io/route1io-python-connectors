@@ -12,8 +12,7 @@ import pandas as pd
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-# Google API refresh token endpoint
-GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
+from ..utils import endpoints
 
 def get_google_analytics_credentials(refresh_token: str, cid: str,
                                  csc: str) -> "googleapiclient.discovery.Resource":
@@ -40,7 +39,7 @@ def get_google_analytics_credentials(refresh_token: str, cid: str,
         "client_secret": csc,
         "grant_type": "refresh_token"
     }
-    resp = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data)
+    resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
     access_token_data = json.loads(resp.text)
     access_token = access_token_data["access_token"]
     credentials = Credentials(token=access_token)
