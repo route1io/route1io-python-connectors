@@ -15,6 +15,45 @@ DCM_API_RESOURCE_VERSION = "v3.4"
 DCM_REPORTING_AUTHENTICATION_ENDPOINT = ["https://www.googleapis.com/auth/dfareporting"]
 GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
 
+def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
+    """Return filepath to downloaded DCM fpath
+
+    Parameters
+    ----------
+    refresh_token : str
+        Valid refresh token with DCM reporting access
+    cid : str
+        Client ID generated from Google Cloud Platform
+    csc : str
+        Client secret generated from Google Cloud Platform
+    profile_id : str
+        Profile ID on DCM of the account that has access to the report
+    report_id : str
+        Existing report on DCM that we want to create
+    fpath : str
+        Local filepath to download report to
+
+    Returns
+    -------
+    fpath : str
+        Absolute filepath to the downloaded DCM report
+    """
+    credentials = get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
+    dcm = connect_to_dcm(credentials=credentials)
+    request_response = _request_report_run(
+        dcm=dcm,
+        profile_id=profile_id,
+        report_id=report_id
+    )
+    ready_response = _wait_for_report(
+        dcm=dcm,
+        report_id=report_id,
+        file_id=request_response['id']
+    )
+    report_url = _report_url_from_response(resp=ready_response)
+    fpath = _download_report(url=report_url, credentials=credentials, fpath=fpath)
+    return fpath
+
 def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oath2.credentials.Credentials":
     """Return a Credentials object containing the necessary credentials for
     connecting to DCM/Campaign Manager 360
@@ -66,45 +105,6 @@ def get_refresh_token(credentials_fpath: str) -> str:
     flow = InstalledAppFlow.from_client_secrets_file(credentials_fpath, DCM_REPORTING_AUTHENTICATION_ENDPOINT)
     creds = flow.run_local_server(port=8080)
     return creds.refresh_token
-
-def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
-    """Return filepath to downloaded DCM fpath
-
-    Parameters
-    ----------
-    refresh_token : str
-        Valid refresh token with DCM reporting access
-    cid : str
-        Client ID generated from Google Cloud Platform
-    csc : str
-        Client secret generated from Google Cloud Platform
-    profile_id : str
-        Profile ID on DCM of the account that has access to the report
-    report_id : str
-        Existing report on DCM that we want to create
-    fpath : str
-        Local filepath to download report to
-
-    Returns
-    -------
-    fpath : str
-        Absolute filepath to the downloaded DCM report
-    """
-    credentials = get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
-    dcm = connect_to_dcm(credentials=credentials)
-    request_response = _request_report_run(
-        dcm=dcm,
-        profile_id=profile_id,
-        report_id=report_id
-    )
-    ready_response = _wait_for_report(
-        dcm=dcm,
-        report_id=report_id,
-        file_id=request_response['id']
-    )
-    report_url = _report_url_from_response(resp=ready_response)
-    fpath = _download_report(url=report_url, credentials=credentials, fpath=fpath)
-    return fpath
 
 def _download_report(url: str, credentials: "google.oath2.credentials.Credentials", fpath: str) -> str:
     """Return filepath of downloaded report from API via GET request"""
