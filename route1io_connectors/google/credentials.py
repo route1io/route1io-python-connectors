@@ -1,8 +1,11 @@
+import json
+
 import requests
 
 from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
+
+from ..utils import endpoints
 
 def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oath2.credentials.Credentials":
     """Return a Credentials object containing the necessary credentials for
@@ -20,7 +23,7 @@ def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oa
     Returns
     -------
     gsheets_credentials : google.oath2.credentials.Credentials
-        Valid access credentials for accessing Google Sheets API
+        Valid access credentials for accessing Google API
     """
     data = {
         "refresh_token": refresh_token,

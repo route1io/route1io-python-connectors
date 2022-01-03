@@ -4,8 +4,9 @@ from typing import Dict
 
 import requests
 import pandas as pd
+from googleapiclient.discovery import build
 
-from ..utils import endpoints
+from . import credentials
 
 # DCM API resource version
 DCM_API_RESOURCE_VERSION = "v3.4"
@@ -33,8 +34,8 @@ def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report
     fpath : str
         Absolute filepath to the downloaded DCM report
     """
-    credentials = get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
-    dcm = connect_to_dcm(credentials=credentials)
+    creds = credentials.get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
+    dcm = connect_to_dcm(credentials=creds)
     request_response = _request_report_run(
         dcm=dcm,
         profile_id=profile_id,
