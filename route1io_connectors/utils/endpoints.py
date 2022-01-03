@@ -24,3 +24,7 @@ APPLE_CAMPAIGN_API_ENDPOINT = "https://api.searchads.apple.com/api/v4/reports/ca
 # TikTok
 ROOT_URL = "https://business-api.tiktok.com"
 TIKTOK_REPORTING_ENDPOINT = f"{ROOT_URL}/open_api/v1.2/reports/integrated/get"
+
+# LinkedIn
+AD_CAMPAIGNS_ENDPOINT = "https://api.linkedin.com/v2/adCampaignsV2"
+AD_ANALYTICS_ENDPOINT = "https://api.linkedin.com/v2/adAnalyticsV2"
