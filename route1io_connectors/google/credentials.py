@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 import requests
 
@@ -8,8 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from ..utils import endpoints
 
 def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oath2.credentials.Credentials":
-    """Return a Credentials object containing the necessary credentials for
-    connecting to DCM/Campaign Manager 360
+    """Return a Credentials object containing refreshed access token
 
     Parameters
     ----------
@@ -22,7 +22,7 @@ def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oa
 
     Returns
     -------
-    gsheets_credentials : google.oath2.credentials.Credentials
+    creds : google.oath2.credentials.Credentials
         Valid access credentials for accessing Google API
     """
     data = {
@@ -34,11 +34,11 @@ def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oa
     resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
     access_token_data = json.loads(resp.text)
     access_token = access_token_data["access_token"]
-    dcm_credentials = Credentials(token=access_token)
-    return dcm_credentials
+    creds = Credentials(token=access_token)
+    return creds
 
-def get_refresh_token(credentials_fpath: str) -> str:
+def get_refresh_token(credentials_fpath: str, endpoints: List[str], port: int = 8080) -> str:
     """Opens Google auth screen and returns a refresh token"""
-    flow = InstalledAppFlow.from_client_secrets_file(credentials_fpath, endpoints.DCM_REPORTING_AUTHENTICATION_ENDPOINT)
-    creds = flow.run_local_server(port=8080)
+    flow = InstalledAppFlow.from_client_secrets_file(credentials_fpath, endpoints)
+    creds = flow.run_local_server(port=port)
     return creds.refresh_token
