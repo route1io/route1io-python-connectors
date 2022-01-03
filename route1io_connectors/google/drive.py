@@ -12,9 +12,6 @@ from pathlib import Path
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.discovery import build
 
-# Google API refresh token endpoint
-GOOGLE_DRIVE_AUTHENTICATION_ENDPOINT = "https://www.googleapis.com/auth/drive"
-
 def upload_file(drive: "googleapiclient.discovery.Resource", fpath: str, name: str = None, folder_id: str = None) -> Dict[str, str]:
     """POST request a file to a Google Drive folder and return the response
 

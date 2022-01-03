@@ -2,8 +2,6 @@
 
 This module contains functions for interacting with Google Sheets
 """
-import json
-
 import pandas as pd
 from googleapiclient.discovery import build
 
