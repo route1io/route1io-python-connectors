@@ -4,12 +4,9 @@ This module contains functions for interacting with Google Sheets
 """
 import json
 
-import requests
 import pandas as pd
-from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-from ..utils import endpoints
 
 def upload_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resource",
                                filename: str, spreadsheet_id: str,
@@ -61,37 +58,6 @@ def connect_to_gsheets(credentials: "google.oauth2.credentials.Credentials"
     """
     gsheets_conn = build('sheets', 'v4', credentials=credentials)
     return gsheets_conn
-
-def get_gsheets_credentials(refresh_token: str, cid: str, csc: str
-                            ) -> "google.oath2.credentials.Credentials":
-    """Return a Credentials object containing the necessary credentials for
-    connecting to Google Sheets
-
-    Parameters
-    ----------
-    refresh_token : str
-        Valid refresh token for getting a new access token
-    cid : str
-        Client ID from GCP console
-    csc : str
-        Client secret from GCP console
-
-    Returns
-    -------
-    gsheets_credentials : google.oath2.credentials.Credentials
-        Valid access credentials for accessing Google Sheets API
-    """
-    data = {
-        "refresh_token": refresh_token,
-        "client_id": cid,
-        "client_secret": csc,
-        "grant_type": "refresh_token"
-    }
-    resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
-    access_token_data = json.loads(resp.text)
-    access_token = access_token_data["access_token"]
-    gsheets_credentials = Credentials(token=access_token)
-    return gsheets_credentials
 
 def clear_google_sheet(gsheets_conn: "googleapiclient.discovery.Resource",
                        spreadsheet_id: str, spreadsheet_name: str) -> None:
