@@ -14,6 +14,9 @@ DCM_REPORTING_AUTHENTICATION_ENDPOINT = ["https://www.googleapis.com/auth/dfarep
 # Search Ads 360
 GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT = "https://www.googleapis.com/doubleclicksearch/v2/reports"
 
+# Google Drive
+GOOGLE_DRIVE_AUTHENTICATION_ENDPOINT = "https://www.googleapis.com/auth/drive"
+
 # Apple
 OAUTH2_API_ENDPOINT = "https://appleid.apple.com/auth/oauth2/token"
 APPLE_CAMPAIGN_API_ENDPOINT = "https://api.searchads.apple.com/api/v4/reports/campaigns"
