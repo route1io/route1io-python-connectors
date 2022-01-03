@@ -14,6 +14,9 @@ DCM_REPORTING_AUTHENTICATION_ENDPOINT = ["https://www.googleapis.com/auth/dfarep
 # Search Ads 360
 GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT = "https://www.googleapis.com/doubleclicksearch/v2/reports"
 
+# Google Drive
+GOOGLE_DRIVE_AUTHENTICATION_ENDPOINT = "https://www.googleapis.com/auth/drive"
+
 # Apple
 OAUTH2_API_ENDPOINT = "https://appleid.apple.com/auth/oauth2/token"
 APPLE_CAMPAIGN_API_ENDPOINT = "https://api.searchads.apple.com/api/v4/reports/campaigns"
@@ -21,3 +24,7 @@ APPLE_CAMPAIGN_API_ENDPOINT = "https://api.searchads.apple.com/api/v4/reports/ca
 # TikTok
 ROOT_URL = "https://business-api.tiktok.com"
 TIKTOK_REPORTING_ENDPOINT = f"{ROOT_URL}/open_api/v1.2/reports/integrated/get"
+
+# LinkedIn
+AD_CAMPAIGNS_ENDPOINT = "https://api.linkedin.com/v2/adCampaignsV2"
+AD_ANALYTICS_ENDPOINT = "https://api.linkedin.com/v2/adAnalyticsV2"

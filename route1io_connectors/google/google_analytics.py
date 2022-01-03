@@ -2,48 +2,12 @@
 
 This module contains functions for interacting with Google Analytics reporting
 """
-import json
 from typing import List, Union, Dict, Tuple
 import itertools
 
-import requests
 import numpy as np
 import pandas as pd
-from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-
-from ..utils import endpoints
-
-def get_google_analytics_credentials(refresh_token: str, cid: str,
-                                 csc: str) -> "googleapiclient.discovery.Resource":
-    """Return a Credentials object containing the necessary credentials for
-    connecting to Google Analytics
-
-    Parameters
-    ----------
-    refresh_token : str
-        Valid refresh token for getting a new access token
-    cid : str
-        Client ID from GCP console
-    csc : str
-        Client secret from GCP console
-
-    Returns
-    -------
-    credentials : google.oath2.credentials.Credentials
-        Valid access credentials for accessing Google Analytics Reporting API
-    """
-    data = {
-        "refresh_token": refresh_token,
-        "client_id": cid,
-        "client_secret": csc,
-        "grant_type": "refresh_token"
-    }
-    resp = requests.post(endpoints.GOOGLE_TOKEN_ENDPOINT, data=data)
-    access_token_data = json.loads(resp.text)
-    access_token = access_token_data["access_token"]
-    credentials = Credentials(token=access_token)
-    return credentials
 
 def connect_to_google_analytics(credentials: "google.oauth2.credentials.Credentials"
                        ) -> "googleapiclient.discovery.Resource":
