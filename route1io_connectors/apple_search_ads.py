@@ -165,8 +165,6 @@ def refresh_access_token(client_id: str, client_secret: str) -> str:
         Valid client ID of the user requesting the data
     client_secret : str
         Valid client secret token
-    persist : Optional, bool
-        Dump to JSON file
 
     Returns
     -------
