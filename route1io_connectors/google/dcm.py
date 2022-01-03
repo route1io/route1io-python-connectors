@@ -10,17 +10,13 @@ from . import credentials
 # DCM API resource version
 DCM_API_RESOURCE_VERSION = "v3.4"
 
-def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
+def get_dcm_data(dcm: "googleapiclient.discovery.Resource", refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
     """Return filepath to downloaded DCM fpath
 
     Parameters
     ----------
-    refresh_token : str
-        Valid refresh token with DCM reporting access
-    cid : str
-        Client ID generated from Google Cloud Platform
-    csc : str
-        Client secret generated from Google Cloud Platform
+    dcm : googleapiclient.discovery.Resource
+        Authenticated instance of DCM connection
     profile_id : str
         Profile ID on DCM of the account that has access to the report
     report_id : str
@@ -33,8 +29,6 @@ def get_dcm_data(refresh_token: str, cid: str, csc: str, profile_id: str, report
     fpath : str
         Absolute filepath to the downloaded DCM report
     """
-    creds = credentials.get_google_credentials(refresh_token=refresh_token, cid=cid, csc=csc)
-    dcm = connect_to_dcm(credentials=creds)
     request_response = _request_report_run(
         dcm=dcm,
         profile_id=profile_id,
