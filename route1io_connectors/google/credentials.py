@@ -51,15 +51,34 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
     return creds
 
 def refresh_token_from_credentials(refresh_token: str,
-                                   client_id: str, client_secret: str) -> "google.oath2.credentials.Credentials":
+                                   client_id: str, client_secret: str,
+                                   scopes: List[str] = None) -> "google.oath2.credentials.Credentials":
+    """Return valid credentials refreshed from explicitly passed refresh token,
+    client ID, and client secret
+
+    Parameters
+    ----------
+    refresh_token : str
+        Valid refresh token
+    client_id : str
+        Client ID acquired from creating credentials in APIs & Services on GCP
+    client_secret : str
+        Client secret acquired from creating credentials in APIs & Services on GCP
+    scopes : List[str] = None
+        Optional scopes to pass. This has no bearing on the token refresh but it's
+        a good idea to explicitly set what scopes we have access to to keep track
+        of permissions.
+    """
     creds = Credentials(
         token=None,
         refresh_token=refresh_token,
         client_id=client_id,
         client_secret=client_secret,
-        token_uri=endpoints.GOOGLE_TOKEN_ENDPOINT
+        token_uri=endpoints.GOOGLE_TOKEN_ENDPOINT,
+        scopes=scopes
     )
     creds.refresh(Request())
+    return creds
 
 def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oath2.credentials.Credentials":
 
