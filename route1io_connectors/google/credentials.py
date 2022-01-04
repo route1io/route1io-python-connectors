@@ -74,7 +74,7 @@ def get_token_from_full_auth_flow(authorized_user_file: str,
     if creds is None or not creds.valid:
         expired_but_has_refresh_token = (creds is not None) and (creds.expired) and (creds.refresh_token)
         if expired_but_has_refresh_token:
-            creds.refresh(Request())
+            _refresh_credentials(creds=creds)
         else:
             creds = get_token_from_user_consent_screen(
                 client_secrets_file=client_secrets_file,
@@ -126,7 +126,7 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
     """
     creds = Credentials.from_authorized_user_file(filename=authorized_user_file)
     if creds.expired:
-        creds.refresh(Request())
+        _refresh_credentials(creds=creds)
     return creds
 
 def refresh_token_from_credentials(refresh_token: str,
@@ -161,7 +161,7 @@ def refresh_token_from_credentials(refresh_token: str,
         token_uri=endpoints.GOOGLE_TOKEN_ENDPOINT,
         scopes=scopes
     )
-    creds.refresh(Request())
+    _refresh_credentials(creds=creds)
     return creds
 
 def _save_credentials(creds: "google.oauth2.credentials.Credentials", fpath: str) -> None:
@@ -171,4 +171,4 @@ def _save_credentials(creds: "google.oauth2.credentials.Credentials", fpath: str
 
 def _refresh_credentials(creds: "google.oauth2.credentials.Credentials") -> None:
     """Return credentials object in place"""
-    creds.refresh(request=Request())
+    creds.refresh(Request())
