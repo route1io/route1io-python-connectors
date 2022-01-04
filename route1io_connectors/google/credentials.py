@@ -37,9 +37,10 @@ def get_token_from_user_consent_screen(client_secrets_file: str, scopes: List[st
     fpath : str = None
         If specified, dumps the token to this filepath as a JSON
 
-    Return
-    ------
+    Returns
+    -------
     creds : google.oath2.credentials.Credentials
+        Authenticated and authorized credentials for accessing Google API
     """
     flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file=client_secrets_file, scopes=scopes)
     creds = flow.run_local_server(port=port)
@@ -54,6 +55,11 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
     authorized_user_file : str
         Filepath to a file containing refresh token and various credentials
         acquired after user consented to scopes.
+
+    Returns
+    -------
+    creds : google.oath2.credentials.Credentials
+        Authenticated and authorized credentials for accessing Google API
     """
     creds = Credentials.from_authorized_user_file(filename=authorized_user_file)
     if creds.expired:
@@ -78,6 +84,11 @@ def refresh_token_from_credentials(refresh_token: str,
         Optional scopes to pass. This has no bearing on the token refresh but it's
         a good idea to explicitly set what scopes we have access to to keep track
         of permissions.
+
+    Returns
+    -------
+    creds : google.oath2.credentials.Credentials
+        Authenticated and authorized credentials for accessing Google API
     """
     creds = Credentials(
         token=None,
