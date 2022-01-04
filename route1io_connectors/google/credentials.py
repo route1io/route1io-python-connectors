@@ -2,6 +2,10 @@
 
 Helper functions for easily going through all steps of the OAuth flow process
 for accessing Google APIs.
+
+Google's example on credential access:
+    https://developers.google.com/docs/api/quickstart/python
+
 """
 
 import json
@@ -16,7 +20,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from ..utils import endpoints
 
 def get_token_from_client_secrets_file(client_secrets_file: str, scopes: List[str],
-                                       port: int = 0) -> "google.oath2.credentials.Credentials":
+                                       port: int = 0, fpath: str = None) -> "google.oath2.credentials.Credentials":
     """Return valid credentials after opening user consent screen authorizing
     the app to access scopes enabled for the app outlined in client secrets file.
 
@@ -29,6 +33,8 @@ def get_token_from_client_secrets_file(client_secrets_file: str, scopes: List[st
         Scopes of APIs that have been enabled on Google Cloud Platform
     port : int = 0
         Port to open user consent screen on
+    fpath : str = None
+        If specified, dumps the token to this filepath as a JSON
 
     Return
     ------
@@ -36,6 +42,9 @@ def get_token_from_client_secrets_file(client_secrets_file: str, scopes: List[st
     """
     flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file=client_secrets_file, scopes=scopes)
     creds = flow.run_local_server(port=port)
+    if fpath is not None:
+        with open(fpath, "w") as outjson:
+            json.dump(creds.to_json(), outjson)
     return creds
 
 def refresh_token_from_authorized_user_file(authorized_user_file: str):
@@ -79,3 +88,4 @@ def refresh_token_from_credentials(refresh_token: str,
     )
     creds.refresh(Request())
     return creds
+
