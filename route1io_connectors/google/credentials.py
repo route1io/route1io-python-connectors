@@ -4,6 +4,8 @@ Helper functions for easily going through all steps of the OAuth flow process
 for accessing Google APIs. All functions return authenticated and authorized
 credentials.
 
+References
+----------
 Google's example on credential access:
     https://developers.google.com/docs/api/quickstart/python
 To create credentials:
@@ -12,6 +14,20 @@ To enable APIs:
     https://console.cloud.google.com/apis/library
 Available OAuth 2.0 scope URL endpoints:
     https://developers.google.com/identity/protocols/oauth2/scopes
+
+Examples
+--------
+Generally the use case is for automating tasks that require accessing Google APIs
+such as Sheets or Drive. Developers should first create an app on Google Cloud Platform,
+enable relevant APIs, create OAuth 2.0 credentials, and then download those credentials
+to their local machine.
+
+Sample code for getting credentials for Google Drive API:
+
+SCOPES = ["https://www.googleapis.com/auth/drive"]
+CLIENT_SECRETS_FPATH = "/path/to/client/secrets.json"
+TOKEN_FPATH = "/path/to/save/token.json"
+creds = get_token_from_full_auth_flow(TOKEN_FPATH, CLIENT_SECRETS_FPATH, SCOPES)
 """
 
 import json
