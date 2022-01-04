@@ -39,7 +39,7 @@ def get_token_from_user_consent_screen(client_secrets_file: str, scopes: List[st
 
     Return
     ------
-    creds : "google.oath2.credentials.Credentials"
+    creds : google.oath2.credentials.Credentials
     """
     flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file=client_secrets_file, scopes=scopes)
     creds = flow.run_local_server(port=port)
@@ -111,6 +111,11 @@ def get_token_from_full_auth_flow(authorized_user_file: str,
         Enabled APIs that we want our app to have access to
     port : int
         Port to open user consent screen on
+
+    Returns
+    -------
+    creds : google.oath2.credentials.Credentials
+        Authenticated and authorized credentials for accessing Google API
     """
     creds = None
     if os.path.exists(authorized_user_file):
