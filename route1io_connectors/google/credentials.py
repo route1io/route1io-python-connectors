@@ -1,6 +1,6 @@
 """Google Credentials
 
-Helper functions for easily going through all steps of the OAuth flow process
+Lightweight helper functions for easily going through all steps of the OAuth flow process
 for accessing Google APIs. All functions return authenticated and authorized
 credentials.
 
