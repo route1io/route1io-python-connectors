@@ -1,11 +1,17 @@
 """Google Credentials
 
 Helper functions for easily going through all steps of the OAuth flow process
-for accessing Google APIs.
+for accessing Google APIs. All functions return authenticated and authorized
+credentials.
 
 Google's example on credential access:
     https://developers.google.com/docs/api/quickstart/python
-
+To create credentials:
+    https://console.cloud.google.com/apis/credentials
+To enable APIs:
+    https://console.cloud.google.com/apis/library
+Available OAuth 2.0 scope URL endpoints:
+    https://developers.google.com/identity/protocols/oauth2/scopes
 """
 
 import json
