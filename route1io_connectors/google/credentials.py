@@ -1,3 +1,9 @@
+"""Google Credentials
+
+Helper functions for easily going through all steps of the OAuth flow process
+for accessing Google APIs.
+"""
+
 import json
 from typing import List
 
