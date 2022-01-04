@@ -50,7 +50,19 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
         creds.refresh(Request())
     return creds
 
+def refresh_token_from_credentials(refresh_token: str,
+                                   client_id: str, client_secret: str) -> "google.oath2.credentials.Credentials":
+    creds = Credentials(
+        token=None,
+        refresh_token=refresh_token,
+        client_id=client_id,
+        client_secret=client_secret,
+        token_uri=endpoints.GOOGLE_TOKEN_ENDPOINT
+    )
+    creds.refresh(Request())
+
 def get_google_credentials(refresh_token: str, cid: str, csc: str) -> "google.oath2.credentials.Credentials":
+
     """Return a Credentials object containing refreshed access token
 
     Parameters
