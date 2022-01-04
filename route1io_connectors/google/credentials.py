@@ -42,7 +42,7 @@ from ..utils import endpoints
 
 def get_token_from_full_auth_flow(authorized_user_file: str,
                                   client_secrets_file: str, scopes: List[str],
-                                  port: int = 0) -> "google.oath2.credentials.Credentials":
+                                  port: int = 0) -> "google.oauth2.credentials.Credentials":
     """Return authorized and authenticated credentials for accessing Google APIs.
     If refresh token hasn't yet been generated or is invalid, this function will
     open a user consent screen and then save the credentials that are returned.
@@ -64,7 +64,7 @@ def get_token_from_full_auth_flow(authorized_user_file: str,
 
     Returns
     -------
-    creds : google.oath2.credentials.Credentials
+    creds : google.oauth2.credentials.Credentials
         Authenticated and authorized credentials for accessing Google API
     """
     creds = None
@@ -85,7 +85,7 @@ def get_token_from_full_auth_flow(authorized_user_file: str,
     return creds
 
 def get_token_from_user_consent_screen(client_secrets_file: str, scopes: List[str],
-                                       port: int = 0, fpath: str = None) -> "google.oath2.credentials.Credentials":
+                                       port: int = 0, fpath: str = None) -> "google.oauth2.credentials.Credentials":
     """Return valid credentials after opening user consent screen authorizing
     the app to access scopes enabled for the app outlined in client secrets file.
 
@@ -103,14 +103,13 @@ def get_token_from_user_consent_screen(client_secrets_file: str, scopes: List[st
 
     Returns
     -------
-    creds : google.oath2.credentials.Credentials
+    creds : google.oauth2.credentials.Credentials
         Authenticated and authorized credentials for accessing Google API
     """
     flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file=client_secrets_file, scopes=scopes)
     creds = flow.run_local_server(port=port)
     if fpath is not None:
-        with open(fpath, "w") as outjson:
-            json.dump(creds.to_json(), outjson)
+        _save_credentials(creds=creds, fpath=fpath)
     return creds
 
 def refresh_token_from_authorized_user_file(authorized_user_file: str):
@@ -122,7 +121,7 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
 
     Returns
     -------
-    creds : google.oath2.credentials.Credentials
+    creds : google.oauth2.credentials.Credentials
         Authenticated and authorized credentials for accessing Google API
     """
     creds = Credentials.from_authorized_user_file(filename=authorized_user_file)
@@ -132,7 +131,7 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
 
 def refresh_token_from_credentials(refresh_token: str,
                                    client_id: str, client_secret: str,
-                                   scopes: List[str] = None) -> "google.oath2.credentials.Credentials":
+                                   scopes: List[str] = None) -> "google.oauth2.credentials.Credentials":
     """Return valid credentials refreshed from explicitly passed refresh token,
     client ID, and client secret
 
@@ -151,7 +150,7 @@ def refresh_token_from_credentials(refresh_token: str,
 
     Returns
     -------
-    creds : google.oath2.credentials.Credentials
+    creds : google.oauth2.credentials.Credentials
         Authenticated and authorized credentials for accessing Google API
     """
     creds = Credentials(
@@ -165,3 +164,7 @@ def refresh_token_from_credentials(refresh_token: str,
     creds.refresh(Request())
     return creds
 
+def _save_credentials(creds: "google.oauth2.credentials.Credentials", fpath: str) -> None:
+    """Save credentials to JSON file at fpath"""
+    with open(fpath, "w") as outjson:
+            json.dump(creds.to_json(), outjson)
