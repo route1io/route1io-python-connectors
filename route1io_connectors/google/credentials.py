@@ -19,7 +19,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 from ..utils import endpoints
 
-def get_token_from_client_secrets_file(client_secrets_file: str, scopes: List[str],
+def get_token_from_user_consent_screen(client_secrets_file: str, scopes: List[str],
                                        port: int = 0, fpath: str = None) -> "google.oath2.credentials.Credentials":
     """Return valid credentials after opening user consent screen authorizing
     the app to access scopes enabled for the app outlined in client secrets file.
@@ -54,7 +54,7 @@ def refresh_token_from_authorized_user_file(authorized_user_file: str):
         Filepath to a file containing refresh token and various credentials
         acquired after user consented to scopes.
     """
-    creds = Credentials.from_authorized_user_file('token.json')
+    creds = Credentials.from_authorized_user_file(filename=authorized_user_file)
     if creds.expired:
         creds.refresh(Request())
     return creds
@@ -88,4 +88,3 @@ def refresh_token_from_credentials(refresh_token: str,
     )
     creds.refresh(Request())
     return creds
-
