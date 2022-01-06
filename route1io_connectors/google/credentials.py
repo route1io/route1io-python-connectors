@@ -167,7 +167,7 @@ def refresh_token_from_credentials(refresh_token: str,
 def _save_credentials(creds: "google.oauth2.credentials.Credentials", fpath: str) -> None:
     """Save credentials to JSON file at fpath"""
     with open(fpath, "w") as outjson:
-            json.dump(creds.to_json(), outjson)
+            outjson.write(creds.to_json())
 
 def _refresh_credentials(creds: "google.oauth2.credentials.Credentials") -> None:
     """Return credentials object in place"""
