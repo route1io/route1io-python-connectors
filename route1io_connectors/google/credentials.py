@@ -30,7 +30,6 @@ TOKEN_FPATH = "/path/to/save/token.json"
 creds = get_token_from_full_auth_flow(TOKEN_FPATH, CLIENT_SECRETS_FPATH, SCOPES)
 """
 
-import json
 from typing import List
 import os
 
