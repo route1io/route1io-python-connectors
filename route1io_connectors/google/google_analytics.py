@@ -2,7 +2,6 @@
 
 This module contains functions for interacting with Google Analytics reporting
 """
-from types import NoneType
 from typing import List, Union, Dict, Tuple
 import itertools
 
