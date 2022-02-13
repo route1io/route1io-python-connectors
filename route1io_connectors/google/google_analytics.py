@@ -56,16 +56,31 @@ def get_google_analytics_data(
     -------
     df : pd.DataFrame
     """
-    resp = _request_google_analytics_data(
-        analytics=analytics,
-        view_id=view_id,
-        dimensions=dimensions,
-        metrics=metrics,
-        start_date=start_date,
-        end_date=end_date
-    )
-    df = _process_raw_google_analytics_data(resp=resp)
+    resp_df_arr = []
+    next_page_token = None
+    while True:
+        resp = _request_google_analytics_data(
+            analytics=analytics,
+            view_id=view_id,
+            dimensions=dimensions,
+            metrics=metrics,
+            start_date=start_date,
+            end_date=end_date,
+            next_page_token=next_page_token
+        )
+        resp_df = _process_raw_google_analytics_data(resp=resp)
+        resp_df_arr.append(resp_df)
+
+        next_page_token = _get_next_page_token(resp=resp)
+        if next_page_token is None:
+            break
+
+    df = pd.concat(resp_df_arr)
     return df
+
+def _get_next_page_token(resp: Dict[str, str]) -> Union[str, None]:
+    """Return Boolean indicating if paginated data exists"""
+    return resp["reports"][0].get("nextPageToken")
 
 def _request_google_analytics_data(
         analytics,
@@ -73,7 +88,8 @@ def _request_google_analytics_data(
         dimensions: List[str] = None,
         metrics: List[str] = None,
         start_date: str = "7daysAgo",
-        end_date: str = "today"
+        end_date: str = "today",
+        next_page_token = Union[str, None]
     ) -> Dict[str, Union[str, List, Dict, bool]]:
     """Returns response from reporting request to the Google Analytics Reporting API
     built from arguments
@@ -103,7 +119,8 @@ def _request_google_analytics_data(
             dimensions=dimensions,
             metrics=metrics,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            next_page_token=next_page_token
         )}
     ).execute()
 
@@ -177,7 +194,8 @@ def _process_report_requests(
         dimensions: Union[List[str], None],
         metrics: Union[List[str], None],
         start_date: str,
-        end_date: str
+        end_date: str,
+        next_page_token: Union[str, None]
     ):
     """Return a dictionary containing formatted data request to Google Analytics
     API"""
@@ -186,6 +204,8 @@ def _process_report_requests(
         "dateRanges": [{"startDate": start_date, "endDate": end_date}],
         "pageSize": 100_000
     }
+    if next_page_token is not None:
+        report_requests["pageToken"] = next_page_token
     if dimensions is not None:
         report_requests['dimensions'] = _process_dimensions(dimensions)
     if metrics is not None:
