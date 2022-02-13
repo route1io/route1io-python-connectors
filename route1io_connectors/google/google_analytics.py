@@ -57,7 +57,6 @@ def get_google_analytics_data(
     df : pd.DataFrame
     """
     resp_df_arr = []
-    next_page_token = None
     while True:
         resp = _request_google_analytics_data(
             analytics=analytics,
@@ -71,15 +70,16 @@ def get_google_analytics_data(
         resp_df = _process_raw_google_analytics_data(resp=resp)
         resp_df_arr.append(resp_df)
 
-        if not _has_next_page(resp=resp):
+        next_page_token = _get_next_page_token(resp=resp)
+        if next_page_token is None:
             break
 
     df = pd.concat(resp_df_arr)
     return df
 
-def _has_next_page(resp: Dict[str, str]) -> bool:
+def _get_next_page_token(resp: Dict[str, str]) -> Union[str, None]:
     """Return Boolean indicating if paginated data exists"""
-    return "nextPageToken" in resp["reports"][0]['data']
+    return resp["reports"][0]['data'].get("nextPageToken")
 
 def _request_google_analytics_data(
         analytics,
