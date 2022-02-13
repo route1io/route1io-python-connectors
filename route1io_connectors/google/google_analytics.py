@@ -80,7 +80,7 @@ def get_google_analytics_data(
 
 def _get_next_page_token(resp: Dict[str, str]) -> Union[str, None]:
     """Return Boolean indicating if paginated data exists"""
-    return resp["reports"][0]['data'].get("nextPageToken")
+    return resp["reports"][0].get("nextPageToken")
 
 def _request_google_analytics_data(
         analytics,
