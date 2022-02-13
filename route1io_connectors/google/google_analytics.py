@@ -184,6 +184,7 @@ def _process_report_requests(
     report_requests = {
         "viewId": f"ga:{view_id}",
         "dateRanges": [{"startDate": start_date, "endDate": end_date}],
+        "pageSize": 100_000
     }
     if dimensions is not None:
         report_requests['dimensions'] = _process_dimensions(dimensions)
