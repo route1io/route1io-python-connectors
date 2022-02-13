@@ -57,6 +57,7 @@ def get_google_analytics_data(
     df : pd.DataFrame
     """
     resp_df_arr = []
+    next_page_token = None
     while True:
         resp = _request_google_analytics_data(
             analytics=analytics,
