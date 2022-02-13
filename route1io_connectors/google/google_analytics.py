@@ -56,16 +56,29 @@ def get_google_analytics_data(
     -------
     df : pd.DataFrame
     """
-    resp = _request_google_analytics_data(
-        analytics=analytics,
-        view_id=view_id,
-        dimensions=dimensions,
-        metrics=metrics,
-        start_date=start_date,
-        end_date=end_date
-    )
-    df = _process_raw_google_analytics_data(resp=resp)
+    resp_df_arr = []
+    next_page_token = None
+    while True:
+        resp = _request_google_analytics_data(
+            analytics=analytics,
+            view_id=view_id,
+            dimensions=dimensions,
+            metrics=metrics,
+            start_date=start_date,
+            end_date=end_date
+        )
+        resp_df = _process_raw_google_analytics_data(resp=resp)
+        resp_df_arr.append(resp_df)
+
+        if not _has_next_page():
+            break
+
+    df = pd.concat(resp_df_arr)
     return df
+
+def _has_next_page(resp: Dict[str, str]) -> bool:
+    """Return Boolean indicating if paginated data exists"""
+    return "nextPageToken" in resp["reports"][0]['data']
 
 def _request_google_analytics_data(
         analytics,
