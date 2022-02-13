@@ -22,6 +22,9 @@ At [route1.io](http://route1.io/index.html) we've written high level, easy-to-us
 Below is a list of API's currently supported by our custom connectors
 * [AWS' S3](route1io_connectors/aws.py)
 * [Google Sheets](route1io_connectors/gsheets.py)
+* [Google Analytics](route1io_connectors/google_analytics.py)
+* [Google Ads](route1io_connectors/googleads.py)
+* [DoubleClick Manager](route1io_connectors/dcm.py)
 * [Search Ads 360](route1io_connectors/sa360.py)
 * [Slack](route1io_connectors/slack.py)
 * [Facebook](route1io_connectors/facebook.py)
