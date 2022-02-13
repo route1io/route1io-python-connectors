@@ -71,7 +71,7 @@ def get_google_analytics_data(
         resp_df = _process_raw_google_analytics_data(resp=resp)
         resp_df_arr.append(resp_df)
 
-        if not _has_next_page():
+        if not _has_next_page(resp=resp):
             break
 
     df = pd.concat(resp_df_arr)
