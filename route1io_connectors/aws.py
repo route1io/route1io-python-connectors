@@ -117,7 +117,12 @@ def _create_filename_key_map(filename: FilenameVar,
     local filename"""
     filename = _coerce_input_to_tuple(filename)
     key = _coerce_input_to_tuple(key)
-
+    _filenames_and_keys_are_valid_inputs(
+        filename=filename,
+        key=key,
+        filename_required=filename_required,
+        key_required=key_required
+    )
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
