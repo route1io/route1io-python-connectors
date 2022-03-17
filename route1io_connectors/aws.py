@@ -115,8 +115,8 @@ def _create_filename_key_map(filename: FilenameVar,
                              key_required: bool = False) -> Dict[str, str]:
     """Return a dictionary of string pairs mapping key as it appears on AWS to
     local filename"""
-    filename = _coerce_input_to_tuple(filename)
-    key = _coerce_input_to_tuple(key)
+    filename = _coerce_input_to_list(filename)
+    key = _coerce_input_to_list(key)
     _filenames_and_keys_are_valid_inputs(
         filename=filename,
         key=key,
@@ -124,24 +124,25 @@ def _create_filename_key_map(filename: FilenameVar,
         key_required=key_required
     )
     if filename_required:
-        keys = _validate_keys(filename, key)
+        keys = (filename, key)
     if key_required:
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
                                          filename_required: bool = False,
-                                         key_required: bool = False) -> bool:
-    """Return bool after validating user passed valid filenames and/or keys."""
+                                         key_required: bool = False):
+    """Validation checks on user input"""
+    _validate_lengths(filename, key)
     _validate_input(filename, filename_required, "Filename")
     _validate_input(key, key_required, "Key")
 
 def _validate_lengths(filename: Tuple[str], key: Tuple[str]) -> None:
-    """If lengths of both are greater than zero but do not match then raise error"""
+    """If lengths of both are greater than zero but do not match raise ValueError"""
     filename_num = len(filename)
     key_num = len(key)
     if filename_num > 0 and key_num > 0:
         if filename_num != key_num:
-            pass
+            raise("filename and key cannot both be greater than zero and unequal length as this means the keys won't map together properly")
 
 def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
@@ -153,11 +154,12 @@ def _sequence_contains_none(seq: Tuple[str]) -> bool:
     """Return True if None in sequence else False"""
     return any([val is None for val in seq])
 
-def _coerce_input_to_tuple(seq: FilenameVar) -> Tuple[str]:
+def _coerce_input_to_list(seq: FilenameVar) -> Tuple[str]:
     """Return tuple of values from string or sequence as argument provided by user"""
     if isinstance(seq, str):
-        seq = (seq)
-    if seq is None:
-        seq = ()
-    seq = tuple(seq)
+        seq = [seq]
+    elif seq is None:
+        seq = []
+    else:
+        seq = list(seq)
     return seq
