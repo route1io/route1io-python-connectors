@@ -102,7 +102,8 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[st
         Remote filename to download from the bucket
     """
     filename_to_key_map = _create_filename_key_map(filename, key, key_required=True)
-    for s3_key, local_fname in filename_to_key_map:
+    print(filename_to_key_map)
+    for s3_key, local_fname in filename_to_key_map.items():
         s3.download_file(
             Bucket=bucket,
             Key=s3_key,
