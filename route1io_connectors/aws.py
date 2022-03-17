@@ -65,7 +65,7 @@ def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     )
     return s3
 
-def upload_to_s3(s3, filename: Union[str, Sequence[str]], bucket: str,
+def upload_to_s3(s3, bucket: str, filename: Union[str, Sequence[str]],
                  key: Union[str, Sequence[str]] = None) -> None:
     """Uploads a file to AWS s3 bucket
 
