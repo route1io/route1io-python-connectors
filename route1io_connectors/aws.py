@@ -8,6 +8,8 @@ from pathlib import Path
 
 import boto3
 
+FilenameVar = Union[str, Sequence[Union[str, None]]]
+
 def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
     """Return the key name as it appears in s3 bucket of the most recently modified
     file in bucket
@@ -78,12 +80,6 @@ def upload_to_s3(s3, filename: Union[str, Sequence[str]], bucket: str,
     key : str (optional)
         Remote filename to upload file as
     """
-    if isinstance(filename, str):
-        filename = [filename]
-    filename_list = list(filename)
-    if key is None:
-        key = Path(filename).name
-
 
     s3.upload_file(
         Filename=filename,
@@ -113,8 +109,22 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
     )
     return filename
 
-def _create_filename_key_map(filename: Union[str, Sequence[str]],
-                             key: Union[str, Sequence[str]]) -> Dict[str, str]:
+def _create_filename_key_map(filename: FilenameVar,
+                             key: FilenameVar) -> Dict[str, str]:
     """Return a dictionary of string pairs mapping key as it appears on AWS to
     local filename"""
     pass
+
+def _filenames_and_keys_are_valid_inputs(filename: FilenameVar,
+                                         key: FilenameVar,
+                                         filename_required: bool,
+                                         key_required: bool) -> bool:
+    """Return bool after validating user passed valid filenames and/or keys."""
+    if isinstance(filename, str):
+
+
+def _contains_none(seq: FilenameVar) -> bool:
+    """Return True if None in sequence else False"""
+    return any([val is None for val in seq])
+
+def _coerce_string_to_list(seq: FilenameVar)
