@@ -2,6 +2,8 @@
 
 This module contains convenience functionality for working with AWS.
 """
+from typing import Union, Sequence, Dict
+
 from pathlib import Path
 
 import boto3
@@ -61,7 +63,8 @@ def connect_to_s3(aws_access_key_id: str, aws_secret_access_key: str, region_nam
     )
     return s3
 
-def upload_to_s3(s3, filename: str, bucket: str, key: str = None) -> None:
+def upload_to_s3(s3, filename: Union[str, Sequence[str]], bucket: str,
+                 key: Union[str, Sequence[str]] = None) -> None:
     """Uploads a file to AWS s3 bucket
 
     Parameters
@@ -75,8 +78,13 @@ def upload_to_s3(s3, filename: str, bucket: str, key: str = None) -> None:
     key : str (optional)
         Remote filename to upload file as
     """
+    if isinstance(filename, str):
+        filename = [filename]
+    filename_list = list(filename)
     if key is None:
         key = Path(filename).name
+
+
     s3.upload_file(
         Filename=filename,
         Bucket=bucket,
@@ -104,3 +112,9 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
         Filename=filename
     )
     return filename
+
+def _create_filename_key_map(filename: Union[str, Sequence[str]],
+                             key: Union[str, Sequence[str]]) -> Dict[str, str]:
+    """Return a dictionary of string pairs mapping key as it appears on AWS to
+    local filename"""
+    pass
