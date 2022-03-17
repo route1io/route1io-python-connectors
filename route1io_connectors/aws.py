@@ -80,14 +80,15 @@ def upload_to_s3(s3, filename: Union[str, Sequence[str]], bucket: str,
     key : str (optional)
         Remote filename to upload file as
     """
+    filename_to_key_map = _create_filename_key_map(filename, key, filename_required=True)
+    for s3_key, local_fname in filename_to_key_map.items():
+        s3.upload_file(
+            Filename=local_fname,
+            Bucket=bucket,
+            Key=s3_key
+        )
 
-    s3.upload_file(
-        Filename=filename,
-        Bucket=bucket,
-        Key=key
-    )
-
-def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
+def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[str]:
     """
     Download file via AWS s3 bucket and return the fpath to the local file
 
@@ -100,14 +101,14 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
     key : str
         Remote filename to download from the bucket
     """
-    if filename is None:
-        filename = key
-    s3.download_file(
-        Bucket=bucket,
-        Key=key,
-        Filename=filename
-    )
-    return filename
+    filename_to_key_map = _create_filename_key_map(filename, key, key_required=True)
+    for s3_key, local_fname in filename_to_key_map:
+        s3.download_file(
+            Bucket=bucket,
+            Key=s3_key,
+            Filename=local_fname
+        )
+    return list(filename_to_key_map.values())
 
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
@@ -137,13 +138,17 @@ def _fill_values(full_seq, missing_seq) -> List[str]:
     else:
         new_missing_seq = []
         for full_value, missing_value in zip(full_seq, missing_seq):
-            value = full_value if missing_value is _bad_seq_value(missing_value) else missing_value
+            # If value is "" or None then use good value from assumed full seq
+            if _bad_seq_value(missing_value):
+                value = full_value
+            else:
+                value = missing_value
             new_missing_seq.append(value)
     return(new_missing_seq)
 
 def _bad_seq_value(val: Union[str, None]) -> bool:
     """Returns True if string or None"""
-    return isinstance(val, str) or val is None
+    return val == "" or val is None
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
