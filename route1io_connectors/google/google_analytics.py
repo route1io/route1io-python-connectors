@@ -74,7 +74,7 @@ def get_google_analytics_data(
         next_page_token = _get_next_page_token(resp=resp)
         if next_page_token is None:
             break
-
+        
     df = pd.concat(resp_df_arr)
     return df
 
