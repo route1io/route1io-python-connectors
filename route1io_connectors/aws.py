@@ -123,6 +123,9 @@ def _create_filename_key_map(filename: FilenameVar,
         filename_required=filename_required,
         key_required=key_required
     )
+    if filename_required:
+        keys = _validate_keys(filename, key)
+    if key_required:
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
@@ -131,6 +134,14 @@ def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
     """Return bool after validating user passed valid filenames and/or keys."""
     _validate_input(filename, filename_required, "Filename")
     _validate_input(key, key_required, "Key")
+
+def _validate_lengths(filename: Tuple[str], key: Tuple[str]) -> None:
+    """If lengths of both are greater than zero but do not match then raise error"""
+    filename_num = len(filename)
+    key_num = len(key)
+    if filename_num > 0 and key_num > 0:
+        if filename_num != key_num:
+            pass
 
 def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
@@ -146,5 +157,7 @@ def _coerce_input_to_tuple(seq: FilenameVar) -> Tuple[str]:
     """Return tuple of values from string or sequence as argument provided by user"""
     if isinstance(seq, str):
         seq = (seq)
+    if seq is None:
+        seq = ()
     seq = tuple(seq)
     return seq
