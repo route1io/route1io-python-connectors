@@ -123,9 +123,9 @@ def _create_filename_key_map(filename: FilenameVar,
         filename_required=filename_required,
         key_required=key_required
     )
-    if filename_required:
-        keys = (filename, key)
-    if key_required:
+
+def _fill_values(full_seq, missin_seq) -> Tuple[str]:
+    """Fill missing values with names created from the good sequence"""
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
@@ -146,9 +146,10 @@ def _validate_lengths(filename: Tuple[str], key: Tuple[str]) -> None:
 
 def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
+    seq_is_zero = len(seq) == 0
     contains_none = _sequence_contains_none(seq)
-    if required and contains_none:
-        raise(ValueError(f"{name} cannot contain missing values!"))
+    if required and contains_none or required and seq_is_zero:
+        raise(ValueError(f"{name} cannot be missing or contain NoneType values!"))
 
 def _sequence_contains_none(seq: Tuple[str]) -> bool:
     """Return True if None in sequence else False"""
