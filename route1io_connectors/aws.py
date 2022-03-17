@@ -2,7 +2,7 @@
 
 This module contains convenience functionality for working with AWS.
 """
-from typing import Union, Sequence, Dict
+from typing import Union, Sequence, Dict, Tuple
 
 from pathlib import Path
 
@@ -117,14 +117,29 @@ def _create_filename_key_map(filename: FilenameVar,
 
 def _filenames_and_keys_are_valid_inputs(filename: FilenameVar,
                                          key: FilenameVar,
-                                         filename_required: bool,
-                                         key_required: bool) -> bool:
+                                         filename_required: bool = False,
+                                         key_required: bool = False) -> bool:
     """Return bool after validating user passed valid filenames and/or keys."""
-    if isinstance(filename, str):
+    filename = _coerce_input_to_tuple(filename)
+    filename_contains_none = _contains_none(filename)
+    if filename_required and filename_contains_none:
+        raise(ValueError("Filename cannot contain missing values!"))
 
+    key = _coerce_input_to_tuple(key)
+    key_contains_none = _contains_none(key)
+    if key_required and key_contains_none:
+        raise(ValueError("Key cannot contain missing values!"))
+
+def _validate_input(seq: FilenameVar, required: bool, name: str) -> None:
+    """Validate input is correct otherwise raise ValueError"""
 
 def _contains_none(seq: FilenameVar) -> bool:
     """Return True if None in sequence else False"""
     return any([val is None for val in seq])
 
-def _coerce_string_to_list(seq: FilenameVar)
+def _coerce_input_to_tuple(seq: FilenameVar) -> Tuple[str]:
+    """Return tuple of values from string or sequence as argument provided by user"""
+    if isinstance(seq, str):
+        seq = (seq)
+    seq = tuple(seq)
+    return seq
