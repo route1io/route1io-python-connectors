@@ -110,27 +110,29 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> str:
     return filename
 
 def _create_filename_key_map(filename: FilenameVar,
-                             key: FilenameVar) -> Dict[str, str]:
+                             key: FilenameVar,
+                             filename_required: bool = False,
+                             key_required: bool = False) -> Dict[str, str]:
     """Return a dictionary of string pairs mapping key as it appears on AWS to
     local filename"""
-    pass
+    filename = _coerce_input_to_tuple(filename)
+    key = _coerce_input_to_tuple(key)
 
-def _filenames_and_keys_are_valid_inputs(filename: FilenameVar,
-                                         key: FilenameVar,
+def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
+                                         key: Tuple[str],
                                          filename_required: bool = False,
                                          key_required: bool = False) -> bool:
     """Return bool after validating user passed valid filenames and/or keys."""
     _validate_input(filename, filename_required, "Filename")
     _validate_input(key, key_required, "Key")
 
-def _validate_input(seq: FilenameVar, required: bool, name: str) -> None:
+def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
-    seq = _coerce_input_to_tuple(seq)
-    contains_none = _contains_none(contains_none)
+    contains_none = _contains_none(seq)
     if required and contains_none:
         raise(ValueError(f"{name} cannot contain missing values!"))
 
-def _contains_none(seq: FilenameVar) -> bool:
+def _contains_none(seq: Tuple[str]) -> bool:
     """Return True if None in sequence else False"""
     return any([val is None for val in seq])
 
