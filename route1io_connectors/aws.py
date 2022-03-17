@@ -127,9 +127,10 @@ def _create_filename_key_map(filename: FilenameVar,
         key = _fill_values(filename, key)
     elif key_required:
         filename = _fill_values(key, filename)
+    return {key_val: filename_val for key_val, filename_val in zip(key, filename)}
 
 def _fill_values(full_seq, missing_seq) -> List[str]:
-    """Fill missing values with names created from the good sequence"""
+    """Fill missing values with names created from the full sequence"""
     missing_seq_is_empty = len(missing_seq) == 0
     if missing_seq_is_empty:
         new_missing_seq = [Path(fpath).name for fpath in full_seq]
@@ -137,7 +138,7 @@ def _fill_values(full_seq, missing_seq) -> List[str]:
         new_missing_seq = []
         for full_value, missing_value in zip(full_seq, missing_seq):
             value = full_value if missing_value is _bad_seq_value(missing_value) else missing_value
-            new_missing_seq(value)
+            new_missing_seq.append(value)
     return(new_missing_seq)
 
 def _bad_seq_value(val: Union[str, None]) -> bool:
@@ -159,7 +160,7 @@ def _validate_lengths(filename: Tuple[str], key: Tuple[str]) -> None:
     key_num = len(key)
     if filename_num > 0 and key_num > 0:
         if filename_num != key_num:
-            raise("filename and key cannot both be greater than zero and unequal length as this means the keys won't map together properly")
+            raise ValueError("Filename and key cannot both be greater than zero and unequal length as this means the keys won't map together properly")
 
 def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
