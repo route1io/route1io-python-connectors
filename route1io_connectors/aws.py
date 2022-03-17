@@ -2,7 +2,7 @@
 
 This module contains convenience functionality for working with AWS.
 """
-from typing import Union, Sequence, Dict, Tuple
+from typing import Union, Sequence, Dict, Tuple, List
 
 from pathlib import Path
 
@@ -123,9 +123,26 @@ def _create_filename_key_map(filename: FilenameVar,
         filename_required=filename_required,
         key_required=key_required
     )
+    if filename_required:
+        key = _fill_values(filename, key)
+    elif key_required:
+        filename = _fill_values(key, filename)
 
-def _fill_values(full_seq, missin_seq) -> Tuple[str]:
+def _fill_values(full_seq, missing_seq) -> List[str]:
     """Fill missing values with names created from the good sequence"""
+    missing_seq_is_empty = len(missing_seq) == 0
+    if missing_seq_is_empty:
+        new_missing_seq = [Path(fpath).name for fpath in full_seq]
+    else:
+        new_missing_seq = []
+        for full_value, missing_value in zip(full_seq, missing_seq):
+            value = full_value if missing_value is _bad_seq_value(missing_value) else missing_value
+            new_missing_seq(value)
+    return(new_missing_seq)
+
+def _bad_seq_value(val: Union[str, None]) -> bool:
+    """Returns True if string or None"""
+    return isinstance(val, str) or val is None
 
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
