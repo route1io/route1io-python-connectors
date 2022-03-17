@@ -120,18 +120,15 @@ def _filenames_and_keys_are_valid_inputs(filename: FilenameVar,
                                          filename_required: bool = False,
                                          key_required: bool = False) -> bool:
     """Return bool after validating user passed valid filenames and/or keys."""
-    filename = _coerce_input_to_tuple(filename)
-    filename_contains_none = _contains_none(filename)
-    if filename_required and filename_contains_none:
-        raise(ValueError("Filename cannot contain missing values!"))
-
-    key = _coerce_input_to_tuple(key)
-    key_contains_none = _contains_none(key)
-    if key_required and key_contains_none:
-        raise(ValueError("Key cannot contain missing values!"))
+    _validate_input(filename, filename_required, "Filename")
+    _validate_input(key, key_required, "Key")
 
 def _validate_input(seq: FilenameVar, required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
+    seq = _coerce_input_to_tuple(seq)
+    contains_none = _contains_none(contains_none)
+    if required and contains_none:
+        raise(ValueError(f"{name} cannot contain missing values!"))
 
 def _contains_none(seq: FilenameVar) -> bool:
     """Return True if None in sequence else False"""
