@@ -118,6 +118,7 @@ def _create_filename_key_map(filename: FilenameVar,
     filename = _coerce_input_to_tuple(filename)
     key = _coerce_input_to_tuple(key)
 
+
 def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
                                          key: Tuple[str],
                                          filename_required: bool = False,
@@ -128,11 +129,11 @@ def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
 
 def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     """Validate input is correct otherwise raise ValueError"""
-    contains_none = _contains_none(seq)
+    contains_none = _sequence_contains_none(seq)
     if required and contains_none:
         raise(ValueError(f"{name} cannot contain missing values!"))
 
-def _contains_none(seq: Tuple[str]) -> bool:
+def _sequence_contains_none(seq: Tuple[str]) -> bool:
     """Return True if None in sequence else False"""
     return any([val is None for val in seq])
 
