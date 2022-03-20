@@ -1,3 +1,13 @@
+"""LinkedIn
+
+Connectors for pulling LinkedIn data
+
+References
+----------
+LinkedIn Marketing APIs
+    https://developer.linkedin.com/product-catalog/marketing
+"""
+
 import json
 from typing import Dict, List
 

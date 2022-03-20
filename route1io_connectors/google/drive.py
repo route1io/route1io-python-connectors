@@ -2,9 +2,14 @@
 
 This module contains functions for interacting with Google Drive
 
-https://developers.google.com/drive/api/v3/manage-uploads
-https://developers.google.com/drive/api/v3/folder
-https://developers.google.com/drive/api/v3/reference/files/create
+References
+----------
+Upload file data
+    https://developers.google.com/drive/api/v3/manage-uploads
+Create and populate folders
+    https://developers.google.com/drive/api/v3/folder
+Files: create
+    https://developers.google.com/drive/api/v3/reference/files/create
 """
 from typing import Dict
 from pathlib import Path
@@ -25,6 +30,11 @@ def upload_file(drive: "googleapiclient.discovery.Resource", fpath: str, name: s
         Name of the file as it will appear in Drive
     folder_id : str
         ID of the folder to upload to
+
+    Returns
+    -------
+    response : Dict[str, str]
+        Response from Google after POST requesting file
     """
     file_metadata = {
         "name": name if name is not None else Path(fpath).name,

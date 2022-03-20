@@ -1,6 +1,13 @@
-"""Apple Search Ads connectors
+"""Apple Search Ads
 
 This module contains code for accessing data from Apple Search Ads.
+
+References
+----------
+Apple Search Ads documentation
+    https://developer.apple.com/documentation/apple_search_ads
+Implementing OAuth for the Apple Search Ads API
+    https://developer.apple.com/documentation/apple_search_ads/implementing_oauth_for_the_apple_search_ads_api
 """
 
 # pylint: disable=invalid-name
@@ -273,7 +280,7 @@ def _process_campaign(campaign: dict) -> "pd.DataFrame":
     )
     return campaign_df
 
-def _process_result(result: dict) -> Dict[str, str]:
+def _process_result(result: Dict[str, str]) -> Dict[str, str]:
     """Return dictionary of parsed data from raw API response"""
     return {
         "impressions": result["impressions"],
