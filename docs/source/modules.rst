@@ -1,5 +1,5 @@
-route1io-python-connectors
-==========================
+route1io_connectors
+===================
 
 .. toctree::
    :maxdepth: 4

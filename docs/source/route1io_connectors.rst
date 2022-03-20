@@ -1,41 +1,26 @@
 route1io\_connectors package
 ============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    route1io_connectors.google
+    route1io_connectors.utils
+
 Submodules
 ----------
 
-route1io\_connectors.aws module
--------------------------------
+.. toctree::
 
-.. automodule:: route1io_connectors.aws
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.gsheets module
------------------------------------
-
-.. automodule:: route1io_connectors.gsheets
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.sa360 module
----------------------------------
-
-.. automodule:: route1io_connectors.sa360
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.slack module
----------------------------------
-
-.. automodule:: route1io_connectors.slack
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   route1io_connectors.apple_search_ads
+   route1io_connectors.aws
+   route1io_connectors.facebook
+   route1io_connectors.linkedin
+   route1io_connectors.onedrive
+   route1io_connectors.slack
+   route1io_connectors.tiktok
 
 Module contents
 ---------------

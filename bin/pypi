@@ -1,12 +1,16 @@
 #!/usr/bin/bash
 # Author: Chris Greening
-# Date: 07/29/2021
-# Purpose: Upload the package to PyPI
+# Date: 2021-07-29
+# Purpose: Upload the package to PyPI and update documentation
 
 # Update documentation
-
+cd docs
+sphinx-apidoc -of source/ ../route1io_connectors/ --separate
+make clean
+make html
 
 # Update package to PyPI
+cd ..
 python3 setup.py sdist bdist_wheel
 twine upload dist/*
 rm -rf build dist *.egg-info
