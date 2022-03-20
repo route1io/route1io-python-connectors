@@ -177,7 +177,7 @@ def _process_dimensions_columns(column_header_resp) -> List[Tuple[str, str]]:
         dimensions_cols = [(dimension, str) for dimension in dimensions_col_data]
     return dimensions_cols
 
-def _lookup_dtype(resp_type: str):
+def _lookup_dtype(resp_type: str) -> Dict[str, str]:
     """Return dtype for pd.DataFrame associated with column as determined
     from the API response
     """
