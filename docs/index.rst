@@ -14,33 +14,43 @@ what matters most: *your data*.
 .. toctree::
    :maxdepth: 6
 
+Google
+------
+* :doc:`Credentials <source/route1io_connectors.google.credentials>`
+* :doc:`DCM <source/route1io_connectors.google.dcm>`
+* :doc:`Drive <source/route1io_connectors.google.drive>`
+* :doc:`Google Analytics <source/route1io_connectors.google.google_analytics>`
+* :doc:`Google Ads <source/route1io_connectors.google.googleads>`
+* :doc:`Google Sheets <source/route1io_connectors.google.gsheets>`
+* :doc:`Search Ads 360 <source/route1io_connectors.google.sa360>`
+
 Facebook
 --------
-:doc:`source/route1io_connectors.facebook`
+* :doc:`Facebook <source/route1io_connectors.facebook>`
 
 LinkedIn
 --------
-:doc:`source/route1io_connectors.linkedin`
+* :doc:`LinkedIn <source/route1io_connectors.linkedin>`
 
 OneDrive
 --------
-:doc:`source/route1io_connectors.onedrive`
+* :doc:`OneDrive <source/route1io_connectors.onedrive>`
 
 Slack
 -----
-:doc:`source/route1io_connectors.slack`
+* :doc:`Slack <source/route1io_connectors.slack>`
 
 TikTok
 ------
-:doc:`source/route1io_connectors.tiktok`
+* :doc:`TikTok <source/route1io_connectors.tiktok>`
 
 Apple Search Ads
 ----------------
-:doc:`source/route1io_connectors.apple_search_ads`
+* :doc:`Apple Search Ads <source/route1io_connectors.apple_search_ads>`
 
 AWS
 ---
-:doc:`source/route1io_connectors.aws`
+* :doc:`AWS <source/route1io_connectors.aws>`
 
 Indices and tables
 ==================
