@@ -4,62 +4,15 @@ route1io\_connectors.google package
 Submodules
 ----------
 
-route1io\_connectors.google.credentials module
-----------------------------------------------
+.. toctree::
 
-.. automodule:: route1io_connectors.google.credentials
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.dcm module
---------------------------------------
-
-.. automodule:: route1io_connectors.google.dcm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.drive module
-----------------------------------------
-
-.. automodule:: route1io_connectors.google.drive
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.google\_analytics module
-----------------------------------------------------
-
-.. automodule:: route1io_connectors.google.google_analytics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.googleads module
---------------------------------------------
-
-.. automodule:: route1io_connectors.google.googleads
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.gsheets module
-------------------------------------------
-
-.. automodule:: route1io_connectors.google.gsheets
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.google.sa360 module
-----------------------------------------
-
-.. automodule:: route1io_connectors.google.sa360
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   route1io_connectors.google.credentials
+   route1io_connectors.google.dcm
+   route1io_connectors.google.drive
+   route1io_connectors.google.google_analytics
+   route1io_connectors.google.googleads
+   route1io_connectors.google.gsheets
+   route1io_connectors.google.sa360
 
 Module contents
 ---------------

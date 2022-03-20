@@ -4,22 +4,10 @@ route1io\_connectors.utils package
 Submodules
 ----------
 
-route1io\_connectors.utils.date\_range module
----------------------------------------------
+.. toctree::
 
-.. automodule:: route1io_connectors.utils.date_range
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-route1io\_connectors.utils.endpoints module
--------------------------------------------
-
-.. automodule:: route1io_connectors.utils.endpoints
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   route1io_connectors.utils.date_range
+   route1io_connectors.utils.endpoints
 
 Module contents
 ---------------
