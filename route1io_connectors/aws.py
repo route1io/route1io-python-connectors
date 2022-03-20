@@ -3,7 +3,6 @@
 This module contains convenience functionality for working with AWS.
 """
 from typing import Union, Sequence, Dict, Tuple, List
-
 from pathlib import Path
 
 import boto3
