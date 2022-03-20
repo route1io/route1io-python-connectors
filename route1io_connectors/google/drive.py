@@ -30,6 +30,11 @@ def upload_file(drive: "googleapiclient.discovery.Resource", fpath: str, name: s
         Name of the file as it will appear in Drive
     folder_id : str
         ID of the folder to upload to
+
+    Returns
+    -------
+    response : Dict[str, str]
+        Response from Google after POST requesting file
     """
     file_metadata = {
         "name": name if name is not None else Path(fpath).name,
