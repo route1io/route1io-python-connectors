@@ -2,9 +2,14 @@
 
 This module contains functions for interacting with Google Drive
 
-https://developers.google.com/drive/api/v3/manage-uploads
-https://developers.google.com/drive/api/v3/folder
-https://developers.google.com/drive/api/v3/reference/files/create
+References
+----------
+Upload file data
+    https://developers.google.com/drive/api/v3/manage-uploads
+Create and populate folders
+    https://developers.google.com/drive/api/v3/folder
+Files: create
+    https://developers.google.com/drive/api/v3/reference/files/create
 """
 from typing import Dict
 from pathlib import Path
