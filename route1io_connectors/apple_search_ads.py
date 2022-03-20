@@ -280,7 +280,7 @@ def _process_campaign(campaign: dict) -> "pd.DataFrame":
     )
     return campaign_df
 
-def _process_result(result: dict) -> Dict[str, str]:
+def _process_result(result: Dict[str, str]) -> Dict[str, str]:
     """Return dictionary of parsed data from raw API response"""
     return {
         "impressions": result["impressions"],
