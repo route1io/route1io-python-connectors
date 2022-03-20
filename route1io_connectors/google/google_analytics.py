@@ -196,7 +196,7 @@ def _process_report_requests(
         start_date: str,
         end_date: str,
         next_page_token: Union[str, None]
-    ):
+    ) -> Dict[str, str]:
     """Return a dictionary containing formatted data request to Google Analytics
     API"""
     report_requests = {
