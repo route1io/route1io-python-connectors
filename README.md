@@ -14,6 +14,7 @@ At [route1.io](http://route1.io/index.html) we've written high level, easy-to-us
 * [Supported API's](#supported)
 * [Installation](#installation)
 * [Sample usage](#usage)
+* [Documentation](#documentation)
 * [License](#license)
 
 ---
@@ -80,6 +81,10 @@ aws.download_from_S3(
 The official documentation can be found [here](docs/_build/html/index.html). -->
 
 ---
+
+## Documentation <a name="documentation">
+Documentation can be found in docs/_build/html or online at
+[Read The Docs](https://route1io-python-connectors.readthedocs.io/en/latest/)
 
 ## License <a name="license"></a>
 This library operates under the [GNU GPL v3.0](LICENSE) license.
