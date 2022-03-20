@@ -1,6 +1,11 @@
 """AWS
 
 This module contains convenience functionality for working with AWS.
+
+References
+----------
+AWS SDK for Python (Boto3)
+    https://aws.amazon.com/sdk-for-python/
 """
 from typing import Union, Sequence, Dict, Tuple, List
 from pathlib import Path
