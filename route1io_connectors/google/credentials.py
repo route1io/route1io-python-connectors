@@ -6,6 +6,8 @@ credentials.
 
 References
 ----------
+route1.io blog post on creating OAuth 2.0 credentials:
+    https://www.route1.io/configuring-oauth-2-0-access-to-the-google-apis/
 Google's example on credential access:
     https://developers.google.com/docs/api/quickstart/python
 To create credentials:
