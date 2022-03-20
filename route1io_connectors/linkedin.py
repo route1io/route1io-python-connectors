@@ -13,15 +13,6 @@ def get_linkedin_data(ad_account_id: str, access_token: str,
     ad_analytics_df = get_ad_analytics(ad_account_id=ad_account_id, access_token=access_token, start_date=start_date)
     ad_analytics_df['campaign'] = ad_analytics_df['id'].map(campaigns_map)
     ad_analytics_df = ad_analytics_df[["date", "campaign", "impressions", "clicks", "cost"]]    
-    ad_analytics_df = ad_analytics_df.rename(
-        columns={
-            "date": "Date",
-            "campaign": "Campaign Name",
-            "impressions": "Impressions",
-            "clicks": "Clicks",
-            "cost": "Total Spent"
-        }
-    )
     return ad_analytics_df
 
 def get_ad_analytics(ad_account_id: str, access_token: str,
