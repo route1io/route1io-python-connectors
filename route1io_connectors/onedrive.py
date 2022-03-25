@@ -100,7 +100,20 @@ def refresh_access_token(client_id: str, client_secret: str, refresh_token: str,
     )
 
 def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
-    """Return results of find SharePoint site(s) by keyword search"""
+    """Return results of find SharePoint site(s) by keyword search
+
+    Parameters
+    ----------
+    access_token : str
+        Valid access token for accessing SharePoint
+    search : str
+        Search term for finding site
+
+    Return
+    ------
+    Dict[str, str]
+        Returns response JSON
+    """
     resp = requests.get(
         headers={"Authorization": f"Bearer {access_token}"},
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
