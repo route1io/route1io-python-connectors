@@ -38,6 +38,10 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
     df["Week"] = pd.to_datetime(df["Date"]).dt.to_period('W-SAT').dt.start_time
     return df
 
+def _build_base_url(domain_id: str) -> "str":
+    """Return base URL from given domaind ID"""
+    pass
+
 def _process_response(resp) -> "pd.DataFrame":
     """Return DataFrame of processed response data"""
     resp_dict = json.loads(resp.text)
