@@ -20,14 +20,14 @@ import pandas as pd
 def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
                               date_end: str, competitors: List[str] = None,
                               search_term_groups: List[str] = None, whole_market: bool = False,
-                              traffictype: str = "paid") -> "pd.DataFrame":
+                              traffic_type: str = "paid") -> "pd.DataFrame":
     """Return DataFrame of share of clicks trend data"""
 
     resp = requests.get(
         url=_construct_share_of_clicks_trend_url(
             domain_id=domain_id, date_start=date_start, date_end=date_end,
             competitors=competitors, search_term_groups=search_term_groups,
-            whole_market=whole_market, traffic_type=traffictype),
+            whole_market=whole_market, traffic_type=traffic_type),
         headers=_construct_header(api_key=api_key)
     )
     # ipdb.set_trace()
@@ -62,6 +62,7 @@ def _construct_api_url_query_params(date_start: str, date_end: str, competitors:
         url += _combine_query_params('kg', search_term_groups)
     if whole_market:
         url += "&wholemarket=true"
+
     return query_param
 
 def _construct_base_api_url(domain_id: str) -> "str":
