@@ -20,14 +20,14 @@ import pandas as pd
 def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
                               date_end: str, competitors: List[str] = None,
                               search_term_groups: List[str] = None, whole_market: bool = False,
-                              traffic_type: str = "paid") -> "pd.DataFrame":
+                              traffic_type: str = "paid", device: str = "desktop") -> "pd.DataFrame":
     """Return DataFrame of share of clicks trend data"""
 
     resp = requests.get(
         url=_construct_share_of_clicks_trend_url(
             domain_id=domain_id, date_start=date_start, date_end=date_end,
             competitors=competitors, search_term_groups=search_term_groups,
-            whole_market=whole_market, traffic_type=traffic_type),
+            whole_market=whole_market, traffic_type=traffic_type, device=device),
         headers=_construct_header(api_key=api_key)
     )
     # ipdb.set_trace()
@@ -39,31 +39,30 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
                                          date_end: str, competitors: List[str],
                                          search_term_groups: List[str],
-                                         whole_market: bool, traffic_type: str) -> str:
+                                         whole_market: bool, traffic_type: str, device: str) -> str:
     """Return URL for calling share of clicks trend API"""
     base_url = _construct_base_api_url(domain_id)
     query_params = _construct_api_url_query_params(
         date_start=date_start, date_end=date_end, competitors=competitors,
         search_term_groups=search_term_groups, whole_market=whole_market,
-        traffic_type=traffic_type
+        traffic_type=traffic_type, device=device
     )
     url = f"{base_url}/share-of-clicks-trend/all?{query_params}"
     return url
 
 def _construct_api_url_query_params(date_start: str, date_end: str, competitors: List[str],
                                     search_term_groups: List[str], whole_market: bool,
-                                    traffic_type: str) -> str:
+                                    traffic_type: str, device: str) -> str:
     """Return query parameters formatted from user input"""
-    query_param = f"periodstart={date_start}&periodend={date_end}&device=mobile"
-    url += f"&traffictype={traffic_type}"
+    query_param = f"periodstart={date_start}&periodend={date_end}"
+    query_param += f"&traffictype={traffic_type}"
+    query_param += f"&device={device}"
     if competitors is not None:
-        url += _combine_query_params('competitor', competitors)
+        query_param += _combine_query_params('competitor', competitors)
     if search_term_groups is not None:
-        url += _combine_query_params('kg', search_term_groups)
+        query_param += _combine_query_params('kg', search_term_groups)
     if whole_market:
-        url += "&wholemarket=true"
-
-
+        query_param += "&wholemarket=true"
     return query_param
 
 def _construct_base_api_url(domain_id: str) -> "str":
