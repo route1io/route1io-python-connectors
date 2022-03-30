@@ -39,16 +39,30 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
                                          date_end: str, competitors: List[str],
                                          search_term_groups: List[str],
-                                         whole_market: bool, traffic_type: str = "paid") -> str:
+                                         whole_market: bool, traffic_type: str) -> str:
     """Return URL for calling share of clicks trend API"""
-    url = f"{_construct_base_api_url(domain_id)}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
+    base_url = _construct_base_api_url(domain_id)
+    query_params = _construct_api_url_query_params(
+        date_start=date_start, date_end=date_end, competitors=competitors,
+        search_term_groups=search_term_groups, whole_market=whole_market,
+        traffic_type=traffic_type
+    )
+    url = f"{base_url}/share-of-clicks-trend/all?{query_params}"
+
+    return url
+
+def _construct_api_url_query_params(date_start: str, date_end: str, competitors: List[str],
+                                    search_term_groups: List[str], whole_market: bool,
+                                    traffic_type: str) -> str:
+    """Return query parameters formatted from user input"""
+    query_param = f"periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
     if competitors is not None:
         url += _combine_query_params('competitor', competitors)
     if search_term_groups is not None:
         url += _combine_query_params('kg', search_term_groups)
     if whole_market:
         url += "&wholemarket=true"
-    return url
+    return query_param
 
 def _construct_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
