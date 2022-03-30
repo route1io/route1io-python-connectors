@@ -56,3 +56,9 @@ def _combine_query_params(key: str, values: List[str]) -> str:
 def _construct_header(api_key: str) -> Dict[str, str]:
     """Return header dictionary for POST request with API key"""
     return {"Adthena-api-key": api_key, "Accept": "application/json"}
+
+if __name__ == "__main__":
+    import os
+    API_KEY = os.environ.get("ADTHENA_API_KEY")
+    DOMAIN_ID = os.environ.get("ADTHENA_DOMAIN_ID")
+    ACCOUNT = os.environ.get("ADTHENA_ACCOUNT")
