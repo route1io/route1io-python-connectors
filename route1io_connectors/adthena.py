@@ -21,7 +21,36 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
                               date_end: str, competitors: List[str] = None,
                               search_term_groups: List[str] = None, whole_market: bool = False,
                               traffic_type: str = "paid", device: str = "desktop") -> "pd.DataFrame":
-    """Return DataFrame of share of clicks trend data"""
+    """Return pandas.DataFrame of share of clicks trend data
+
+    Parameters
+    ----------
+    api_key : str
+        Valid API key for accessing the Adthena API
+    domain_id : str
+        Domain ID of the account you are accessing data for
+    date_start : str
+        Start date to pull data for in YYYY-MM-DD
+    date_end : str
+        End date to pull data for in YYYY-MM-DD
+    competitors : List[str] = None
+        List of competitors to pull data for
+    search_term_groups : List[str] = None
+        List of search term groups to pull data for
+    whole_market: bool = False
+        Pull data from Whole Market or My Terms
+    traffic_type: str = "paid"
+        Traffic type to pull i.e. paid/organic/total/totalpaid
+        (where totalpaid = PLA + Text Ads, and total includes everything.)
+    device: str = "desktop"
+        Device to pull data for
+
+    Returns
+    -------
+    df : pd.DataFrame
+        DataFrame constructed from processed JSON response from Adthena API
+        with the given parameters of data
+    """
 
     resp = requests.get(
         url=_construct_share_of_clicks_trend_url(
@@ -30,7 +59,6 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
             whole_market=whole_market, traffic_type=traffic_type, device=device),
         headers=_construct_header(api_key=api_key)
     )
-    # ipdb.set_trace()
     df = _process_response(resp)
     return df
 
