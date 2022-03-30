@@ -16,10 +16,11 @@ from typing import Dict, List
 import requests
 import pandas as pd
 
-def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
-                              date_end: str, competitors: List[str] = None,
-                              search_term_groups: List[str] = None, whole_market: bool = False,
-                              traffic_type: str = "paid", device: str = "desktop") -> "pd.DataFrame":
+def get_share_of_clicks_trend(
+        api_key: str, domain_id: str, date_start: str, date_end: str, competitors: List[str] = None,
+        search_term_groups: List[str] = None, whole_market: bool = False, traffic_type: str = "paid",
+        device: str = "desktop"
+    ) -> "pd.DataFrame":
     """Return pandas.DataFrame of share of clicks trend data
 
     Parameters
