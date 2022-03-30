@@ -61,4 +61,10 @@ if __name__ == "__main__":
     import os
     API_KEY = os.environ.get("ADTHENA_API_KEY")
     DOMAIN_ID = os.environ.get("ADTHENA_DOMAIN_ID")
-    ACCOUNT = os.environ.get("ADTHENA_ACCOUNT")
+    resp = get_share_of_clicks_trend(
+        api_key=API_KEY,
+        domain_id=DOMAIN_ID,
+        date_start="2022-03-10",
+        date_end="2022-03-23",
+        whole_market=True
+    )
