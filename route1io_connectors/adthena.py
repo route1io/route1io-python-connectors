@@ -41,7 +41,7 @@ def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
                                          search_term_groups: List[str],
                                          whole_market: bool, traffic_type: str = "paid") -> str:
     """Return URL for calling share of clicks trend API"""
-    url = f"{_build_base_api_url(domain_id)}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
+    url = f"{_construct_base_api_url(domain_id)}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
     if competitors is not None:
         url += _combine_query_params('competitor', competitors)
     if search_term_groups is not None:
@@ -50,7 +50,7 @@ def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
         url += "&wholemarket=true"
     return url
 
-def _build_base_api_url(domain_id: str) -> "str":
+def _construct_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
     return f"https://api.adthena.com/wizard/{domain_id}"
 
