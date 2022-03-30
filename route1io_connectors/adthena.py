@@ -6,6 +6,8 @@ References
 ----------
 API Reference
     https://api.adthena.com/?json
+Adthena Knowledge Base (useful additional information on the platform)
+    https://support.adthena.com/hc/en-us
 """
 
 import json
