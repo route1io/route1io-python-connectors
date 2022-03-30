@@ -10,6 +10,7 @@ Adthena Knowledge Base (useful additional information on the platform)
     https://support.adthena.com/hc/en-us
 """
 
+import asyncio
 import json
 from typing import Dict, List
 
@@ -51,16 +52,34 @@ def get_share_of_clicks_trend(
         DataFrame constructed from processed JSON response from Adthena API
         with the given parameters of data
     """
-
-    resp = requests.get(
-        url=_construct_share_of_clicks_trend_url(
+    if search_term_groups is not None:
+        urls = [_construct_share_of_clicks_trend_url(
             domain_id=domain_id, date_start=date_start, date_end=date_end,
-            competitors=competitors, search_term_groups=search_term_groups,
-            whole_market=whole_market, traffic_type=traffic_type, device=device),
-        headers=_construct_header(api_key=api_key)
+            competitors=competitors, search_term_groups=[search_term],
+            whole_market=whole_market, traffic_type=traffic_type, device=device
+        ) for search_term in search_term_groups]
+    else:
+        urls = [_construct_share_of_clicks_trend_url(domain_id=domain_id,
+            date_start=date_start, date_end=date_end,
+            competitors=competitors, search_term_groups=None,
+            whole_market=whole_market, traffic_type=traffic_type, device=device)]
+    responses = asyncio.run(
+        _request_all_urls(urls=urls, headers=_construct_header(api_key=api_key))
     )
-    df = _process_response(resp)
+    dfs = []
+    for resp in responses:
+        dfs.append(_process_response(resp))
+    df = pd.concat(dfs)
     return df
+
+async def _request_all_urls(urls: List[str], headers: Dict[str, str]) -> List[str]:
+    """Return responses asynchronously requested from Adthena"""
+    async with aiohttp.ClientSession() as session:
+        responses = []
+        for url in urls:
+            async with session.get(url, headers=headers) as resp:
+                responses.append(await resp.text())
+    return responses
 
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
                                          date_end: str, competitors: List[str],
@@ -95,9 +114,9 @@ def _construct_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
     return f"https://api.adthena.com/wizard/{domain_id}"
 
-def _process_response(resp) -> "pd.DataFrame":
+def _process_response(resp: str) -> "pd.DataFrame":
     """Return DataFrame of processed response data"""
-    resp_dict = json.loads(resp.text)
+    resp_dict = json.loads(resp)
     all_data = []
     for competitor_data in resp_dict:
         competitor = competitor_data["Competitor"]
