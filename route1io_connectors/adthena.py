@@ -12,7 +12,6 @@ Adthena Knowledge Base (useful additional information on the platform)
 
 import json
 from typing import Dict, List
-from jmespath import search
 
 import requests
 import pandas as pd
