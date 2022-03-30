@@ -37,9 +37,9 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
     return df
 
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
-                                         date_end: str, competitors: List[str] = None,
-                                         search_term_groups: List[str] = None,
-                                         whole_market: bool = False, traffic_type: str = "paid") -> str:
+                                         date_end: str, competitors: List[str],
+                                         search_term_groups: List[str],
+                                         whole_market: bool, traffic_type: str = "paid") -> str:
     """Return URL for calling share of clicks trend API"""
     url = f"{_build_base_api_url(domain_id)}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
     if competitors is not None:
@@ -48,6 +48,7 @@ def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
         url += _combine_query_params('kg', search_term_groups)
     if whole_market:
         url += "&wholemarket=true"
+    return url
 
 def _build_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
