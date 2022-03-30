@@ -48,20 +48,21 @@ def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
         traffic_type=traffic_type
     )
     url = f"{base_url}/share-of-clicks-trend/all?{query_params}"
-
     return url
 
 def _construct_api_url_query_params(date_start: str, date_end: str, competitors: List[str],
                                     search_term_groups: List[str], whole_market: bool,
                                     traffic_type: str) -> str:
     """Return query parameters formatted from user input"""
-    query_param = f"periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
+    query_param = f"periodstart={date_start}&periodend={date_end}&device=mobile"
+    url += f"&traffictype={traffic_type}"
     if competitors is not None:
         url += _combine_query_params('competitor', competitors)
     if search_term_groups is not None:
         url += _combine_query_params('kg', search_term_groups)
     if whole_market:
         url += "&wholemarket=true"
+
 
     return query_param
 
