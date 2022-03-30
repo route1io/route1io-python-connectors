@@ -15,6 +15,7 @@ import json
 from typing import Dict, List
 
 import aiohttp
+from jmespath import search
 import pandas as pd
 
 def get_share_of_clicks_trend(
@@ -52,34 +53,41 @@ def get_share_of_clicks_trend(
         DataFrame constructed from processed JSON response from Adthena API
         with the given parameters of data
     """
+    urls = []
     if search_term_groups is not None:
-        urls = [_construct_share_of_clicks_trend_url(
+        for search_term in search_term_groups:
+            url = _construct_share_of_clicks_trend_url(
             domain_id=domain_id, date_start=date_start, date_end=date_end,
             competitors=competitors, search_term_groups=[search_term],
-            whole_market=whole_market, traffic_type=traffic_type, device=device
-        ) for search_term in search_term_groups]
+            whole_market=whole_market, traffic_type=traffic_type, device=device)
+            urls.append((url, search_term))
     else:
-        urls = [_construct_share_of_clicks_trend_url(domain_id=domain_id,
+        url = _construct_share_of_clicks_trend_url(domain_id=domain_id,
             date_start=date_start, date_end=date_end,
             competitors=competitors, search_term_groups=None,
-            whole_market=whole_market, traffic_type=traffic_type, device=device)]
-    responses = asyncio.run(
-        _request_all_urls(urls=urls, headers=_construct_header(api_key=api_key))
+            whole_market=whole_market, traffic_type=traffic_type, device=device)
+        urls.append((url, None))
+    response_df = asyncio.run(
+        _request_all_urls(
+            urls=urls,
+            headers=_construct_header(api_key=api_key)
+        )
     )
-    dfs = []
-    for resp in responses:
-        dfs.append(_process_response(resp))
-    df = pd.concat(dfs)
-    return df
+    return response_df
 
 async def _request_all_urls(urls: List[str], headers: Dict[str, str]) -> List[str]:
     """Return responses asynchronously requested from Adthena"""
     async with aiohttp.ClientSession() as session:
         responses = []
-        for url in urls:
+        for url, search_term in urls:
             async with session.get(url, headers=headers) as resp:
-                responses.append(await resp.text())
-    return responses
+                responses.append((await resp.text(), search_term))
+    response_dfs = []
+    for resp, search_term in responses:
+        df = _process_response(resp, search_term)
+        response_dfs.append(df)
+    response_df = pd.concat(response_dfs)
+    return response_df
 
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
                                          date_end: str, competitors: List[str],
@@ -105,6 +113,7 @@ def _construct_api_url_query_params(date_start: str, date_end: str, competitors:
     if competitors is not None:
         query_param += _combine_query_params('competitor', competitors)
     if search_term_groups is not None:
+        search_term_groups = [term.replace(" ", "+") for term in search_term_groups]
         query_param += _combine_query_params('kg', search_term_groups)
     if whole_market:
         query_param += "&wholemarket=true"
@@ -114,7 +123,7 @@ def _construct_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
     return f"https://api.adthena.com/wizard/{domain_id}"
 
-def _process_response(resp: str) -> "pd.DataFrame":
+def _process_response(resp: str, search_term: str) -> "pd.DataFrame":
     """Return DataFrame of processed response data"""
     resp_dict = json.loads(resp)
     all_data = []
@@ -125,6 +134,7 @@ def _process_response(resp: str) -> "pd.DataFrame":
             date_dict["Competitor"] = competitor
             all_data.append(date_dict)
     df = pd.DataFrame(all_data)
+    df = df.assign(Search_Term=search_term)
     return df
 
 def _combine_query_params(key: str, values: List[str]) -> str:
