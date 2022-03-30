@@ -32,8 +32,6 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
     )
     # ipdb.set_trace()
     df = _process_response(resp)
-    df["Value"] = df["Value"]*100
-    df["Week"] = pd.to_datetime(df["Date"]).dt.to_period('W-SAT').dt.start_time
     return df
 
 def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
