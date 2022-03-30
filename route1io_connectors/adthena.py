@@ -13,7 +13,7 @@ Adthena Knowledge Base (useful additional information on the platform)
 import json
 from typing import Dict, List
 
-import requests
+import aiohttp
 import pandas as pd
 
 def get_share_of_clicks_trend(
