@@ -12,6 +12,7 @@ Adthena Knowledge Base (useful additional information on the platform)
 
 import json
 from typing import Dict, List
+from jmespath import search
 
 import requests
 import pandas as pd
@@ -21,15 +22,12 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
                               search_term_groups: List[str] = None, whole_market: bool = False,
                               traffictype: str = "paid") -> "pd.DataFrame":
     """Return DataFrame of share of clicks trend data"""
-    url = f"https://api.adthena.com/wizard/{domain_id}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
-    if competitors is not None:
-        url += _combine_query_params('competitor', competitors)
-    if search_term_groups is not None:
-        url += _combine_query_params('kg', search_term_groups)
-    if whole_market:
-        url += "&wholemarket=true"
+
     resp = requests.get(
-        url=url,
+        url=_construct_share_of_clicks_trend_url(
+            domain_id=domain_id, date_start=date_start, date_end=date_end,
+            competitors=competitors, search_term_groups=search_term_groups,
+            whole_market=whole_market, traffic_type=traffictype),
         headers=_construct_header(api_key=api_key)
     )
     # ipdb.set_trace()
@@ -38,9 +36,22 @@ def get_share_of_clicks_trend(api_key: str, domain_id: str, date_start: str,
     df["Week"] = pd.to_datetime(df["Date"]).dt.to_period('W-SAT').dt.start_time
     return df
 
-def _build_base_url(domain_id: str) -> "str":
+def _construct_share_of_clicks_trend_url(domain_id: str, date_start: str,
+                                         date_end: str, competitors: List[str] = None,
+                                         search_term_groups: List[str] = None,
+                                         whole_market: bool = False, traffic_type: str = "paid") -> str:
+    """Return URL for calling share of clicks trend API"""
+    url = f"{_build_base_api_url(domain_id)}/share-of-clicks-trend/all?periodstart={date_start}&periodend={date_end}&traffictype=paid&device=mobile"
+    if competitors is not None:
+        url += _combine_query_params('competitor', competitors)
+    if search_term_groups is not None:
+        url += _combine_query_params('kg', search_term_groups)
+    if whole_market:
+        url += "&wholemarket=true"
+
+def _build_base_api_url(domain_id: str) -> "str":
     """Return base URL from given domaind ID"""
-    pass
+    return f"https://api.adthena.com/wizard/{domain_id}"
 
 def _process_response(resp) -> "pd.DataFrame":
     """Return DataFrame of processed response data"""
