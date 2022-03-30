@@ -59,6 +59,7 @@ def _construct_header(api_key: str) -> Dict[str, str]:
 
 if __name__ == "__main__":
     import os
+    # Add Adthena API key and domain ID as environment vars to call function
     API_KEY = os.environ.get("ADTHENA_API_KEY")
     DOMAIN_ID = os.environ.get("ADTHENA_DOMAIN_ID")
     df = get_share_of_clicks_trend(
