@@ -7,4 +7,4 @@ pandas==1.2.5
 requests==2.25.1
 facebook-business==11.0.0
 pyjwt==1.5.3
-aiohttp==3.7.4.post0
+aiohttp==3.7.4
