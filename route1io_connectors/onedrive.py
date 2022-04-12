@@ -89,10 +89,16 @@ def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str =
     Parameters
     ----------
     access_token : str
+        Valid access token for accessing OneDrive
     url : str
+        URL of the file on OneDrive or SharePoint
     s3
+        Valid S3 connection created using aws.connect_to_s3
     bucket : str
-    key : str
+        Existing bucket on AWS
+    key : str = None
+        (Optional) Key name of the file as it will appear in S3. If left blank
+        it will default to the same name that's in OneDrive
     """
     resp = _get_request_url(access_token=access_token, url=url)
     if key is None:
