@@ -11,6 +11,8 @@ import tempfile
 
 import requests 
 
+from . import aws
+
 def get_file(access_token: str, url: str) -> str:
     """Get content from file on OneDrive specified at URL
 
@@ -81,7 +83,8 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     return json.loads(resp.text)
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
-    pass
+    content = get_file(access_token=access_token, url=url)
+
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
