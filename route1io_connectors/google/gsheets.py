@@ -95,3 +95,8 @@ def download_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resour
     values = result.get('values', [])
     df = pd.DataFrame(values[1:], columns=values[0])
     df.to_csv(filename, index=False)
+
+def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
+    spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str, key: str) -> None:
+    """Copy file at given Google Sheet to S3 bucket"""
+    pass
