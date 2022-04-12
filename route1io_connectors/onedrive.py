@@ -79,6 +79,9 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
+def copy_file_to_aws_s3():
+    pass
+
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
     # NOTE: Microsoft's masl Python package seems to have some functionality
