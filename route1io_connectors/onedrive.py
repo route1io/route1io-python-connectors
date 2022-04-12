@@ -11,6 +11,20 @@ import json
 import requests 
 
 def get_file(access_token: str, url: str) -> str:
+    """Get content from file on OneDrive specified at URL
+
+    Parameters
+    ----------
+    access_token : str
+        Valid access token
+    url : str
+        Valid Microsoft Graph API URL of the file we are going to download
+
+    Returns
+    -------
+    content : str
+        Content of the downloaded file
+    """
     resp = requests.get(
         headers={"Authorization": f"Bearer {access_token}"},
         url=url
