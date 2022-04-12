@@ -7,6 +7,7 @@ via the Microsoft Graph API
 import webbrowser
 from typing import List, Dict
 import json
+import tempfile
 
 import requests 
 
