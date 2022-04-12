@@ -48,13 +48,10 @@ def download_file(access_token: str, url: str, fpath: str) -> str:
     content : str
         Content of the downloaded file
     """
-    resp = requests.get(
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=url
-    )
+    content = _get_request_url(access_token=access_token, url=url)
     with open(fpath, 'wb') as outfile:
-        outfile.write(resp.content)
-    return resp.content
+        outfile.write(content)
+    return content
 
 def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
