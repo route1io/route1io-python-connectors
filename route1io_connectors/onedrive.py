@@ -84,6 +84,16 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     return json.loads(resp.text)
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
+    """Copy file at given URL to S3 bucket
+
+    Parameters
+    ----------
+    access_token : str
+    url : str
+    s3
+    bucket : str
+    key : str
+    """
     resp = _get_request_url(access_token=access_token, url=url)
     if key is None:
         key = _parse_filename_from_response_headers(resp.headers)
