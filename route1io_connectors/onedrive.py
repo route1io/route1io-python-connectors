@@ -191,7 +191,7 @@ def _encode_scope(scope: List[str]) -> str:
     return '%20'.join(scope)
 
 def _get_request_url(access_token: str, url: str) -> str:
-    """Return content at URL"""
+    """Return response at URL"""
     resp = requests.get(
         headers={"Authorization": f"Bearer {access_token}"},
         url=url
