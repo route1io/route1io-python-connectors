@@ -10,6 +10,13 @@ import json
 
 import requests 
 
+def get_file(access_token: str, url: str) -> str:
+    resp = requests.get(
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    )
+    return resp.content
+
 def download_file(access_token: str, url: str, fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
 
