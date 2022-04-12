@@ -84,6 +84,8 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     resp = _get_request_url(access_token=access_token, url=url)
+    if key is None:
+        key = _parse_filename_from_response_headers(resp.headers)
     with tempfile.NamedTemporaryFile("w") as outfile:
         outfile.write(resp.content)
 
@@ -169,6 +171,9 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
     )
     return json.loads(resp.text)
+
+def _parse_filename_from_response_headers(resp) -> "str":
+    """Return filename from GET request response header"""
 
 def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
     """Return JSON response as dictionary after POST requesting token endpoint"""
