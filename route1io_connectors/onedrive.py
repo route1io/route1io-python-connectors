@@ -87,7 +87,7 @@ def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str =
     resp = _get_request_url(access_token=access_token, url=url)
     if key is None:
         key = _parse_filename_from_response_headers(resp.headers)
-    with tempfile.NamedTemporaryFile("w+") as outfile:
+    with tempfile.NamedTemporaryFile("wb+") as outfile:
         outfile.write(resp.content)
         aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
 
