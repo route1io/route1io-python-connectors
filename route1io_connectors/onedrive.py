@@ -184,3 +184,7 @@ def _encode_payload(**kwargs) -> str:
 def _encode_scope(scope: List[str]) -> str:
     """Return scope encoded as a string for a URL query param"""
     return '%20'.join(scope)
+
+def _get_request_url(access_token: str, url: str) -> str:
+    """Return content at URL"""
+    pass
