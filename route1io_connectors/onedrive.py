@@ -28,8 +28,8 @@ def get_file(access_token: str, url: str) -> str:
     content : str
         Content of the downloaded file
     """
-    content = _get_request_url(access_token=access_token, url=url)
-    return content
+    resp = _get_request_url(access_token=access_token, url=url)
+    return resp.content
 
 def download_file(access_token: str, url: str, fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
@@ -48,10 +48,10 @@ def download_file(access_token: str, url: str, fpath: str) -> str:
     content : str
         Content of the downloaded file
     """
-    content = _get_request_url(access_token=access_token, url=url)
+    resp = _get_request_url(access_token=access_token, url=url)
     with open(fpath, 'wb') as outfile:
-        outfile.write(content)
-    return content
+        outfile.write(resp.content)
+    return resp.content
 
 def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
@@ -84,6 +84,10 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     content = get_file(access_token=access_token, url=url)
+
+    with tempfile.NamedTemporaryFile("w") as outfile:
+        outfile.write(content)
+
 
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
@@ -192,4 +196,4 @@ def _get_request_url(access_token: str, url: str) -> str:
         headers={"Authorization": f"Bearer {access_token}"},
         url=url
     )
-    return resp.content
+    return resp
