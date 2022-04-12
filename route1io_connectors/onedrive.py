@@ -4,6 +4,7 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 via the Microsoft Graph API
 """
 
+from fileinput import filename
 import webbrowser
 from typing import List, Dict
 import json
@@ -89,8 +90,6 @@ def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str =
     with tempfile.NamedTemporaryFile("w") as outfile:
         outfile.write(resp.content)
 
-
-
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
     # NOTE: Microsoft's masl Python package seems to have some functionality
@@ -172,8 +171,13 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
-def _parse_filename_from_response_headers(resp) -> "str":
+def _parse_filename_from_response_headers(headers) -> "str":
     """Return filename from GET request response header"""
+    content_disposition = headers["Content-Disposition"]
+    split_content = content_disposition.split(";")
+    filename_field = split_content[-1]
+    parsed_filename = filename_field.replace("filename=", "").replace('"', "")
+    return parsed_filename
 
 def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
     """Return JSON response as dictionary after POST requesting token endpoint"""
