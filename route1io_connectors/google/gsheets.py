@@ -7,6 +7,7 @@ import tempfile
 import pandas as pd
 from googleapiclient.discovery import build
 
+from .. import aws
 
 def upload_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resource",
                                filename: str, spreadsheet_id: str,
@@ -102,3 +103,13 @@ def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
     spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str,
     key: str = None) -> None:
     """Copy file at given Google Sheet to S3 bucket"""
+    if key is None:
+        key = f"{spreadsheet_name}.csv"
+    with tempfile.NamedTemporaryFile("wb+") as outfile:
+        download_gsheets_spreadsheet(
+            gsheets_conn=gsheets_conn,
+            spreadsheet_id=spreadsheet_id,
+            spreadsheet_name=spreadsheet_name,
+            filename=outfile.name
+        )
+        aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
