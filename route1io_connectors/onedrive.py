@@ -25,11 +25,8 @@ def get_file(access_token: str, url: str) -> str:
     content : str
         Content of the downloaded file
     """
-    resp = requests.get(
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=url
-    )
-    return resp.content
+    content = _get_request_url(access_token=access_token, url=url)
+    return content
 
 def download_file(access_token: str, url: str, fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
