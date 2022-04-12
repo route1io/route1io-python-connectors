@@ -2,6 +2,8 @@
 
 This module contains functions for interacting with Google Sheets
 """
+import tempfile
+
 import pandas as pd
 from googleapiclient.discovery import build
 
@@ -97,6 +99,5 @@ def download_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resour
     df.to_csv(filename, index=False)
 
 def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
-    spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str, key: str) -> None:
+    spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given Google Sheet to S3 bucket"""
-    pass
