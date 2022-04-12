@@ -15,7 +15,6 @@ import json
 from typing import Dict, List
 
 import aiohttp
-from jmespath import search
 import pandas as pd
 
 def get_share_of_clicks_trend(

@@ -4,11 +4,15 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 via the Microsoft Graph API
 """
 
+from fileinput import filename
 import webbrowser
 from typing import List, Dict
 import json
+import tempfile
 
 import requests 
+
+from . import aws
 
 def get_file(access_token: str, url: str) -> str:
     """Get content from file on OneDrive specified at URL
@@ -25,8 +29,8 @@ def get_file(access_token: str, url: str) -> str:
     content : str
         Content of the downloaded file
     """
-    content = _get_request_url(access_token=access_token, url=url)
-    return content
+    resp = _get_request_url(access_token=access_token, url=url)
+    return resp.content
 
 def download_file(access_token: str, url: str, fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
@@ -45,10 +49,10 @@ def download_file(access_token: str, url: str, fpath: str) -> str:
     content : str
         Content of the downloaded file
     """
-    content = _get_request_url(access_token=access_token, url=url)
+    resp = _get_request_url(access_token=access_token, url=url)
     with open(fpath, 'wb') as outfile:
-        outfile.write(content)
-    return content
+        outfile.write(resp.content)
+    return resp.content
 
 def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
@@ -78,6 +82,14 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
         url=url
     )
     return json.loads(resp.text)
+
+def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
+    resp = _get_request_url(access_token=access_token, url=url)
+    if key is None:
+        key = _parse_filename_from_response_headers(resp.headers)
+    with tempfile.NamedTemporaryFile("wb+") as outfile:
+        outfile.write(resp.content)
+        aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
     """Convenience function for opening web browser to permissions prompt"""
@@ -160,6 +172,14 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
+def _parse_filename_from_response_headers(headers) -> "str":
+    """Return filename from GET request response header"""
+    content_disposition = headers["Content-Disposition"]
+    split_content = content_disposition.split(";")
+    filename_field = split_content[-1]
+    parsed_filename = filename_field.replace("filename=", "").replace('"', "")
+    return parsed_filename
+
 def _request_token_endpoint(data: str, url: str) -> Dict[str, str]:
     """Return JSON response as dictionary after POST requesting token endpoint"""
     resp = requests.post(data=data, url=url)
@@ -180,9 +200,9 @@ def _encode_scope(scope: List[str]) -> str:
     return '%20'.join(scope)
 
 def _get_request_url(access_token: str, url: str) -> str:
-    """Return content at URL"""
+    """Return response at URL"""
     resp = requests.get(
         headers={"Authorization": f"Bearer {access_token}"},
         url=url
     )
-    return resp.content
+    return resp
