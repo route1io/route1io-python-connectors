@@ -10,6 +10,46 @@ import json
 
 import requests 
 
+def get_file(access_token: str, url: str) -> str:
+    """Get content from file on OneDrive specified at URL
+
+    Parameters
+    ----------
+    access_token : str
+        Valid access token
+    url : str
+        Valid Microsoft Graph API URL of the file we are going to download
+
+    Returns
+    -------
+    content : str
+        Content of the downloaded file
+    """
+    content = _get_request_url(access_token=access_token, url=url)
+    return content
+
+def download_file(access_token: str, url: str, fpath: str) -> str:
+    """Download file locally from OneDrive from the specified URL
+
+    Parameters
+    ----------
+    access_token : str
+        Valid access token
+    url : str
+        Valid Microsoft Graph API URL of the file we are going to download
+    fpath : str
+        Local fpath of where the file will be downloaded to
+
+    Returns
+    -------
+    content : str
+        Content of the downloaded file
+    """
+    content = _get_request_url(access_token=access_token, url=url)
+    with open(fpath, 'wb') as outfile:
+        outfile.write(content)
+    return content
+
 def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
     suffixed with /content to work
@@ -138,3 +178,11 @@ def _encode_payload(**kwargs) -> str:
 def _encode_scope(scope: List[str]) -> str:
     """Return scope encoded as a string for a URL query param"""
     return '%20'.join(scope)
+
+def _get_request_url(access_token: str, url: str) -> str:
+    """Return content at URL"""
+    resp = requests.get(
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    )
+    return resp.content
