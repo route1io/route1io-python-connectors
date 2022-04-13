@@ -129,4 +129,5 @@ def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
             spreadsheet_name=spreadsheet_name,
             filename=outfile.name
         )
+        outfile.seek(0)
         aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)

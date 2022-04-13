@@ -105,6 +105,7 @@ def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str =
         key = _parse_filename_from_response_headers(resp.headers)
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         outfile.write(resp.content)
+        outfile.seek(0)
         aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
 
 def permissions_prompt(tenant_id: str, client_id: str, scope: List[str]) -> None:
