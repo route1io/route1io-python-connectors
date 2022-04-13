@@ -2,9 +2,12 @@
 
 This module contains functions for interacting with Google Sheets
 """
+import tempfile
+
 import pandas as pd
 from googleapiclient.discovery import build
 
+from .. import aws
 
 def upload_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resource",
                                filename: str, spreadsheet_id: str,
@@ -95,3 +98,35 @@ def download_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resour
     values = result.get('values', [])
     df = pd.DataFrame(values[1:], columns=values[0])
     df.to_csv(filename, index=False)
+
+def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
+    spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str,
+    key: str = None) -> None:
+    """Copy file at given Google Sheet to S3 bucket
+
+    Parameters
+    ----------
+    gsheets_conn : googleapiclient.discovery.Resource
+        Connection to Google Sheets API
+    spreadsheet_id : str
+        ID of the Google Sheet to download from
+    spreadsheet_name : str
+        Name of the specific Sheet to write to
+    s3
+        Valid S3 connection created using aws.connect_to_s3
+    bucket : str
+        Existing bucket on AWS
+    key : str = None
+        (Optional) Key name of the file as it will appear in S3. If left blank
+        it will default to the same name that's in OneDrive
+    """
+    if key is None:
+        key = f"{spreadsheet_name}.csv"
+    with tempfile.NamedTemporaryFile("wb+") as outfile:
+        download_gsheets_spreadsheet(
+            gsheets_conn=gsheets_conn,
+            spreadsheet_id=spreadsheet_id,
+            spreadsheet_name=spreadsheet_name,
+            filename=outfile.name
+        )
+        aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
