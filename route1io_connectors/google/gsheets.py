@@ -102,7 +102,24 @@ def download_gsheets_spreadsheet(gsheets_conn: "googleapiclient.discovery.Resour
 def copy_sheet_to_aws_s3(gsheets_conn: "googleapiclient.discovery.Resource",
     spreadsheet_id: str, spreadsheet_name: str, s3, bucket: str,
     key: str = None) -> None:
-    """Copy file at given Google Sheet to S3 bucket"""
+    """Copy file at given Google Sheet to S3 bucket
+
+    Parameters
+    ----------
+    gsheets_conn : googleapiclient.discovery.Resource
+        Connection to Google Sheets API
+    spreadsheet_id : str
+        ID of the Google Sheet to download from
+    spreadsheet_name : str
+        Name of the specific Sheet to write to
+    s3
+        Valid S3 connection created using aws.connect_to_s3
+    bucket : str
+        Existing bucket on AWS
+    key : str = None
+        (Optional) Key name of the file as it will appear in S3. If left blank
+        it will default to the same name that's in OneDrive
+    """
     if key is None:
         key = f"{spreadsheet_name}.csv"
     with tempfile.NamedTemporaryFile("wb+") as outfile:
