@@ -6,6 +6,7 @@ This module contains code for accessing data from Search Ads 360.
 from abc import ABC, abstractmethod
 import datetime
 import json
+from threading import local
 import time
 import os
 from typing import Dict, List, Union
@@ -302,7 +303,7 @@ def sftp_upload_to_sa360(username: str, password: str, local_fpath: str,
             password=password,
             cnopts=cnopts
         ) as sftp:
-        sftp.put()
+        sftp.put(localpath=local_fpath, remotepath=remote_fpath)
 
 def _validate_datetime(date_obj):
     if isinstance(date_obj, str):
