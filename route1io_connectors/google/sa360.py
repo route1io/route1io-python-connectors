@@ -293,8 +293,7 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
 def upload_to_sa360_partner_feed(username: str, password: str, fpath: Union[str, List[str]],
                                  known_hosts: str = None) -> None:
     """Uploads local file(s) to SA360 partner upload via SFTP"""
-    HOST = "partnerupload.google.com"
-    PORT = 19321
+
 
 def _validate_datetime(date_obj):
     if isinstance(date_obj, str):
