@@ -291,7 +291,7 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     df = df.drop_duplicates()
     return df
 
-def upload_to_sa360_partner_feed(username: str, password: str, local_fpath: str,
+def sftp_upload_to_sa360(username: str, password: str, local_fpath: str,
                                  remote_fpath: str, known_hosts: str = None) -> None:
     """Uploads local file(s) to SA360 partner upload via SFTP"""
     cnopts = pysftp.CnOpts(knownhosts=known_hosts)
