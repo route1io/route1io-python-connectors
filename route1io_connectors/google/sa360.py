@@ -6,12 +6,14 @@ This module contains code for accessing data from Search Ads 360.
 from abc import ABC, abstractmethod
 import datetime
 import json
+from threading import local
 import time
 import os
-from typing import Dict
+from typing import Dict, List, Union
 
 import requests
 import pandas as pd
+import pysftp
 
 from ..utils import endpoints
 
@@ -289,6 +291,35 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     # HACK: duplicate values are being introuduces somewhere so drop them
     df = df.drop_duplicates()
     return df
+
+def sftp_upload_to_sa360(username: str, password: str, known_hosts: str, local_fpath: str,
+                         remote_fpath: str = None) -> None:
+    """Uploads local file to SA360 partner upload via SFTP
+
+    Parameters
+    ----------
+    username : str
+        Username for SA360 SFTP server
+    password : str
+        Password for SA360 SFTP server
+    known_hosts : str
+        Filepath to known_hosts file that contains known host fingerprint for
+        partnerupload.google.com
+    local_fpath : str
+        Filepath to local file for uploading
+    remote_fpath : str
+        (Optional) Filepath of remote file on server to upload to. Default is
+        the filename from local_fpath
+    """
+    cnopts = pysftp.CnOpts(knownhosts=known_hosts)
+    with pysftp.Connection(
+            host=endpoints.SA360_PARTNER_UPLOAD_SFTP_HOST,
+            port=endpoints.SA360_PARTNER_UPLOAD_SFTP_PORT,
+            username=username,
+            password=password,
+            cnopts=cnopts
+        ) as sftp:
+        sftp.put(localpath=local_fpath, remotepath=remote_fpath)
 
 def _validate_datetime(date_obj):
     if isinstance(date_obj, str):
