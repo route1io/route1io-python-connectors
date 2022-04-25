@@ -8,7 +8,7 @@ import datetime
 import json
 import time
 import os
-from typing import Dict
+from typing import Dict, List, Union
 
 import requests
 import pandas as pd
@@ -289,6 +289,12 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     # HACK: duplicate values are being introuduces somewhere so drop them
     df = df.drop_duplicates()
     return df
+
+def upload_to_sa360_partner_feed(username: str, password: str, fpath: Union[str, List[str]],
+                                 known_hosts: str = None) -> None:
+    """Uploads local file(s) to SA360 partner upload via SFTP"""
+    HOST = "partnerupload.google.com"
+    PORT = 19321
 
 def _validate_datetime(date_obj):
     if isinstance(date_obj, str):
