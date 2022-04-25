@@ -13,6 +13,8 @@ DCM_REPORTING_AUTHENTICATION_ENDPOINT = ["https://www.googleapis.com/auth/dfarep
 
 # Search Ads 360
 GOOGLE_DOUBLE_CLICK_SEARCH_REPORT_ENDPOINT = "https://www.googleapis.com/doubleclicksearch/v2/reports"
+SA360_PARTNER_UPLOAD_SFTP_HOST = "partnerupload.google.com"
+SA360_PARTNER_UPLOAD_SFTP_PORT = 19321
 
 # Google Drive
 GOOGLE_DRIVE_AUTHENTICATION_ENDPOINT = "https://www.googleapis.com/auth/drive"
