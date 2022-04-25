@@ -292,7 +292,7 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     return df
 
 def sftp_upload_to_sa360(username: str, password: str, local_fpath: str,
-                                 remote_fpath: str, known_hosts: str = None) -> None:
+                         remote_fpath: str, known_hosts: str = None) -> None:
     """Uploads local file(s) to SA360 partner upload via SFTP"""
     cnopts = pysftp.CnOpts(knownhosts=known_hosts)
     with pysftp.Connection(
