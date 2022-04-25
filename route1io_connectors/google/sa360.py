@@ -12,6 +12,7 @@ from typing import Dict, List, Union
 
 import requests
 import pandas as pd
+import pysftp
 
 from ..utils import endpoints
 
@@ -290,10 +291,18 @@ def filter_zero_rows(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     df = df.drop_duplicates()
     return df
 
-def upload_to_sa360_partner_feed(username: str, password: str, fpath: Union[str, List[str]],
-                                 known_hosts: str = None) -> None:
+def upload_to_sa360_partner_feed(username: str, password: str, local_fpath: str,
+                                 remote_fpath: str, known_hosts: str = None) -> None:
     """Uploads local file(s) to SA360 partner upload via SFTP"""
-
+    cnopts = pysftp.CnOpts(knownhosts=known_hosts)
+    with pysftp.Connection(
+            host="partnerupload.google.com",
+            port=19321,
+            username=username,
+            password=password,
+            cnopts=cnopts
+        ) as sftp:
+        pass
 
 def _validate_datetime(date_obj):
     if isinstance(date_obj, str):
