@@ -233,4 +233,4 @@ def _keyword_conversions_gaql_query(start_date: "datetime.date") -> str:
     """
 
 if __name__ == "__main__":
-    ga = connect_to_googleads("../google-ads.yaml")
+    googleads_client = connect_to_googleads("../google-ads.yaml")
