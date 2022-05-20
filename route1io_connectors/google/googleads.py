@@ -231,3 +231,6 @@ def _keyword_conversions_gaql_query(start_date: "datetime.date") -> str:
         FROM keyword_view
         WHERE segments.date BETWEEN '{start_date.strftime("%Y-%m-%d")}' AND '{datetime.datetime.today().strftime("%Y-%m-%d")}'
     """
+
+if __name__ == "__main__":
+    ga = connect_to_googleads("../google-ads.yaml")
