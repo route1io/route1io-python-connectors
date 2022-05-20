@@ -10,7 +10,7 @@ import numpy as np
 
 from google.ads.googleads.client import GoogleAdsClient
 
-GOOGLEADS_VERSION = "v8"
+GOOGLEADS_VERSION = "v10"
 
 # TODO: the API pull scripts can definitely be refactored/combined
 def connect_to_googleads(google_yaml_fpath: str) -> "GoogleAdsClient":
