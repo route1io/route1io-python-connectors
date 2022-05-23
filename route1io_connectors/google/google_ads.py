@@ -52,7 +52,7 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
 
     resp_data = [
         pd.json_normalize(
-            json_format.MessageToDict(row)
+            json_format.MessageToDict(row._pb)
         ) for batch in ga_service.search_stream(search_request)
         for row in batch.results
     ]
