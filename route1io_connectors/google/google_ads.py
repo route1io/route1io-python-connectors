@@ -45,6 +45,8 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
     df : pd.DataFrame
         DataFrame of data pulled via API and GAQL query
     """
+    # NOTE: search_stream and iterator have to occur in same scope otherwise
+    # segfault (see this GitHub Issue https://github.com/googleads/google-ads-python/issues/384)
     ga_service = google_ads_client.get_service("GoogleAdsService")
     search_request = google_ads_client.get_type("SearchGoogleAdsStreamRequest")
     search_request.customer_id = customer_id
