@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 
 from google.ads.googleads.client import GoogleAdsClient
+from google.protobuf import json_format
 
 GOOGLEADS_VERSION = "v10"
 
@@ -35,6 +36,10 @@ def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, q
     search_request.query = query
 
     raw_resp = ga_service.search_stream(search_request)
+    df = pd.concat([
+        pd.json_normalize(json_format.MessageToDict(row))
+        for batch in raw_resp for row in batch.results
+    ])
     resp_data = []
     for batch in raw_resp:
         for row in batch.results:
