@@ -42,6 +42,8 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
 
     Returns
     -------
+    df : pd.DataFrame
+        DataFrame of data pulled via API and GAQL query
     """
     ga_service = google_ads_client.get_service("GoogleAdsService")
     search_request = google_ads_client.get_type("SearchGoogleAdsStreamRequest")
