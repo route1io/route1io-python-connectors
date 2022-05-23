@@ -3,10 +3,7 @@
 This module contains functions for pulling data via Google Ads
 """
 
-import datetime
-
 import pandas as pd
-import numpy as np
 
 from google.ads.googleads.client import GoogleAdsClient
 from google.protobuf import json_format
@@ -34,6 +31,10 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
 
     Parameters
     ----------
+    google_ads_client : GoogleAdsClient
+        Authenticated client for accessing Google Ads API
+    customer_id : str
+    query : str
 
     Returns
     -------
