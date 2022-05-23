@@ -40,11 +40,6 @@ def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, q
         pd.json_normalize(json_format.MessageToDict(row))
         for batch in raw_resp for row in batch.results
     ])
-    resp_data = []
-    for batch in raw_resp:
-        for row in batch.results:
-            pass
-    df = pd.DataFrame(resp_data)
     return df
 
 if __name__ == "__main__":
