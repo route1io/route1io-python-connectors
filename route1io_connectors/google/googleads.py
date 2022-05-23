@@ -35,12 +35,14 @@ def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, q
     search_request.customer_id = customer_id
     search_request.query = query
 
-    raw_resp = ga_service.search_stream(search_request)
+    resp_data = [
+        pd.json_normalize(
+            json_format.MessageToDict(row)
+        ) for batch in ga_service.search_stream(search_request)
+        for row in batch.results
+    ]
     try:
-        df = pd.concat([
-            pd.json_normalize(json_format.MessageToDict(row))
-            for batch in raw_resp for row in batch.results
-        ])
+        df = pd.concat(resp_data)
     except ValueError:
         df = pd.DataFrame()
     return df
