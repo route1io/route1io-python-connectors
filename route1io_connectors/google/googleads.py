@@ -34,8 +34,6 @@ def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, q
     search_request.customer_id = customer_id
     search_request.query = query
 
-    # HACK: accessing the resp data has to occur in same scope as 
-    # service object otherwise segfault
     raw_resp = ga_service.search_stream(search_request)
     resp_data = []
     for batch in raw_resp:
