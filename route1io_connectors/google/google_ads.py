@@ -34,7 +34,11 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
     google_ads_client : GoogleAdsClient
         Authenticated client for accessing Google Ads API
     customer_id : str
+        Customer ID of the customer whose data will be accessed
     query : str
+        Valid GAQL query
+        See https://developers.google.com/google-ads/api/fields/v10/overview_query_builder
+        for more details
 
     Returns
     -------
