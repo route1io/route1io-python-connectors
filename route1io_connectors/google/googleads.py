@@ -40,18 +40,7 @@ def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, q
     resp_data = []
     for batch in raw_resp:
         for row in batch.results:
-            campaign = row.campaign
-            ad_group = row.ad_group
-            metrics = row.metrics
-            segments = row.segments
-            resp_data.append({
-                "Campaign": campaign.name,
-                "Ad group": ad_group.name,
-                "Day": pd.to_datetime(datetime.datetime.strptime(segments.date, "%Y-%m-%d")),
-                "Clicks": metrics.clicks,
-                "Impr.": metrics.impressions,
-                "Cost": metrics.cost_micros/1E6,
-            })
+            pass
     df = pd.DataFrame(resp_data)
     return df
 
