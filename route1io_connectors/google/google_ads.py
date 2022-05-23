@@ -49,7 +49,6 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
     search_request = google_ads_client.get_type("SearchGoogleAdsStreamRequest")
     search_request.customer_id = customer_id
     search_request.query = query
-
     resp_data = [
         pd.json_normalize(
             json_format.MessageToDict(row._pb)
