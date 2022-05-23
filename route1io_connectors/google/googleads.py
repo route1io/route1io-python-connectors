@@ -29,9 +29,17 @@ def connect_to_googleads(google_yaml_fpath: str) -> "GoogleAdsClient":
     """
     return GoogleAdsClient.load_from_storage(google_yaml_fpath, version=GOOGLEADS_VERSION)
 
-def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
-    ga_service = googleads_client.get_service("GoogleAdsService")
-    search_request = googleads_client.get_type("SearchGoogleAdsStreamRequest")
+def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
+    """Return a connection to Google Ads API via YAML file with necessary credentials
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+    ga_service = google_ads_client.get_service("GoogleAdsService")
+    search_request = google_ads_client.get_type("SearchGoogleAdsStreamRequest")
     search_request.customer_id = customer_id
     search_request.query = query
 
