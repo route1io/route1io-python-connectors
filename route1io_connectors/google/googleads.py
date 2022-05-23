@@ -11,7 +11,7 @@ from google.protobuf import json_format
 GOOGLEADS_VERSION = "v10"
 
 # TODO: the API pull scripts can definitely be refactored/combined
-def connect_to_googleads(google_yaml_fpath: str) -> "GoogleAdsClient":
+def connect_to_google_ads(google_yaml_fpath: str) -> "GoogleAdsClient":
     """Return a connection to Google Ads API via YAML file with necessary credentials
 
     Parameters
