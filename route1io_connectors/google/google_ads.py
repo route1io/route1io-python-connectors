@@ -60,7 +60,13 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
         df = pd.concat(resp_data)
     except ValueError:
         df = pd.DataFrame()
+    else:
+        df = _convert_dtypes(df)
     return df
+
+def _convert_dtypes(df: "pd.DataFrame") -> "pd.DataFrame":
+    """Return DataFrame with attempted conversion of dtypes across columns"""
+    return df[df.columns].apply(pd.to_numeric, errors="ignore")
 
 if __name__ == "__main__":
     googleads_client = connect_to_google_ads("../google-ads.yaml")
