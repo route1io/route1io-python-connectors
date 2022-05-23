@@ -57,4 +57,4 @@ def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, 
     return df
 
 if __name__ == "__main__":
-    googleads_client = connect_to_googleads("../google-ads.yaml")
+    googleads_client = connect_to_google_ads("../google-ads.yaml")
