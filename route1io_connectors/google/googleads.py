@@ -28,12 +28,11 @@ def connect_to_googleads(google_yaml_fpath: str) -> "GoogleAdsClient":
     """
     return GoogleAdsClient.load_from_storage(google_yaml_fpath, version=GOOGLEADS_VERSION)
 
-def get_ad_group_data(googleads_client: "GoogleAdsClient", customer_id: str,
-                    start_date: "datetime.date") -> "pd.DataFrame":
+def get_google_ads_data(googleads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
     ga_service = googleads_client.get_service("GoogleAdsService")
     search_request = googleads_client.get_type("SearchGoogleAdsStreamRequest")
     search_request.customer_id = customer_id
-    search_request.query = _ad_group_gaql_query(start_date=start_date)
+    search_request.query = query
 
     # HACK: accessing the resp data has to occur in same scope as 
     # service object otherwise segfault
@@ -54,10 +53,6 @@ def get_ad_group_data(googleads_client: "GoogleAdsClient", customer_id: str,
                 "Cost": metrics.cost_micros/1E6,
             })
     df = pd.DataFrame(resp_data)
-    df = df.groupby(
-        ["Campaign", "Ad group", "Day"],
-        as_index=False
-    ).sum()
     return df
 
 if __name__ == "__main__":
