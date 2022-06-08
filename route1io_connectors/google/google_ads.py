@@ -3,6 +3,8 @@
 This module contains functions for pulling data via Google Ads
 """
 
+from typing import List
+
 import pandas as pd
 
 from google.ads.googleads.client import GoogleAdsClient
@@ -24,6 +26,10 @@ def connect_to_google_ads(google_yaml_fpath: str) -> "GoogleAdsClient":
         Connection to Google Ads API via Python wrapper
     """
     return GoogleAdsClient.load_from_storage(google_yaml_fpath, version=GOOGLEADS_VERSION)
+
+def get_customers_linked_to_manager_account(client) -> List[str]:
+    """Return list of customer IDs linked to account"""
+
 
 def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
     """Return a connection to Google Ads API via YAML file with necessary credentials
