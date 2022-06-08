@@ -43,6 +43,7 @@ def get_customers_linked_to_manager_account(client) -> List[str]:
     """
     customer_service = client.get_service("CustomerService")
     available_customers = customer_service.list_accessible_customers()
+    available_customers = [customer.replace("customers/", "") for customer in available_customers.resource_names]
     return available_customers
 
 def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
