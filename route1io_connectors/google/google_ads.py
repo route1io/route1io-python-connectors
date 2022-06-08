@@ -38,10 +38,12 @@ def get_customers_linked_to_manager_account(client) -> List[str]:
 
     Returns
     =======
-    List[str]
+    available_customers : List[str]
         List of customers linked to Google Ads client
     """
-
+    customer_service = client.get_service("CustomerService")
+    available_customers = customer_service.list_accessible_customers()
+    return available_customers
 
 def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
     """Return a connection to Google Ads API via YAML file with necessary credentials
