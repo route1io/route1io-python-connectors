@@ -28,7 +28,18 @@ def connect_to_google_ads(google_yaml_fpath: str) -> "GoogleAdsClient":
     return GoogleAdsClient.load_from_storage(google_yaml_fpath, version=GOOGLEADS_VERSION)
 
 def get_customers_linked_to_manager_account(client) -> List[str]:
-    """Return list of customer IDs linked to account"""
+    """Return list of customer IDs linked to account
+
+    Parameters
+    ==========
+    client : GoogleAdsClient
+        Authenticated GoogleAdsClient
+
+    Returns
+    =======
+    List[str]
+        List of customers linked to Google Ads client
+    """
 
 
 def get_google_ads_data(google_ads_client: "GoogleAdsClient", customer_id: str, query: str) -> "pd.DataFrame":
