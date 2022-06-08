@@ -28,7 +28,8 @@ def connect_to_google_ads(google_yaml_fpath: str) -> "GoogleAdsClient":
     return GoogleAdsClient.load_from_storage(google_yaml_fpath, version=GOOGLEADS_VERSION)
 
 def get_customers_linked_to_manager_account(client) -> List[str]:
-    """Return list of customer IDs linked to account
+    """Return list of customer IDs linked to account. Additional information
+    available at https://developers.google.com/google-ads/api/docs/account-management/listing-accounts
 
     Parameters
     ==========
