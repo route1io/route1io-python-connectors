@@ -8,7 +8,6 @@ AWS SDK for Python (Boto3)
     https://aws.amazon.com/sdk-for-python/
 """
 import tempfile
-
 from typing import Union, Sequence, Dict, Tuple, List
 from pathlib import Path
 
@@ -134,8 +133,8 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, url: s
     """ 
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         download_from_s3(s3, bucket, outfile.name)
-        
 
+        
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
                              filename_required: bool = False,
