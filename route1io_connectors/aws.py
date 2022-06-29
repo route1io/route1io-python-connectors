@@ -13,7 +13,7 @@ from pathlib import Path
 
 import boto3
 
-import onedrive
+from . import onedrive
 
 FilenameVar = Union[str, Sequence[Union[str, None]]]
 
