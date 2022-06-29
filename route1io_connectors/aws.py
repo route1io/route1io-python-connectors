@@ -134,8 +134,8 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, url: s
         URL of the file on OneDrive or SharePoint
     """ 
     with tempfile.NamedTemporaryFile("wb+") as outfile:
-        download_from_s3(s3, bucket, outfile.name)
-
+        download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
+        onedrive.upload_file(access_token, url, fpath=outfile.name)
         
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
