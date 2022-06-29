@@ -114,6 +114,9 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[st
         )
     return list(filename_to_key_map.values())
 
+def copy_file_to_onedrive() -> None: 
+    pass 
+
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
                              filename_required: bool = False,
