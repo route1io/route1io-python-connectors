@@ -7,10 +7,13 @@ References
 AWS SDK for Python (Boto3)
     https://aws.amazon.com/sdk-for-python/
 """
+import tempfile
 from typing import Union, Sequence, Dict, Tuple, List
 from pathlib import Path
 
 import boto3
+
+from . import onedrive
 
 FilenameVar = Union[str, Sequence[Union[str, None]]]
 
@@ -114,6 +117,26 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[st
         )
     return list(filename_to_key_map.values())
 
+def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, url: str) -> None: 
+    """Copy object from S3 bucket to OneDrive at given URL
+
+    Parameters
+    ----------
+    s3
+        Valid S3 connection created using aws.connect_to_s3
+    bucket : str
+        Existing bucket on AWS
+    key : str
+         Key name of the file as it will appear in S3
+    access_token : str
+        Valid access token for accessing OneDrive
+    url : str
+        URL of the file on OneDrive or SharePoint
+    """ 
+    with tempfile.NamedTemporaryFile("wb+") as outfile:
+        download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
+        onedrive.upload_file(access_token, url, fpath=outfile.name)
+        
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
                              filename_required: bool = False,
