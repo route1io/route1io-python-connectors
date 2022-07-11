@@ -93,8 +93,9 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
             )
     return json.loads(resp.text)
 
-def _create_content_range_value():
-    pass 
+def _create_content_range_value(start_byte: str, chunk_size: int, file_size: int):
+    """Return Content-Range value at current chunk upload iteration"""
+    
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
@@ -208,7 +209,7 @@ def _get_upload_session_url(metadata: Dict[str, str]) -> str:
 
 def _get_next_expected_start_byte(metadata: Dict[str, str]) -> str:
     """Return next expected start byte of file upload"""
-    return metadata["nextExpectedRanges"].split("-")[0]
+    return int(metadata["nextExpectedRanges"].split("-")[0])
 
 def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
     """Return dictionary of JSON response after creating upload session"""
