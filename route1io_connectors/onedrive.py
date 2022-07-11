@@ -92,31 +92,6 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
             ) 
     return metadata
 
-def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
-    """PUT request a chunk to the upload URL and return response metadata"""
-    content_range = _create_content_range_value(
-        start_byte=start_byte, 
-        chunk_size=chunk_size, 
-        file_size=file_size
-    )
-    metadata = requests.put(
-        data=chunk,
-        headers={
-            "Authorization": f"Bearer {access_token}",
-            "Content-Length": str(chunk_size),
-            "Content-Range": content_range
-        },
-        url=upload_url
-    )
-    return json.loads(metadata.text)
-
-def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
-    """Return Content-Range value at current chunk upload iteration"""
-    end_byte = start_byte + (chunk_size - 1) 
-    if end_byte >= file_size:
-        end_byte = file_size - 1
-    return f"{start_byte}-{end_byte}/{file_size}"
-
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
 
@@ -223,12 +198,38 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
+def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
+    """PUT request a chunk to the upload URL and return response metadata"""
+    content_range = _create_content_range_value(
+        start_byte=start_byte, 
+        chunk_size=chunk_size, 
+        file_size=file_size
+    )
+    metadata = requests.put(
+        data=chunk,
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Length": str(chunk_size),
+            "Content-Range": content_range
+        },
+        url=upload_url
+    )
+    return json.loads(metadata.text)
+
+def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
+    """Return Content-Range value at current chunk upload iteration"""
+    end_byte = start_byte + (chunk_size - 1) 
+    if end_byte >= file_size:
+        end_byte = file_size - 1
+    return f"bytes {start_byte}-{end_byte}/{file_size}"
+
 def _get_upload_session_url(metadata: Dict[str, str]) -> str:
     """Return upload URL for PUT requesting file chunks into"""
     return metadata["uploadUrl"]
 
 def _get_next_expected_start_byte(metadata: Dict[str, str]) -> int:
     """Return next expected start byte of file upload"""
+    print(metadata)
     return int(metadata["nextExpectedRanges"][0].split("-")[0])
 
 def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
