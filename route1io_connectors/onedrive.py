@@ -90,7 +90,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
                 chunk_size=chunk_size,
                 file_size=file_size
             ) 
-    return json.loads(metadata.text)
+    return metadata
 
 def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
     """PUT request a chunk to the upload URL and return response metadata"""
@@ -103,7 +103,7 @@ def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_
         data=chunk,
         headers={
             "Authorization": f"Bearer {access_token}",
-            "Content-Length": chunk_size,
+            "Content-Length": str(chunk_size),
             "Content-Range": content_range
         },
         url=upload_url
@@ -229,7 +229,7 @@ def _get_upload_session_url(metadata: Dict[str, str]) -> str:
 
 def _get_next_expected_start_byte(metadata: Dict[str, str]) -> int:
     """Return next expected start byte of file upload"""
-    return int(metadata["nextExpectedRanges"].split("-")[0])
+    return int(metadata["nextExpectedRanges"][0].split("-")[0])
 
 def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
     """Return dictionary of JSON response after creating upload session"""
