@@ -191,7 +191,11 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
 
 def _read_in_chunks(file_obj, chunk_size: int):
     """Return lazy-loaded chunk from file object"""
-    pass 
+    while True:
+        data = file_obj.read(chunk_size)
+        if not data:
+            break
+        yield data
 
 def _parse_filename_from_response_headers(headers) -> "str":
     """Return filename from GET request response header"""
