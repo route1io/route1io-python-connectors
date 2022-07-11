@@ -190,7 +190,7 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
-def _get_upload_url(metadata: Dict[str, str]) -> str:
+def _get_upload_session_url(metadata: Dict[str, str]) -> str:
     """Return upload URL for PUT requesting file chunks into"""
     pass
 
