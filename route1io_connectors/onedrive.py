@@ -14,6 +14,8 @@ import requests
 
 from . import aws
 
+DEFAULT_UPLOAD_CHUNK_SIZE = 327_680
+
 def get_file(access_token: str, url: str) -> str:
     """Get content from file on OneDrive specified at URL
 
@@ -54,7 +56,7 @@ def download_file(access_token: str, url: str, fpath: str) -> str:
         outfile.write(resp.content)
     return resp.content
 
-def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
+def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
     suffixed with /content to work
     
@@ -75,14 +77,15 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
         Dictionary of information pertaining to recently uploaded file
     """
 
-    with open(fpath, 'rb') as f:
-        data = f.read()
-    resp = requests.put(
-        data=data,
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=url
-    )
-    return json.loads(resp.text)
+    with open(fpath, 'rb') as infile:
+        for chunk in _read_in_chunks(infile, chunk_size=chunk_size)
+            pass
+    # resp = requests.put(
+    #     data=data,
+    #     headers={"Authorization": f"Bearer {access_token}"},
+    #     url=url
+    # )
+    # return json.loads(resp.text)
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
