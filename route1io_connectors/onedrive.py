@@ -192,7 +192,11 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
 
 def _get_upload_session_url(metadata: Dict[str, str]) -> str:
     """Return upload URL for PUT requesting file chunks into"""
-    pass
+    return metadata["uploadUrl"]
+
+def _get_next_expected_start_byte(metadata: Dict[str, str]) -> str:
+    """Return next expected start byte of file upload"""
+    pass 
 
 def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
     """Return dictionary of JSON response after creating upload session"""
