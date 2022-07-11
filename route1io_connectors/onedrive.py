@@ -189,6 +189,10 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
+def _read_in_chunks(file_obj, chunk_size: int):
+    """Return lazy-loaded chunk from file object"""
+    pass 
+
 def _parse_filename_from_response_headers(headers) -> "str":
     """Return filename from GET request response header"""
     content_disposition = headers["Content-Disposition"]
