@@ -76,9 +76,9 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     resp : Dict[str, str]
         Dictionary of information pertaining to recently uploaded file
     """
-
+    upload_session_metadata = _create_upload_session(access_token=access_token, url=url)
     with open(fpath, 'rb') as infile:
-        for chunk in _read_in_chunks(infile, chunk_size=chunk_size)
+        for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
             pass
     # resp = requests.put(
     #     data=data,
