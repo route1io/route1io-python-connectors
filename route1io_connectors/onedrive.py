@@ -192,7 +192,11 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
 
 def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
     """Return dictionary of JSON response after creating upload session"""
-    pass
+    resp = requests.post(
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    ) 
+    return json.loads(resp.text)
 
 def _read_in_chunks(file_obj, chunk_size: int):
     """Return lazy-loaded chunk from file object"""
