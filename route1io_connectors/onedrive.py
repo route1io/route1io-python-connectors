@@ -78,6 +78,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     """
     upload_session_metadata = _create_upload_session(access_token=access_token, url=url)
     upload_url = _get_upload_session_url(metadata=upload_session_metadata)
+    file_size = os.path.getsize(fpath)
     with open(fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
             resp = requests.put(
