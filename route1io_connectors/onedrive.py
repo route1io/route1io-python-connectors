@@ -80,13 +80,13 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     upload_url = _get_upload_session_url(metadata=upload_session_metadata)
     with open(fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
-            pass
-    # resp = requests.put(
-    #     data=data,
-    #     headers={"Authorization": f"Bearer {access_token}"},
-    #     url=url
-    # )
+            resp = requests.put(
+                data=chunk,
+                headers={"Authorization": f"Bearer {access_token}"},
+                url=upload_url
+            )
     # return json.loads(resp.text)
+
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
