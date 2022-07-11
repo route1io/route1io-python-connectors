@@ -98,6 +98,10 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
             )
     return json.loads(metadata.text)
 
+def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
+    """PUT request a chunk to the upload URL and return response metadata"""
+    pass
+
 def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
     """Return Content-Range value at current chunk upload iteration"""
     end_byte = start_byte + (chunk_size - 1) 
