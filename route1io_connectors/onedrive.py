@@ -82,25 +82,33 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     with open(fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
             next_expected_start_byte = _get_next_expected_start_byte(metadata)
-            content_range = _create_content_range_value(
-                start_byte=next_expected_start_byte, 
-                chunk_size=chunk_size, 
+            metadata = _upload_chunk(
+                access_token=access_token, 
+                chunk=chunk,
+                upload_url=upload_url,
+                start_byte=next_expected_start_byte,
+                chunk_size=chunk_size,
                 file_size=file_size
-            )
-            metadata = requests.put(
-                data=chunk,
-                headers={
-                    "Authorization": f"Bearer {access_token}",
-                    "Content-Length": chunk_size,
-                    "Content-Range": content_range
-                },
-                url=upload_url
-            )
+            ) 
     return json.loads(metadata.text)
 
 def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
     """PUT request a chunk to the upload URL and return response metadata"""
-    pass
+    content_range = _create_content_range_value(
+        start_byte=start_byte, 
+        chunk_size=chunk_size, 
+        file_size=file_size
+    )
+    metadata = requests.put(
+        data=chunk,
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Length": chunk_size,
+            "Content-Range": content_range
+        },
+        url=upload_url
+    )
+    return json.loads(metadata.text)
 
 def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
     """Return Content-Range value at current chunk upload iteration"""
