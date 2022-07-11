@@ -82,7 +82,11 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
             resp = requests.put(
                 data=chunk,
-                headers={"Authorization": f"Bearer {access_token}"},
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Content-Length": "",
+                    "Content-Range": ""
+                },
                 url=upload_url
             )
     # return json.loads(resp.text)
