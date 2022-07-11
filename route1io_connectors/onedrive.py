@@ -81,7 +81,12 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     file_size = os.path.getsize(fpath)
     with open(fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
-            start_byte = _get_next_expected_start_byte(metadata)
+            next_expected_start_byte = _get_next_expected_start_byte(metadata)
+            content_range = _create_content_range_value(
+                start_byte=next_expected_start_byte, 
+                chunk_size=chunk_size, 
+                file_size=file_size
+            )
             resp = requests.put(
                 data=chunk,
                 headers={
@@ -93,9 +98,9 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
             )
     return json.loads(resp.text)
 
-def _create_content_range_value(start_byte: str, chunk_size: int, file_size: int):
+def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int):
     """Return Content-Range value at current chunk upload iteration"""
-    
+    pass 
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
