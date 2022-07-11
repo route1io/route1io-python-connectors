@@ -83,7 +83,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
                 data=chunk,
                 headers={
                     "Authorization": f"Bearer {access_token}",
-                    "Content-Length": "",
+                    "Content-Length": chunk_size,
                     "Content-Range": ""
                 },
                 url=upload_url
