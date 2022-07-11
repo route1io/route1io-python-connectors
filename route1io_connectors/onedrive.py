@@ -207,7 +207,7 @@ def _get_upload_session_url(metadata: Dict[str, str]) -> str:
     """Return upload URL for PUT requesting file chunks into"""
     return metadata["uploadUrl"]
 
-def _get_next_expected_start_byte(metadata: Dict[str, str]) -> str:
+def _get_next_expected_start_byte(metadata: Dict[str, str]) -> int:
     """Return next expected start byte of file upload"""
     return int(metadata["nextExpectedRanges"].split("-")[0])
 
