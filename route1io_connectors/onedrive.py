@@ -74,6 +74,7 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     resp : Dict[str, str]
         Dictionary of information pertaining to recently uploaded file
     """
+
     with open(fpath, 'rb') as f:
         data = f.read()
     resp = requests.put(
@@ -188,6 +189,10 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
     )
     return json.loads(resp.text)
+
+def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
+    """Return dictionary of JSON response after creating upload session"""
+    pass
 
 def _read_in_chunks(file_obj, chunk_size: int):
     """Return lazy-loaded chunk from file object"""
