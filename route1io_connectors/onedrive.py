@@ -92,7 +92,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
                 headers={
                     "Authorization": f"Bearer {access_token}",
                     "Content-Length": chunk_size,
-                    "Content-Range": ""
+                    "Content-Range": content_range
                 },
                 url=upload_url
             )
@@ -100,7 +100,10 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
 
 def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int):
     """Return Content-Range value at current chunk upload iteration"""
-    pass 
+    end_byte = start_byte + (chunk_size - 1) 
+    if end_byte >= file_size:
+        end_byte = file_size - 1
+    return f"{start_byte}-{end_byte}/{file_size}"
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
