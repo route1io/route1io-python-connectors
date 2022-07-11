@@ -87,7 +87,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
                 chunk_size=chunk_size, 
                 file_size=file_size
             )
-            resp = requests.put(
+            metadata = requests.put(
                 data=chunk,
                 headers={
                     "Authorization": f"Bearer {access_token}",
@@ -96,7 +96,7 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
                 },
                 url=upload_url
             )
-    return json.loads(resp.text)
+    return json.loads(metadata.text)
 
 def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
     """Return Content-Range value at current chunk upload iteration"""
