@@ -53,7 +53,8 @@ def download_file(access_token: str, drive_id: str, remote_fpath: str, local_fpa
     content : str
         Content of the downloaded file
     """
-    resp = _get_request_url(access_token=access_token, url=url)
+    download_url = _construct_download_url(drive_id=drive_id, remote_fpath=remote_fpath)
+    resp = _get_request_url(access_token=access_token, url=download_url)
     with open(fpath, 'wb') as outfile:
         outfile.write(resp.content)
     return resp.content
