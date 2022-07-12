@@ -90,12 +90,11 @@ def upload_file(access_token: str, drive_id: str, remote_fpath: str,
     file_size = os.path.getsize(local_fpath)
     with open(local_fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
-            next_expected_start_byte = _get_next_expected_start_byte(metadata)
             metadata = _upload_chunk(
                 access_token=access_token, 
                 chunk=chunk,
                 upload_url=upload_url,
-                start_byte=next_expected_start_byte,
+                metadata=metadata,
                 chunk_size=chunk_size,
                 file_size=file_size
             ) 
@@ -215,10 +214,11 @@ def _construct_upload_url(drive_id: str, remote_fpath: str) -> str:
     """Return properly formatted upload URL"""
     return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/createUploadSession"
 
-def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
+def _upload_chunk(access_token, chunk, upload_url, metadata, chunk_size, file_size) -> Dict[str, str]:
     """PUT request a chunk to the upload URL and return response metadata"""
+    next_expected_start_byte = _get_next_expected_start_byte(metadata)
     content_range = _create_content_range_value(
-        start_byte=start_byte, 
+        start_byte=next_expected_start_byte, 
         chunk_size=chunk_size, 
         file_size=file_size
     )
