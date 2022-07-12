@@ -62,7 +62,10 @@ def download_file(access_token: str, drive_id: str, remote_fpath: str, local_fpa
 
 def upload_file(access_token: str, drive_id: str, remote_fpath: str, 
                 local_fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
-    """Upload file locally to OneDrive at specified URL
+    """Upload file locally to OneDrive at specified URL. Algorithm uses chunking 
+    to allow for arbitrarily large files to be uploaded. See official Microsoft 
+    Graph API docs for details on uploading large files via chunking and upload
+    sessions: https://docs.microsoft.com/en-us/onedrive/developer/rest-api/api/driveitem_createuploadsession?view=odsp-graph-online
     
     Parameters
     ----------
