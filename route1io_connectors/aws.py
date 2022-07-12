@@ -137,6 +137,8 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str,
         Remote filepath to upload to. If none is provided use the provided S3
         key name and upload to root folder of drive
     """ 
+    if remote_fpath is None:
+        remote_fpath = f"/{key}"
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
         onedrive.upload_file(
