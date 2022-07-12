@@ -100,7 +100,8 @@ def upload_file(access_token: str, drive_id: str, remote_fpath: str,
             ) 
     return metadata
 
-def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
+def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, 
+                        key: str = None) -> None:
     """Copy file at given URL to S3 bucket
 
     Parameters
