@@ -34,17 +34,19 @@ def get_file(access_token: str, url: str) -> str:
     resp = _get_request_url(access_token=access_token, url=url)
     return resp.content
 
-def download_file(access_token: str, url: str, fpath: str) -> str:
+def download_file(access_token: str, drive_id: str, remote_fpath: str, local_fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
 
     Parameters
     ----------
     access_token : str
         Valid access token
-    url : str
-        Valid Microsoft Graph API URL of the file we are going to download
-    fpath : str
-        Local fpath of where the file will be downloaded to
+    drive_id : str 
+        ID of the drive to upload file to 
+    remote_fpath : str 
+        Filepath in Drive to upload the file to
+    local_fpath : str 
+        Local filepath to upload to OneDrive
 
     Returns
     -------
