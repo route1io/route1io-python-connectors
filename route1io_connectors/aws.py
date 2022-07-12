@@ -117,7 +117,8 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[st
         )
     return list(filename_to_key_map.values())
 
-def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, url: str) -> None: 
+def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, 
+                            drive_id: str, remote_fpath: str = None) -> None: 
     """Copy object from S3 bucket to OneDrive at given URL
 
     Parameters
@@ -130,12 +131,22 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, url: s
          Key name of the file as it will appear in S3
     access_token : str
         Valid access token for accessing OneDrive
-    url : str
-        URL of the file on OneDrive or SharePoint
+    drive_id : str
+        OneDrive drive ID to upload to 
+    remote_fpath : str = None
+        Remote filepath to upload to. If none is provided use the provided S3
+        key name and upload to root folder of drive
     """ 
+    if remote_fpath is None:
+        remote_fpath = f"/{key}"
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
-        onedrive.upload_file(access_token, url, fpath=outfile.name)
+        onedrive.upload_file(
+            access_token=access_token,
+            drive_id=drive_id, 
+            remote_fpath=remote_fpath, 
+            local_fpath=outfile.name
+        )
         
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,

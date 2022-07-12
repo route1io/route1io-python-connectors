@@ -9,6 +9,7 @@ import webbrowser
 from typing import List, Dict
 import json
 import tempfile
+from pathlib import Path
 
 import requests 
 
@@ -100,7 +101,8 @@ def upload_file(access_token: str, drive_id: str, remote_fpath: str,
             ) 
     return metadata
 
-def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
+def copy_file_to_aws_s3(access_token: str, drive_id: str, remote_fpath: str, s3, 
+                        bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
 
     Parameters
@@ -117,11 +119,15 @@ def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str =
         (Optional) Key name of the file as it will appear in S3. If left blank
         it will default to the same name that's in OneDrive
     """
-    resp = _get_request_url(access_token=access_token, url=url)
     if key is None:
-        key = _parse_filename_from_response_headers(resp.headers)
+        key = Path(remote_fpath).name
     with tempfile.NamedTemporaryFile("wb+") as outfile:
-        outfile.write(resp.content)
+        download_file(
+            access_token=access_token,
+            drive_id=drive_id, 
+            remote_fpath=remote_fpath, 
+            local_fpath=outfile.name
+        )
         outfile.seek(0)
         aws.upload_to_s3(s3=s3, bucket=bucket, filename=outfile.name, key=key)
 
