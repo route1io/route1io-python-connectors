@@ -34,39 +34,45 @@ def get_file(access_token: str, url: str) -> str:
     resp = _get_request_url(access_token=access_token, url=url)
     return resp.content
 
-def download_file(access_token: str, url: str, fpath: str) -> str:
+def download_file(access_token: str, drive_id: str, remote_fpath: str, local_fpath: str) -> str:
     """Download file locally from OneDrive from the specified URL
 
     Parameters
     ----------
     access_token : str
         Valid access token
-    url : str
-        Valid Microsoft Graph API URL of the file we are going to download
-    fpath : str
-        Local fpath of where the file will be downloaded to
+    drive_id : str 
+        ID of the drive to upload file to 
+    remote_fpath : str 
+        Filepath in Drive to upload the file to
+    local_fpath : str 
+        Local filepath to upload to OneDrive
 
     Returns
     -------
     content : str
         Content of the downloaded file
     """
-    resp = _get_request_url(access_token=access_token, url=url)
-    with open(fpath, 'wb') as outfile:
+    download_url = _construct_download_url(drive_id=drive_id, remote_fpath=remote_fpath)
+    resp = _get_request_url(access_token=access_token, url=download_url)
+    with open(local_fpath, 'wb') as outfile:
         outfile.write(resp.content)
     return resp.content
 
-def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
-    """Upload file locally to OneDrive at specified URL. Note: URL must be 
-    suffixed with /content to work
+def upload_file(access_token: str, drive_id: str, remote_fpath: str, 
+                local_fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
+    """Upload file locally to OneDrive at specified URL
     
     Parameters
     ----------
     access_token : str
         Valid access token
-    url : str
-        Valid Microsoft Graph API URL of the file we are going to update 
-        and/or create
+    drive_id : str 
+        ID of the drive to upload file to 
+    remote_fpath : str 
+        Filepath in Drive to upload the file to
+    local_fpath : str 
+        Local filepath to upload to OneDrive
     fpath : str
         Local fpath of the file we will upload to OneDrive location specified
         at url
@@ -78,17 +84,17 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     resp : Dict[str, str]
         Dictionary of information pertaining to recently uploaded file
     """
-    metadata = _create_upload_session(access_token=access_token, url=url)
-    upload_url = _get_upload_session_url(metadata=metadata)
-    file_size = os.path.getsize(fpath)
-    with open(fpath, 'rb') as infile:
+    upload_url = _construct_upload_url(drive_id=drive_id, remote_fpath=remote_fpath)
+    metadata = _create_upload_session(access_token=access_token, url=upload_url)
+    upload_session_url = _get_upload_session_url(metadata=metadata)
+    file_size = os.path.getsize(local_fpath)
+    with open(local_fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
-            next_expected_start_byte = _get_next_expected_start_byte(metadata)
             metadata = _upload_chunk(
                 access_token=access_token, 
                 chunk=chunk,
-                upload_url=upload_url,
-                start_byte=next_expected_start_byte,
+                upload_session_url=upload_session_url,
+                metadata=metadata,
                 chunk_size=chunk_size,
                 file_size=file_size
             ) 
@@ -200,10 +206,19 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
-def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
+def _construct_download_url(drive_id: str, remote_fpath: str):
+    """Return properly formatted download URL"""
+    return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/content"
+
+def _construct_upload_url(drive_id: str, remote_fpath: str) -> str:
+    """Return properly formatted upload URL"""
+    return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/createUploadSession"
+
+def _upload_chunk(access_token, chunk, upload_session_url, metadata, chunk_size, file_size) -> Dict[str, str]:
     """PUT request a chunk to the upload URL and return response metadata"""
+    next_expected_start_byte = _get_next_expected_start_byte(metadata)
     content_range = _create_content_range_value(
-        start_byte=start_byte, 
+        start_byte=next_expected_start_byte, 
         chunk_size=chunk_size, 
         file_size=file_size
     )
@@ -214,7 +229,7 @@ def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_
             "Content-Length": str(chunk_size),
             "Content-Range": content_range
         },
-        url=upload_url
+        url=upload_session_url
     )
     return json.loads(metadata.text)
 
