@@ -205,6 +205,10 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
     )
     return json.loads(resp.text)
 
+def _construct_download_url(drive_id: str, remote_fpath: str):
+    """Return properly formatted download URL"""
+    return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/content"
+
 def _construct_upload_url(drive_id: str, remote_fpath: str) -> str:
     """Return properly formatted upload URL"""
     return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/createUploadSession"
