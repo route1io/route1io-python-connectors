@@ -4,7 +4,7 @@ The purpose of this module is for uploading/downloading files to/from OneDrive a
 via the Microsoft Graph API
 """
 
-from fileinput import filename
+import os
 import webbrowser
 from typing import List, Dict
 import json
@@ -13,6 +13,8 @@ import tempfile
 import requests 
 
 from . import aws
+
+DEFAULT_UPLOAD_CHUNK_SIZE = 3_276_800
 
 def get_file(access_token: str, url: str) -> str:
     """Get content from file on OneDrive specified at URL
@@ -54,7 +56,7 @@ def download_file(access_token: str, url: str, fpath: str) -> str:
         outfile.write(resp.content)
     return resp.content
 
-def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
+def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
     """Upload file locally to OneDrive at specified URL. Note: URL must be 
     suffixed with /content to work
     
@@ -68,20 +70,29 @@ def upload_file(access_token: str, url: str, fpath: str) -> Dict[str, str]:
     fpath : str
         Local fpath of the file we will upload to OneDrive location specified
         at url
+    chunk_size : int
+        Size of chunks to upload to OneDrive
 
     Returns
     -------
     resp : Dict[str, str]
         Dictionary of information pertaining to recently uploaded file
     """
-    with open(fpath, 'rb') as f:
-        data = f.read()
-    resp = requests.put(
-        data=data,
-        headers={"Authorization": f"Bearer {access_token}"},
-        url=url
-    )
-    return json.loads(resp.text)
+    metadata = _create_upload_session(access_token=access_token, url=url)
+    upload_url = _get_upload_session_url(metadata=metadata)
+    file_size = os.path.getsize(fpath)
+    with open(fpath, 'rb') as infile:
+        for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
+            next_expected_start_byte = _get_next_expected_start_byte(metadata)
+            metadata = _upload_chunk(
+                access_token=access_token, 
+                chunk=chunk,
+                upload_url=upload_url,
+                start_byte=next_expected_start_byte,
+                chunk_size=chunk_size,
+                file_size=file_size
+            ) 
+    return metadata
 
 def copy_file_to_aws_s3(access_token: str, url: str, s3, bucket: str, key: str = None) -> None:
     """Copy file at given URL to S3 bucket
@@ -188,6 +199,56 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
     )
     return json.loads(resp.text)
+
+def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
+    """PUT request a chunk to the upload URL and return response metadata"""
+    content_range = _create_content_range_value(
+        start_byte=start_byte, 
+        chunk_size=chunk_size, 
+        file_size=file_size
+    )
+    metadata = requests.put(
+        data=chunk,
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Length": str(chunk_size),
+            "Content-Range": content_range
+        },
+        url=upload_url
+    )
+    return json.loads(metadata.text)
+
+def _create_content_range_value(start_byte: int, chunk_size: int, file_size: int) -> str:
+    """Return Content-Range value at current chunk upload iteration"""
+    end_byte = start_byte + (chunk_size - 1) 
+    if end_byte >= file_size:
+        end_byte = file_size - 1
+    return f"bytes {start_byte}-{end_byte}/{file_size}"
+
+def _get_upload_session_url(metadata: Dict[str, str]) -> str:
+    """Return upload URL for PUT requesting file chunks into"""
+    return metadata["uploadUrl"]
+
+def _get_next_expected_start_byte(metadata: Dict[str, str]) -> int:
+    """Return next expected start byte of file upload"""
+    print(metadata)
+    return int(metadata["nextExpectedRanges"][0].split("-")[0])
+
+def _create_upload_session(access_token: str, url: str) -> Dict[str, str]:
+    """Return dictionary of JSON response after creating upload session"""
+    resp = requests.post(
+        headers={"Authorization": f"Bearer {access_token}"},
+        url=url
+    ) 
+    return json.loads(resp.text)
+
+def _read_in_chunks(file_obj, chunk_size: int):
+    """Return lazy-loaded chunk from file object"""
+    while True:
+        data = file_obj.read(chunk_size)
+        if not data:
+            break
+        yield data
 
 def _parse_filename_from_response_headers(headers) -> "str":
     """Return filename from GET request response header"""
