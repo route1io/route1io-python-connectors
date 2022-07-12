@@ -14,7 +14,7 @@ import requests
 
 from . import aws
 
-DEFAULT_UPLOAD_CHUNK_SIZE = 327_680
+DEFAULT_UPLOAD_CHUNK_SIZE = 3_276_800
 
 def get_file(access_token: str, url: str) -> str:
     """Get content from file on OneDrive specified at URL
@@ -70,6 +70,8 @@ def upload_file(access_token: str, url: str, fpath: str, chunk_size: int = DEFAU
     fpath : str
         Local fpath of the file we will upload to OneDrive location specified
         at url
+    chunk_size : int
+        Size of chunks to upload to OneDrive
 
     Returns
     -------
