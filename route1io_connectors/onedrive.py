@@ -55,14 +55,13 @@ def download_file(access_token: str, drive_id: str, remote_fpath: str, local_fpa
     """
     download_url = _construct_download_url(drive_id=drive_id, remote_fpath=remote_fpath)
     resp = _get_request_url(access_token=access_token, url=download_url)
-    with open(fpath, 'wb') as outfile:
+    with open(local_fpath, 'wb') as outfile:
         outfile.write(resp.content)
     return resp.content
 
 def upload_file(access_token: str, drive_id: str, remote_fpath: str, 
                 local_fpath: str, chunk_size: int = DEFAULT_UPLOAD_CHUNK_SIZE) -> Dict[str, str]:
-    """Upload file locally to OneDrive at specified URL. Note: URL must be 
-    suffixed with /content to work
+    """Upload file locally to OneDrive at specified URL
     
     Parameters
     ----------
