@@ -140,7 +140,8 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str,
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
         onedrive.upload_file(
-            access_token, 
+            access_token=access_token,
+            drive_id=drive_id, 
             remote_fpath=remote_fpath, 
             local_fpath=outfile.name
         )
