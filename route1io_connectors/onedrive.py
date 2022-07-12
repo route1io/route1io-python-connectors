@@ -83,8 +83,8 @@ def upload_file(access_token: str, drive_id: str, remote_fpath: str, local_fpath
     """
     metadata = _create_upload_session(access_token=access_token, url=url)
     upload_url = _get_upload_session_url(metadata=metadata)
-    file_size = os.path.getsize(fpath)
-    with open(fpath, 'rb') as infile:
+    file_size = os.path.getsize(local_fpath)
+    with open(local_fpath, 'rb') as infile:
         for chunk in _read_in_chunks(infile, chunk_size=chunk_size):
             next_expected_start_byte = _get_next_expected_start_byte(metadata)
             metadata = _upload_chunk(
