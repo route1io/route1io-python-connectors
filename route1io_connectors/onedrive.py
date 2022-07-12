@@ -81,7 +81,8 @@ def upload_file(access_token: str, drive_id: str, remote_fpath: str, local_fpath
     resp : Dict[str, str]
         Dictionary of information pertaining to recently uploaded file
     """
-    metadata = _create_upload_session(access_token=access_token, url=url)
+    upload_url = _construct_upload_url(drive_id=drive_id, remote_fpath=remote_fpath)
+    metadata = _create_upload_session(access_token=access_token, url=upload_url)
     upload_url = _get_upload_session_url(metadata=metadata)
     file_size = os.path.getsize(local_fpath)
     with open(local_fpath, 'rb') as infile:
@@ -202,6 +203,10 @@ def search_sharepoint_site(access_token: str, search: str) -> Dict[str, str]:
         url=f"https://graph.microsoft.com/v1.0/sites?search={search}"
     )
     return json.loads(resp.text)
+
+def _construct_upload_url(drive_id: str, remote_fpath: str) -> str:
+    """Return properly formatted upload URL"""
+    return f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:{remote_fpath}:/createUploadSession"
 
 def _upload_chunk(access_token, chunk, upload_url, start_byte, chunk_size, file_size) -> Dict[str, str]:
     """PUT request a chunk to the upload URL and return response metadata"""
