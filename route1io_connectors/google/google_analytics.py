@@ -8,6 +8,7 @@ import itertools
 import numpy as np
 import pandas as pd
 from googleapiclient.discovery import build
+from google.analytics.data_v1beta import BetaAnalyticsDataClient
 
 def connect_to_google_analytics(credentials: "google.oauth2.credentials.Credentials"
                        ) -> "googleapiclient.discovery.Resource":
@@ -20,11 +21,11 @@ def connect_to_google_analytics(credentials: "google.oauth2.credentials.Credenti
 
     Returns
     -------
-    google_drive_conn : googleapiclient.discovery.Resource
-        Connection to Google Drive API
+    google_conn : googleapiclient.discovery.Resource
+        Connection to Google Analytics API
     """
-    google_drive_conn = build('analyticsreporting', 'v4', credentials=credentials)
-    return google_drive_conn
+    google_conn = build('analyticsreporting', 'v4', credentials=credentials)
+    return google_conn
 
 def get_google_analytics_data(
         analytics,
