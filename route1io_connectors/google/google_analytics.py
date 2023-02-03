@@ -62,6 +62,18 @@ def get_google_analytics_data(
     -------
     df : pd.DataFrame
     """
+    pass
+
+def _process_universal_analytics_data(
+        analytics,
+        view_id: str,
+        dimensions: List[str] = None,
+        metrics: List[str] = None,
+        start_date: str = "7daysAgo",
+        end_date: str = "today"
+    ) -> "pd.DataFrame":
+    """Return pd.DataFrame of Universal Analytics data pulled via the 
+    Google Analytics Reporting API"""
     resp_df_arr = []
     next_page_token = None
     while True:
@@ -83,6 +95,7 @@ def get_google_analytics_data(
         
     df = pd.concat(resp_df_arr)
     return df
+
 
 def _get_next_page_token(resp: Dict[str, str]) -> Union[str, None]:
     """Return Boolean indicating if paginated data exists"""
@@ -227,11 +240,3 @@ def _process_metrics(metrics: List[str]) -> List[Dict[str, str]]:
     """Return list of dictionary's containing the metrics formatted for Google
     Analytics Reporting API to accept the request"""
     return [{"expression": f"ga:{metric}"} for metric in metrics]
-
-if __name__ == "__main__":
-    import dotenv
-    import os
-
-    dotenv.load_dotenv("../../.env")
-    
-    
