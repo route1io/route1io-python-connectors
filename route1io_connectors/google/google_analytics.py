@@ -221,3 +221,6 @@ def _process_metrics(metrics: List[str]) -> List[Dict[str, str]]:
     """Return list of dictionary's containing the metrics formatted for Google
     Analytics Reporting API to accept the request"""
     return [{"expression": f"ga:{metric}"} for metric in metrics]
+
+if __name__ == "__main__":
+    pass
