@@ -26,7 +26,10 @@ def connect_to_google_analytics(
     google_conn : googleapiclient.discovery.Resource
         Connection to Google Analytics API
     """
-    google_conn = build('analyticsreporting', 'v4', credentials=credentials)
+    if ga4: 
+        google_conn = BetaAnalyticsDataClient(credentials=credentials)
+    else:
+        google_conn = build('analyticsreporting', 'v4', credentials=credentials)
     return google_conn
 
 def get_google_analytics_data(
