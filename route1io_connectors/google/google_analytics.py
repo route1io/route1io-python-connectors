@@ -223,4 +223,9 @@ def _process_metrics(metrics: List[str]) -> List[Dict[str, str]]:
     return [{"expression": f"ga:{metric}"} for metric in metrics]
 
 if __name__ == "__main__":
-    pass
+    import dotenv
+    import os
+
+    dotenv.load_dotenv("../../.env")
+    
+    
