@@ -71,6 +71,18 @@ def get_google_analytics_data(
         end_date=end_date
     )
 
+def _process_ga4_data(
+        analytics,
+        view_id: str,
+        dimensions: List[str] = None,
+        metrics: List[str] = None,
+        start_date: str = "7daysAgo",
+        end_date: str = "today"
+    ) -> "pd.DataFrame":
+    """Return pd.DataFrame of GA4 data pulled via the 
+    Google Analytics Data API"""
+    pass
+
 def _process_universal_analytics_data(
         analytics,
         view_id: str,
