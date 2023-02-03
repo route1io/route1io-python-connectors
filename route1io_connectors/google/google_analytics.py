@@ -62,7 +62,14 @@ def get_google_analytics_data(
     -------
     df : pd.DataFrame
     """
-    pass
+    df = _process_universal_analytics_data(
+        analytics=analytics,
+        view_id=view_id,
+        dimensions=dimensions,
+        metrics=metrics,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 def _process_universal_analytics_data(
         analytics,
