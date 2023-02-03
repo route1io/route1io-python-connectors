@@ -10,8 +10,10 @@ import pandas as pd
 from googleapiclient.discovery import build
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
 
-def connect_to_google_analytics(credentials: "google.oauth2.credentials.Credentials"
-                       ) -> "googleapiclient.discovery.Resource":
+def connect_to_google_analytics(
+        credentials: "google.oauth2.credentials.Credentials",
+        ga4: bool = False
+    ) -> "googleapiclient.discovery.Resource":
     """Return a connection to Google Drive
 
     Parameters
