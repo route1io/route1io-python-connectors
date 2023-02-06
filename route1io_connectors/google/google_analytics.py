@@ -164,7 +164,7 @@ def _request_universal_analytics_data(
         )}
     ).execute()
 
-def _process_raw_google_analytics_data(resp: Dict[str, Union[str, List, Dict, bool]]) -> "pd.DataFrame":
+def _process_raw_universal_analytics_data(resp: Dict[str, Union[str, List, Dict, bool]]) -> "pd.DataFrame":
     """ Return a DataFrame parsed and constructed from the raw response from
     Google Analytics"""
     resp_data = resp['reports'][0]
