@@ -1,5 +1,11 @@
 """Processing scripts for Universal Analytics data"""
 
+from typing import List, Union, Dict, Tuple
+import itertools
+
+import pandas as pd
+import numpy as np
+
 def _process_universal_analytics_data(
         analytics,
         view_id: str,
