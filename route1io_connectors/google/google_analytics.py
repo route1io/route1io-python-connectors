@@ -83,7 +83,7 @@ def _process_ga4_data(
     ) -> "pd.DataFrame":
     """Return pd.DataFrame of GA4 data pulled via the 
     Google Analytics Data API"""
-    pass
+
 
 def _process_universal_analytics_data(
         analytics,
@@ -98,7 +98,7 @@ def _process_universal_analytics_data(
     resp_df_arr = []
     next_page_token = None
     while True:
-        resp = _request_google_analytics_data(
+        resp = _request_universal_analytics_data(
             analytics=analytics,
             view_id=view_id,
             dimensions=dimensions,
@@ -122,7 +122,7 @@ def _get_next_page_token(resp: Dict[str, str]) -> Union[str, None]:
     """Return Boolean indicating if paginated data exists"""
     return resp["reports"][0].get("nextPageToken")
 
-def _request_google_analytics_data(
+def _request_universal_analytics_data(
         analytics,
         view_id: str,
         dimensions: List[str] = None,
