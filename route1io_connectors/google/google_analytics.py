@@ -10,6 +10,8 @@ import pandas as pd
 from googleapiclient.discovery import build
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
 
+from .utils import _universal_analytics
+
 def connect_to_google_analytics(
         credentials: "google.oauth2.credentials.Credentials",
         ga4: bool = False
@@ -63,7 +65,7 @@ def get_google_analytics_data(
     df : pd.DataFrame
     """
     is_ga4_data = isinstance(analytics, BetaAnalyticsDataClient)
-    processing_func = _process_ga4_data if is_ga4_data else _process_universal_analytics_data 
+    processing_func = _process_ga4_data if is_ga4_data else _process_universal_analytics_data
     df = processing_func(
         analytics=analytics,
         view_id=view_id,
