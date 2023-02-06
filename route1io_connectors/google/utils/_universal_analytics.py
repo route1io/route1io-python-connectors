@@ -6,7 +6,7 @@ import itertools
 import pandas as pd
 import numpy as np
 
-def _process_universal_analytics_data(
+def process_universal_analytics_data(
         analytics,
         view_id: str,
         dimensions: List[str] = None,
