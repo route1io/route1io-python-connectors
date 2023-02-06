@@ -107,7 +107,7 @@ def _process_universal_analytics_data(
             end_date=end_date,
             next_page_token=next_page_token
         )
-        resp_df = _process_raw_google_analytics_data(resp=resp)
+        resp_df = _process_raw_universal_analytics_data(resp=resp)
         resp_df_arr.append(resp_df)
 
         next_page_token = _get_next_page_token(resp=resp)
