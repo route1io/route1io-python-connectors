@@ -37,9 +37,10 @@ def _request_ga4_data(
         end_date: str = "today"
     ):
     """Return response from reporting request to Google Analytics Data API"""
-    RunReportRequest(
-        property=f"properties/{os.environ.get('GCP_PROPERTY_ID')}",
-        dimensions=[Dimension(name="date"), Dimension(name="city")],
-        metrics=[Metric(name="newUsers"), Metric(name="totalUsers")],
-        date_ranges=[DateRange(start_date="2020-03-31", end_date="today")],
+    request = RunReportRequest(
+        property=f"properties/{view_id}",
+        dimensions=[Dimension(dim) for dim in dimensions],
+        metrics=[Metric(metric) for metric in metrics],
+        date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
     )
+    return analytics.run_report(request)
