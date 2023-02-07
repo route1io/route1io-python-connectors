@@ -62,7 +62,10 @@ def get_google_analytics_data(
     df : pd.DataFrame
     """
     is_ga4_data = isinstance(analytics, BetaAnalyticsDataClient)
-    processing_func = _ga4.process_ga4_data if is_ga4_data else _universal_analytics.process_universal_analytics_data
+    if is_ga4_data:
+        processing_func = _ga4.process_ga4_data
+    else:
+        processing_func = _universal_analytics.process_universal_analytics_data
     df = processing_func(
         analytics=analytics,
         view_id=view_id,
