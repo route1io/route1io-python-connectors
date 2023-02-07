@@ -26,6 +26,7 @@ def connect_to_google_analytics(
     google_conn : googleapiclient.discovery.Resource
         Connection to Google Analytics API
     """
+    warnings.warn("In the future ga4=True will become the default behavior for this function. Google is sunsetting Universal Analytics on July 1st, 2023 and is recommending you migrate to Google Analytics 4. More information can be found here: https://support.google.com/analytics/answer/11583528?hl=en", FutureWarning)
     if ga4: 
         google_conn = BetaAnalyticsDataClient(credentials=credentials)
     else:
