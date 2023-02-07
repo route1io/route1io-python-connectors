@@ -74,4 +74,4 @@ def get_google_analytics_data(
         start_date=start_date,
         end_date=end_date
     )
-
+    return df
