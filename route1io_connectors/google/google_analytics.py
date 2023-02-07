@@ -7,7 +7,7 @@ from typing import List
 from googleapiclient.discovery import build
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
 
-from .utils import _universal_analytics
+from .utils import _universal_analytics, _ga4
 
 def connect_to_google_analytics(
         credentials: "google.oauth2.credentials.Credentials",
@@ -62,7 +62,7 @@ def get_google_analytics_data(
     df : pd.DataFrame
     """
     is_ga4_data = isinstance(analytics, BetaAnalyticsDataClient)
-    processing_func = _process_ga4_data if is_ga4_data else _universal_analytics.process_universal_analytics_data
+    processing_func = _ga4.process_ga4_data if is_ga4_data else _universal_analytics.process_universal_analytics_data
     df = processing_func(
         analytics=analytics,
         view_id=view_id,
@@ -72,13 +72,3 @@ def get_google_analytics_data(
         end_date=end_date
     )
 
-def _process_ga4_data(
-        analytics,
-        view_id: str,
-        dimensions: List[str] = None,
-        metrics: List[str] = None,
-        start_date: str = "7daysAgo",
-        end_date: str = "today"
-    ) -> "pd.DataFrame":
-    """Return pd.DataFrame of GA4 data pulled via the 
-    Google Analytics Data API"""
