@@ -50,7 +50,7 @@ def _request_universal_analytics_data(
         metrics: List[str] = None,
         start_date: str = "7daysAgo",
         end_date: str = "today",
-        next_page_token = Union[str, None]
+        next_page_token: Union[str, None] = None
     ) -> Dict[str, Union[str, List, Dict, bool]]:
     """Returns response from reporting request to the Google Analytics Reporting API
     built from arguments
