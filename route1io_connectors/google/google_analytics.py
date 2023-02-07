@@ -3,6 +3,7 @@
 This module contains functions for interacting with Google Analytics reporting
 """
 from typing import List
+import warnings
 
 from googleapiclient.discovery import build
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
@@ -29,6 +30,7 @@ def connect_to_google_analytics(
         google_conn = BetaAnalyticsDataClient(credentials=credentials)
     else:
         google_conn = build('analyticsreporting', 'v4', credentials=credentials)
+        warnings.warn("Google is sunsetting Universal Analytics on July 1st, 2023 and is recommending you migrate to Google Analytics 4. More information can be found here: https://support.google.com/analytics/answer/11583528?hl=en", DeprecationWarning)
     return google_conn
 
 def get_google_analytics_data(
