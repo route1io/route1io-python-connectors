@@ -128,3 +128,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Test script for sandboxing new features/bugfixes
+test.py
