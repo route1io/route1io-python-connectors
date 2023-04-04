@@ -10,7 +10,7 @@ import pandas as pd
 from google.ads.googleads.client import GoogleAdsClient
 from google.protobuf import json_format
 
-GOOGLEADS_VERSION = "v10"
+GOOGLEADS_VERSION = "v13"
 
 def connect_to_google_ads(google_yaml_fpath: str) -> "GoogleAdsClient":
     """Return a connection to Google Ads API via YAML file with necessary credentials
