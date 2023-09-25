@@ -8,9 +8,9 @@ from googleapiclient.discovery import build
 from . import credentials
 
 # DCM API resource version
-DCM_API_RESOURCE_VERSION = "v3.4"
+DCM_API_RESOURCE_VERSION = "v4"
 
-def get_dcm_data(dcm: "googleapiclient.discovery.Resource", refresh_token: str, cid: str, csc: str, profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
+def get_dcm_data(dcm: "googleapiclient.discovery.Resource", profile_id: str, report_id: str, fpath: str) -> "pd.DataFrame":
     """Return filepath to downloaded DCM fpath
 
     Parameters
@@ -40,7 +40,7 @@ def get_dcm_data(dcm: "googleapiclient.discovery.Resource", refresh_token: str, 
         file_id=request_response['id']
     )
     report_url = _report_url_from_response(resp=ready_response)
-    fpath = _download_report(url=report_url, credentials=credentials, fpath=fpath)
+    fpath = _download_report(url=report_url, credentials=dcm._http.credentials, fpath=fpath)
     return fpath
 
 def connect_to_dcm(credentials: "google.oauth2.credentials.Credentials") -> "googleapiclient.discovery.Resource":
