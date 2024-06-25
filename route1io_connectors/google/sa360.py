@@ -11,4 +11,7 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
     """Return SA360 data requested from the SA360 Reporting API and processed
     into a pd.DataFrame
     """
-    pass
+    report_url = _get_report_url(account_id)
+
+def _get_report_url(account_id: str) -> str:
+    return f"https://searchads360.googleapis.com/v0/customers/{account_id}/searchAds360:search"
