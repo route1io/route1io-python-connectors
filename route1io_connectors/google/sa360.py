@@ -1,6 +1,19 @@
-"""SA360 connectors
+"""
+This module provides functionality to interact with the SA360 Reporting API to
+fetch advertising data. The primary function, `get_sa360_data`, queries the
+SA360 API and retrieves data based on specified account and query parameters.
+This data is returned in the form of a pandas DataFrame, making it suitable for
+further data analysis and manipulation.
 
-This module contains code for accessing data from Search Ads 360.
+The module handles authentication via access tokens, supports pagination to
+fetch all relevant data, and allows for querying under manager account contexts
+through the optional `login_customer_id` parameter. It requires the `requests`
+and `pandas` packages for HTTP requests and data handling, respectively.
+
+Internal utility functions are included for tasks such as validating HTTP
+responses, constructing POST request payloads and headers, and generating API
+request URLs. These functions support the main data retrieval function and are
+not intended for direct external use.
 """
 
 import json
