@@ -3,7 +3,7 @@
 This module contains code for accessing data from Search Ads 360.
 """
 
-from typing import Optional
+from typing import Optional, Dict
 
 import pandas as pd
 
@@ -12,6 +12,11 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
     into a pd.DataFrame
     """
     report_url = _get_report_url(account_id)
+    headers = _get_post_request_header(access_token, login_customer_id)
+
+def _get_post_request_header(access_token: str, login_customer_id: str) -> Dict[str, str]:
+    """Return header for POST request"""
+    pass
 
 def _get_report_url(account_id: str) -> str:
     return f"https://searchads360.googleapis.com/v0/customers/{account_id}/searchAds360:search"
