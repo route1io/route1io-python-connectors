@@ -20,7 +20,7 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["boto3", "google-api-python-client", 
+    install_requires=["boto3", "google-api-python-client",
                       "google-auth-httplib2", "google-auth-oauthlib",
                       "numpy", "pandas", "requests", "facebook-business", "pyjwt==1.7.1",
                       "aiohttp", "pysftp", "google-analytics-data"],
