@@ -10,8 +10,25 @@ import pandas as pd
 import requests
 
 def get_sa360_data(access_token: str, account_id: str, query: str, login_customer_id: Optional[Union[str, None]] = None) -> "pd.DataFrame":
-    """Return SA360 data requested from the SA360 Reporting API and processed
-    into a pd.DataFrame
+    """Return pd.DataFrame of SA360 data requested from the SA360 Reporting API
+
+    Parameters
+    ==========
+    access_token : str
+        Authenticated and refreshed access token
+    account_id : str
+        ID of the account we want to query data from
+    query : str
+        Query for building report we want returned. See the following link for
+        details on the grammar https://developers.google.com/search-ads/reporting/query/query-language
+    login_customer_id : Optional[Union[str, None]] = None
+        ID of the manager account that has access to the lower level account.
+        Required if access to the account is derived from a manager account.
+        See the following link for details https://developers.google.com/search-ads/reporting/concepts/login-customer-id
+    Returns
+    =======
+    response_df : pd.DataFrame
+        DataFrame containing the data requested from the API
     """
     report_url = _get_report_url(account_id)
     headers = _get_post_request_header(access_token, login_customer_id)
