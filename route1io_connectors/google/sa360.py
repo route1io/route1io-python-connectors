@@ -43,10 +43,21 @@ def get_sa360_data(
         Required if access to the account is derived from a manager account.
         See the following link for details
         https://developers.google.com/search-ads/reporting/concepts/login-customer-id
+
     Returns
     =======
     response_df : pd.DataFrame
         DataFrame containing the data requested from the API
+
+    Examples
+    ========
+    Here is a code sample that uses `get_sa360_data` to fetch campaign performance data:
+
+    >>> access_token = 'YOUR_ACCESS_TOKEN_HERE'
+    >>> account_id = 'YOUR_ACCOUNT_ID_HERE'
+    >>> query = 'SELECT campaign.name, metrics.clicks, metrics.impressions, metrics.cost_micros FROM campaign WHERE segments.date DURING LAST_7_DAYS'
+    >>> df = get_sa360_data(access_token, account_id, query)
+    >>> print(df.head())
     """
     report_url = _get_report_url(account_id)
     headers = _get_post_request_header(access_token, login_customer_id)
