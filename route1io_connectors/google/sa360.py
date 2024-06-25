@@ -12,7 +12,7 @@ import requests
 def get_sa360_data(
         access_token: str, account_id: str, query: str,
         login_customer_id: Optional[Union[str, None]] = None
-    ) -> "pd.DataFrame":
+    ) -> pd.DataFrame:
     """Return pd.DataFrame of SA360 data requested from the SA360 Reporting API
 
     Parameters
@@ -56,7 +56,7 @@ def get_sa360_data(
     response_df = pd.concat(response_dfs)
     return response_df
 
-def _validate_http_response(resp: "requests.Response") -> None:
+def _validate_http_response(resp: requests.Response) -> None:
     """Raise error if HTTP status isn't 200"""
     if resp.status_code != 200:
         raise requests.HTTPError(
