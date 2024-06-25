@@ -26,7 +26,7 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
         )
         _validate_http_response(resp)
         resp_dict = json.loads(resp.text)
-        resp_df = pd.json_normalize(resp_dict)
+        resp_df = pd.json_normalize(resp_dict["results"])
         response_dfs.append(resp_df)
         next_page_token = resp_dict.get("nextPageToken")
         if next_page_token is None:
