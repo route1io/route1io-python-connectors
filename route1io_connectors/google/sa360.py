@@ -15,8 +15,9 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
     """
     report_url = _get_report_url(account_id)
     headers = _get_post_request_header(access_token, login_customer_id)
-    data = _get_post_request_payload(query)
+    next_page_token = None
     while True:
+        data = _get_post_request_payload(query, next_page_token)
         resp = requests.post(
             report_url,
             headers=headers,
