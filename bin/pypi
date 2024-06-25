@@ -12,5 +12,5 @@ make html
 # Update package to PyPI
 cd ..
 python3 setup.py sdist bdist_wheel
-twine upload dist/*
+twine upload --config-file ./.pypirc --verbose dist/*
 rm -rf build dist *.egg-info
