@@ -9,7 +9,10 @@ from typing import Optional, Dict, Union
 import pandas as pd
 import requests
 
-def get_sa360_data(access_token: str, account_id: str, query: str, login_customer_id: Optional[Union[str, None]] = None) -> "pd.DataFrame":
+def get_sa360_data(
+        access_token: str, account_id: str, query: str,
+        login_customer_id: Optional[Union[str, None]] = None
+    ) -> "pd.DataFrame":
     """Return pd.DataFrame of SA360 data requested from the SA360 Reporting API
 
     Parameters
@@ -20,11 +23,13 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
         ID of the account we want to query data from
     query : str
         Query for building report we want returned. See the following link for
-        details on the grammar https://developers.google.com/search-ads/reporting/query/query-language
+        details on the grammar
+        https://developers.google.com/search-ads/reporting/query/query-language
     login_customer_id : Optional[Union[str, None]] = None
         ID of the manager account that has access to the lower level account.
         Required if access to the account is derived from a manager account.
-        See the following link for details https://developers.google.com/search-ads/reporting/concepts/login-customer-id
+        See the following link for details
+        https://developers.google.com/search-ads/reporting/concepts/login-customer-id
     Returns
     =======
     response_df : pd.DataFrame
@@ -54,7 +59,10 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
 def _validate_http_response(resp: "requests.Response") -> None:
     """Raise error if HTTP status isn't 200"""
     if resp.status_code != 200:
-        raise requests.HTTPError(f"HTTP Error {resp.status_code}: {resp.text}", response=resp)
+        raise requests.HTTPError(
+            f"HTTP Error {resp.status_code}: {resp.text}",
+            response=resp
+        )
 
 def _get_post_request_payload(query: str, page_token: Optional[Union[str, None]] = None) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
