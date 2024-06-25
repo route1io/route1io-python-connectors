@@ -13,6 +13,7 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
     """
     report_url = _get_report_url(account_id)
     headers = _get_post_request_header(access_token, login_customer_id)
+    data = _get_post_request_payload(query)
 
 def _get_post_request_payload(query: str) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
