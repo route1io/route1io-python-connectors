@@ -4,7 +4,7 @@ This module contains code for accessing data from Search Ads 360.
 """
 
 import json
-from typing import Optional, Dict, Union, NoneType
+from typing import Optional, Dict, Union
 
 import pandas as pd
 import requests
