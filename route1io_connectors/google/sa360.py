@@ -23,11 +23,16 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
             headers=headers,
             data=data
         )
+        _validate_http_response(resp)
         resp_dict = json.loads(resp.text)
         next_page_token = resp_dict.get("nextPageToken")
         if next_page_token is None:
             break
 
+def _validate_http_response(resp: "requests.Response") -> None:
+    """Raise error if HTTP status isn't 200"""
+    if resp.status_code != 200:
+        raise requests.HTTPError(f"HTTP Error {resp.status_code}: {resp.text}", response=resp)
 
 def _get_post_request_payload(query: str, page_token: Optional[Union[str, None]] = None) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
