@@ -31,6 +31,8 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
         next_page_token = resp_dict.get("nextPageToken")
         if next_page_token is None:
             break
+    response_df = pd.concat(response_dfs)
+    return response_df
 
 def _validate_http_response(resp: "requests.Response") -> None:
     """Raise error if HTTP status isn't 200"""
