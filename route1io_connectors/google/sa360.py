@@ -64,7 +64,9 @@ def _validate_http_response(resp: "requests.Response") -> None:
             response=resp
         )
 
-def _get_post_request_payload(query: str, page_token: Optional[Union[str, None]] = None) -> Dict[str, Union[bool, str]]:
+def _get_post_request_payload(
+        query: str, page_token: Optional[Union[str, None]] = None
+    ) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
     return {
         "query": query,
