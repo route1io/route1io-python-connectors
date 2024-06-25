@@ -3,6 +3,7 @@
 This module contains code for accessing data from Search Ads 360.
 """
 
+import json
 from typing import Optional, Dict, Union, NoneType
 
 import pandas as pd
@@ -21,6 +22,8 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
             headers=headers,
             data=data
         )
+        resp_dict = json.loads(resp.text)
+
 
 def _get_post_request_payload(query: str, page_token: Optional[Union[str, None]] = None) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
