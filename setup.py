@@ -6,7 +6,7 @@ README = HERE.joinpath("README.md").read_text()
 
 setup(
     name="route1io-connectors",
-    version="0.16.0",
+    version="0.17.0",
     description="Connectors for interacting with popular API's used in marketing analytics using clean and concise Python code.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["boto3", "google-api-python-client", 
+    install_requires=["boto3", "google-api-python-client",
                       "google-auth-httplib2", "google-auth-oauthlib",
                       "numpy", "pandas", "requests", "facebook-business", "pyjwt==1.7.1",
                       "aiohttp", "pysftp", "google-analytics-data"],
