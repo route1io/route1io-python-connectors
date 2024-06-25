@@ -16,7 +16,10 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
 
 def _get_post_request_header(access_token: str, login_customer_id: str) -> Dict[str, str]:
     """Return header for POST request"""
-    pass
+    headers={"Authorization": f"Bearer {access_token}"}
+    if login_customer_id is not None:
+        headers["login_customer_id"] = login_customer_id
+    return headers
 
 def _get_report_url(account_id: str) -> str:
     return f"https://searchads360.googleapis.com/v0/customers/{account_id}/searchAds360:search"
