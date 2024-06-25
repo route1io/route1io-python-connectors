@@ -51,7 +51,6 @@ def _get_post_request_header(access_token: str, login_customer_id: str) -> Dict[
     headers={"Authorization": f"Bearer {access_token}"}
     if login_customer_id is not None:
         headers["login-customer-id"] = login_customer_id
-    print(headers)
     return headers
 
 def _get_report_url(account_id: str) -> str:
