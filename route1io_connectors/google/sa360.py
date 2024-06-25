@@ -50,7 +50,8 @@ def _get_post_request_header(access_token: str, login_customer_id: str) -> Dict[
     """Return dictionary of POST request header data"""
     headers={"Authorization": f"Bearer {access_token}"}
     if login_customer_id is not None:
-        headers["login_customer_id"] = login_customer_id
+        headers["login-customer-id"] = login_customer_id
+    print(headers)
     return headers
 
 def _get_report_url(account_id: str) -> str:
