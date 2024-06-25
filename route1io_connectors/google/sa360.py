@@ -6,6 +6,7 @@ This module contains code for accessing data from Search Ads 360.
 from typing import Optional, Dict, Union, NoneType
 
 import pandas as pd
+import requests
 
 def get_sa360_data(access_token: str, account_id: str, query: str, login_customer_id: Optional[Union[str, None]] = None) -> "pd.DataFrame":
     """Return SA360 data requested from the SA360 Reporting API and processed
@@ -14,6 +15,12 @@ def get_sa360_data(access_token: str, account_id: str, query: str, login_custome
     report_url = _get_report_url(account_id)
     headers = _get_post_request_header(access_token, login_customer_id)
     data = _get_post_request_payload(query)
+    while True:
+        resp = requests.post(
+            report_url,
+            headers=headers,
+            data=data
+        )
 
 def _get_post_request_payload(query: str, page_token: Optional[Union[str, None]] = None) -> Dict[str, Union[bool, str]]:
     """Return dictionary of POST request payload data"""
