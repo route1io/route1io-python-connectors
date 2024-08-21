@@ -34,7 +34,10 @@ def get_bucket_objects(s3, bucket: str, prefix: str = "") -> List[str]:
     List[str]
         List of names of all objects in the bucket
     """
-    pass
+    paginator = s3.get_paginator("list_objects_v2")
+    page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+    objects = [obj["Key"] for page in page_iterator for obj in page.get("Contents", [])]
+    return objects
 
 def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
     """Return the key name as it appears in s3 bucket of the most recently modified
