@@ -17,6 +17,9 @@ from . import onedrive
 
 FilenameVar = Union[str, Sequence[Union[str, None]]]
 
+def get_bucket_objects(s3, bucket: str, prefix: str = "") -> List[str]:
+    pass
+
 def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
     """Return the key name as it appears in s3 bucket of the most recently modified
     file in bucket
