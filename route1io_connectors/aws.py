@@ -17,6 +17,28 @@ from . import onedrive
 
 FilenameVar = Union[str, Sequence[Union[str, None]]]
 
+def get_bucket_objects(s3, bucket: str, prefix: str = "") -> List[str]:
+    """Return a list of key names as they appear in S3 bucket
+
+    Parameters
+    ----------
+    s3
+        Connection to AWS S3 bucket
+    bucket : str
+        Name of the bucket that contains data we want
+    prefix : str, optional
+        Prefix to filter data
+
+    Returns
+    -------
+    List[str]
+        List of names of all objects in the bucket
+    """
+    paginator = s3.get_paginator("list_objects_v2")
+    page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+    objects = [obj["Key"] for page in page_iterator for obj in page.get("Contents", [])]
+    return objects
+
 def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
     """Return the key name as it appears in s3 bucket of the most recently modified
     file in bucket
@@ -117,8 +139,8 @@ def download_from_s3(s3, bucket: str, key: str, filename: str = None) -> List[st
         )
     return list(filename_to_key_map.values())
 
-def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str, 
-                            drive_id: str, remote_fpath: str = None) -> None: 
+def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str,
+                            drive_id: str, remote_fpath: str = None) -> None:
     """Copy object from S3 bucket to OneDrive at given URL
 
     Parameters
@@ -136,18 +158,19 @@ def copy_object_to_onedrive(s3, bucket: str, key: str, access_token: str,
     remote_fpath : str = None
         Remote filepath to upload to. If none is provided use the provided S3
         key name and upload to root folder of drive
-    """ 
+    """
+    # pylint: disable=too-many-arguments
     if remote_fpath is None:
         remote_fpath = f"/{key}"
     with tempfile.NamedTemporaryFile("wb+") as outfile:
         download_from_s3(s3=s3, bucket=bucket, key=key, filename=outfile.name)
         onedrive.upload_file(
             access_token=access_token,
-            drive_id=drive_id, 
-            remote_fpath=remote_fpath, 
+            drive_id=drive_id,
+            remote_fpath=remote_fpath,
             local_fpath=outfile.name
         )
-        
+
 def _create_filename_key_map(filename: FilenameVar,
                              key: FilenameVar,
                              filename_required: bool = False,
@@ -166,7 +189,7 @@ def _create_filename_key_map(filename: FilenameVar,
         key = _fill_values(filename, key)
     elif key_required:
         filename = _fill_values(key, filename)
-    return {key_val: filename_val for key_val, filename_val in zip(key, filename)}
+    return dict(zip(key, filename))
 
 def _fill_values(full_seq, missing_seq) -> List[str]:
     """Fill missing values with names created from the full sequence"""
@@ -182,7 +205,7 @@ def _fill_values(full_seq, missing_seq) -> List[str]:
             else:
                 value = missing_value
             new_missing_seq.append(value)
-    return(new_missing_seq)
+    return new_missing_seq
 
 def _bad_seq_value(val: Union[str, None]) -> bool:
     """Returns True if string or None"""
@@ -199,6 +222,7 @@ def _filenames_and_keys_are_valid_inputs(filename: Tuple[str],
 
 def _validate_lengths(filename: Tuple[str], key: Tuple[str]) -> None:
     """If lengths of both are greater than zero but do not match raise ValueError"""
+    # pylint: disable=line-too-long
     filename_num = len(filename)
     key_num = len(key)
     if filename_num > 0 and key_num > 0:
@@ -210,11 +234,11 @@ def _validate_input(seq: Tuple[str], required: bool, name: str) -> None:
     seq_is_zero = len(seq) == 0
     contains_none = _sequence_contains_none(seq)
     if required and contains_none or required and seq_is_zero:
-        raise(ValueError(f"{name} cannot be missing or contain NoneType values!"))
+        raise ValueError(f"{name} cannot be missing or contain NoneType values!")
 
 def _sequence_contains_none(seq: Tuple[str]) -> bool:
     """Return True if None in sequence else False"""
-    return any([val is None for val in seq])
+    return any(val is None for val in seq)
 
 def _coerce_input_to_list(seq: FilenameVar) -> Tuple[str]:
     """Return tuple of values from string or sequence as argument provided by user"""
