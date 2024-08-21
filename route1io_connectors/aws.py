@@ -18,6 +18,22 @@ from . import onedrive
 FilenameVar = Union[str, Sequence[Union[str, None]]]
 
 def get_bucket_objects(s3, bucket: str, prefix: str = "") -> List[str]:
+    """Return a list of key names as they appear in S3 bucket
+
+    Parameters
+    ----------
+    s3
+        Connection to AWS S3 bucket
+    bucket : str
+        Name of the bucket that contains data we want
+    prefix : str, optional
+        Prefix to filter data
+
+    Returns
+    -------
+    List[str]
+        List of names of all objects in the bucket
+    """
     pass
 
 def get_most_recent_filename(s3, bucket: str, prefix: str = "") -> str:
