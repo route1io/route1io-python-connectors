@@ -13,19 +13,19 @@ def load(config_path="load.yaml"):
         config = yaml.safe_load(f)
 
     # Get sources
-    sources = config['load']['sources']
+    sources = config['load']['targets']
 
     # Loop through sources
     for source in sources:
         name = source['name']
-        source_type = source['source_type']
+        target_type = source['target_type']
 
-        print(f"Starting extraction for source: {name} (type: {source_type})")
+        print(f"Starting extraction for source: {name} (type: {target_type})")
 
         if source_type not in LOAD_DISPATCH:
-            raise ValueError(f"No loader defined for source type: {source_type}")
+            raise ValueError(f"No loader defined for source type: {target_type}")
 
-        extractor = LOAD_DISPATCH[source_type]
+        extractor = LOAD_DISPATCH[target_type]
 
         # Execute extraction
         data = extractor(source)
