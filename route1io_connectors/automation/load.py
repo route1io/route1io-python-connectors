@@ -19,7 +19,7 @@ def load(config_path="load.yaml"):
         name = target['name']
         target_type = target['target_type']
 
-        print(f"Starting extraction for source: {name} (type: {target_type})")
+        print(f"Starting load to target: {name} (type: {target_type})")
 
         if target_type not in LOAD_DISPATCH:
             raise ValueError(f"No loader defined for source type: {target_type}")
