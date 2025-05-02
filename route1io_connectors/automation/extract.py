@@ -1,7 +1,6 @@
 import yaml
-import os
 
-from route1io_connectors.extract.connectors import s3
+from route1io_connectors.automation.connectors import s3
 
 EXTRACTION_DISPATCH = {
     "s3": s3.extract,
