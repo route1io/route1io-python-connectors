@@ -1,5 +1,4 @@
 import yaml
-import os
 
 from route1io_connectors.automation.connectors import s3
 
