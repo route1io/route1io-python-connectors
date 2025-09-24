@@ -1,9 +1,10 @@
 import yaml
 
-from route1io_connectors.automation.connectors import s3
+from route1io_connectors.automation.connectors import s3, gsheets
 
 EXTRACTION_DISPATCH = {
     "s3": s3.extract,
+    "gsheets": gsheets.extract
 }
 
 def extract(config_path="extraction.yaml"):
