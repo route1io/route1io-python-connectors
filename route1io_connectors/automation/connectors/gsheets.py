@@ -5,9 +5,9 @@ from route1io_connectors.google import gsheets, credentials
 def extract(config):
     # Connect to S3
     gsheets_credentials = credentials.refresh_token_from_credentials(
-        refresh_token=os.env.get("GCP_REFRESH_TOKEN"),
-        client_id=os.env.get("GCP_CLIENT_ID"),
-        client_secret=os.env.get("GCP_CLIENT_SECRET")
+        refresh_token=os.environ.get("GCP_REFRESH_TOKEN"),
+        client_id=os.environ.get("GCP_CLIENT_ID"),
+        client_secret=os.environ.get("GCP_CLIENT_SECRET")
     )
     client = gsheets.connect_to_gsheets(gsheets_credentials)
 
