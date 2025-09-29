@@ -8,3 +8,4 @@ requests==2.25.1
 facebook-business==11.0.0
 pyjwt==1.5.3
 aiohttp==3.7.4
+google-analytics-data==0.18.19
