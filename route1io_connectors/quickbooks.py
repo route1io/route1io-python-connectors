@@ -97,7 +97,6 @@ def _get_leaf_lookup(G):
 
 def _graph_jobcodes(jobcodes):
     G = nx.DiGraph()
-
     for page in jobcodes:
         for jobcode_id, jobcode in page.items():
             job_id = str(jobcode_id)
@@ -155,16 +154,12 @@ def _request_data(access_token, start_date=None, end_date=None):
         active = True
         while active:
             print(f"Fetching page {page}")
-            resp = requests.get(
-                "https://rest.tsheets.com/api/v1/timesheets",
-                headers={"Authorization": f"Bearer {access_token}"},
-                params={
-                    "start_date": current_date.strftime("%Y-%m-%d"),
-                    "end_date": period_end.strftime("%Y-%m-%d"),
-                    "page": page,
-                },
+            resp = _fetch_page(
+                access_token=access_token,
+                start_date=current_date,
+                end_date=period_end,
+                page=page
             )
-            resp = json.loads(resp.text)
             results.append(resp["results"])
             metadata.append(resp["supplemental_data"])
             page += 1
@@ -174,3 +169,16 @@ def _request_data(access_token, start_date=None, end_date=None):
         current_date = next_month
 
     return results, metadata
+
+def _fetch_page(access_token, start_date, end_date, page):
+    resp = requests.get(
+        "https://rest.tsheets.com/api/v1/timesheets",
+        headers={"Authorization": f"Bearer {access_token}"},
+        params={
+            "start_date": start_date.strftime("%Y-%m-%d"),
+            "end_date": end_date.strftime("%Y-%m-%d"),
+            "page": page,
+        },
+    )
+    resp = json.loads(resp.text)
+    return resp
