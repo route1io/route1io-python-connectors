@@ -1,12 +1,46 @@
 import json
 import datetime
+from typing import Dict, List, Tuple, Optional
 
 import requests
 import networkx as nx
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 
-def request_access_token_refresh(access_token, refresh_token, client_id, client_secret) -> str:
+def request_access_token_refresh(
+        access_token: str,
+        refresh_token: str,
+        client_id: str,
+        client_secret: str
+    ) -> str:
+    """
+    Refreshes the access token using the provided refresh token and client credentials.
+
+    Sends a POST request to the TSheets API grant endpoint to obtain a new access token.
+    This function is typically used when the current access token has expired.
+
+    Parameters
+    ----------
+    access_token : str
+        The current access token used for authentication.
+    refresh_token : str
+        The refresh token provided by the API for generating a new access token.
+    client_id : str
+        The client identifier registered with the API.
+    client_secret : str
+        The client secret key associated with the client ID.
+
+    Returns
+    -------
+    str
+        A JSON string containing the new access token and related authentication details.
+
+    Notes
+    -----
+    The function assumes that the API response is valid JSON and that authentication
+    credentials are correct. If invalid credentials are supplied, the API may return
+    an error response instead of a token payload.
+    """
     resp = requests.post(
         url="https://rest.tsheets.com/api/v1/grant",
         headers={
@@ -23,7 +57,38 @@ def request_access_token_refresh(access_token, refresh_token, client_id, client_
     token_response = json.loads(resp.text)
     return token_response
 
-def get_timesheets(access_token, start_date, end_date) -> pd.DataFrame:
+def get_timesheets(
+        access_token: str,
+        start_date: str,
+        end_date: str
+    ) -> pd.DataFrame:
+    """
+    Retrieves and processes timesheet data from the TSheets API within a specified date range.
+
+    This function orchestrates data retrieval and transformation by calling internal
+    helper functions to fetch raw results, process metadata, and merge them into
+    a unified DataFrame for analysis.
+
+    Parameters
+    ----------
+    access_token : str
+        The API access token for authentication.
+    start_date : str
+        The start date for data retrieval in 'YYYY-MM-DD' format.
+    end_date : str
+        The end date for data retrieval in 'YYYY-MM-DD' format.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame containing processed timesheet records with associated user and
+        jobcode details.
+
+    Notes
+    -----
+    The returned DataFrame includes merged metadata and normalized identifiers.
+    Pagination and multi-month ranges are handled automatically by internal functions.
+    """
     results, metadata = _request_data(
         access_token=access_token,
         start_date=start_date,
@@ -33,7 +98,9 @@ def get_timesheets(access_token, start_date, end_date) -> pd.DataFrame:
     df = _process_results(results, metadata)
     return df
 
-def _process_results(results, metadata):
+def _process_results(results: List[Dict], metadata: List[Dict]) -> pd.DataFrame:
+    """Returns a DataFrame from merging timesheet results with supplemental metadata."""
+
     records = []
     for page in results:
         for timesheet_id, timesheet in page['timesheets'].items():
@@ -51,7 +118,8 @@ def _process_results(results, metadata):
     df = df.rename(columns={"duration": "duration_seconds"})
     return df
 
-def _process_metadata(metadata):
+def _process_metadata(metadata: List[Dict]) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Returns user and jobcode DataFrames extracted from API metadata."""
     users = [page['users'] for page in metadata]
     jobcodes = [page['jobcodes'] for page in metadata]
 
@@ -60,7 +128,8 @@ def _process_metadata(metadata):
 
     return users_df, jobcodes_df
 
-def _create_users_lookup(users):
+def _create_users_lookup(users: List[Dict]) -> pd.DataFrame:
+    """Returns a DataFrame containing user details built from user metadata."""
     records = []
     for page in users:
         for user_id, user_data in page.items():
@@ -72,7 +141,8 @@ def _create_users_lookup(users):
     users_df = users_df.drop_duplicates()
     return users_df
 
-def _graph_jobcodes(jobcodes):
+def _graph_jobcodes(jobcodes: List[Dict]) -> pd.DataFrame:
+    """Returns a DataFrame representing hierarchical jobcode paths constructed from metadata."""
     G = _create_jobcodes_graph_edges(jobcodes)
     leaf_lookup = _get_leaf_lookup(G)
     jobcode_df = pd.DataFrame.from_dict(
@@ -82,7 +152,8 @@ def _graph_jobcodes(jobcodes):
     )
     return jobcode_df
 
-def _get_leaf_lookup(G):
+def _get_leaf_lookup(G: nx.DiGraph) -> Dict[str, str]:
+    """Returns a dictionary mapping leaf jobcodes to full hierarchy paths within a directed graph."""
     roots = [n for n in G if G.in_degree(n) == 0]
     leaves = [n for n in G if G.out_degree(n) == 0]
 
@@ -95,8 +166,9 @@ def _get_leaf_lookup(G):
                     leaf_lookup[leaf] = path_str
     return leaf_lookup
 
-def _create_jobcodes_graph_edges(jobcodes):
-    G = nx.DiGraph()
+
+def _create_jobcodes_graph_edges(jobcodes: List[Dict]) -> nx.DiGraph:
+    """Returns a directed graph representing parent-child relationships between jobcodes."""    G = nx.DiGraph()
     for page in jobcodes:
         for jobcode_id, jobcode in page.items():
             job_id = str(jobcode_id)
@@ -106,7 +178,8 @@ def _create_jobcodes_graph_edges(jobcodes):
                 G.add_edge(parent_id, job_id)
     return G
 
-def _create_jobcode_lookup(jobcodes):
+def _create_jobcode_lookup(jobcodes: List[Dict]) -> pd.DataFrame:
+    """Returns a DataFrame of jobcode identifiers with hierarchy levels extracted and cleaned."""
     jobcode_df = (
         _graph_jobcodes(jobcodes)
             .reset_index()
@@ -118,13 +191,19 @@ def _create_jobcode_lookup(jobcodes):
     )
     return jobcode_df
 
-def _split_jobcode_index(jobcode_df):
+def _split_jobcode_index(jobcode_df: pd.DataFrame) -> pd.DataFrame:
+    """Returns a DataFrame with jobcode hierarchy split into separate level columns."""
     parts = jobcode_df["jobcode"].str.split(">", expand=True)
     parts.columns = [f"jobcode_{i+1}" for i in range(parts.shape[1])]
     jobcode_df = pd.concat([jobcode_df, parts], axis=1)
     return jobcode_df
 
-def _request_data(access_token, start_date=None, end_date=None):
+def _request_data(
+        access_token: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None
+    ) -> Tuple[List[Dict], List[Dict]]:
+    """Returns combined results and metadata retrieved from the TSheets API over a date range."""
 
     if start_date is None:
         start_date = datetime.date.today() - relativedelta(months=1)
@@ -164,7 +243,12 @@ def _request_data(access_token, start_date=None, end_date=None):
 
     return results, metadata
 
-def _fetch_current_period(access_token, start_date, end_date):
+def _fetch_current_period(
+        access_token: str,
+        start_date: datetime.date,
+        end_date: datetime.date
+    ) -> Tuple[List[Dict], List[Dict]]:
+    """Returns results and metadata for a specific monthly period from the TSheets API."""
     current_results = []
     current_metadata = []
     page = 1
@@ -183,7 +267,13 @@ def _fetch_current_period(access_token, start_date, end_date):
         active = resp.get("more", False)
     return current_results, current_metadata
 
-def _fetch_page(access_token, start_date, end_date, page):
+def _fetch_page(
+        access_token: str,
+        start_date: datetime.date,
+        end_date: datetime.date,
+        page: int
+    ) -> Dict:
+    """Returns a parsed JSON dictionary containing timesheet data for a single API page."""
     resp = requests.get(
         "https://rest.tsheets.com/api/v1/timesheets",
         headers={"Authorization": f"Bearer {access_token}"},
