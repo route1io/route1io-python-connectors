@@ -162,7 +162,7 @@ def _get_leaf_lookup(G: nx.DiGraph) -> Dict[str, str]:
         for leaf in leaves:
             if nx.has_path(G, root, leaf):
                 for path in nx.all_simple_paths(G, source=root, target=leaf):
-                    path_str = " > ".join(G.nodes[x].get("name", str(x)) for x in path)
+                    path_str = ">".join(G.nodes[x].get("name", str(x)) for x in path)
                     leaf_lookup[leaf] = path_str
     return leaf_lookup
 
