@@ -168,7 +168,8 @@ def _get_leaf_lookup(G: nx.DiGraph) -> Dict[str, str]:
 
 
 def _create_jobcodes_graph_edges(jobcodes: List[Dict]) -> nx.DiGraph:
-    """Returns a directed graph representing parent-child relationships between jobcodes."""    G = nx.DiGraph()
+    """Returns a directed graph representing parent-child relationships between jobcodes."""
+    G = nx.DiGraph()
     for page in jobcodes:
         for jobcode_id, jobcode in page.items():
             job_id = str(jobcode_id)
@@ -227,8 +228,6 @@ def _request_data(
         month_end = next_month - relativedelta(days=1)
         period_end = month_end if month_end < final_date else final_date
 
-        print(current_date.strftime("%Y-%m-%d"), "→", period_end.strftime("%Y-%m-%d"))
-
         current_results, current_metadata = _fetch_current_period(
             access_token=access_token,
             start_date=current_date,
@@ -254,7 +253,6 @@ def _fetch_current_period(
     page = 1
     active = True
     while active:
-        print(f"Fetching page {page}")
         resp = _fetch_page(
             access_token=access_token,
             start_date=start_date,
