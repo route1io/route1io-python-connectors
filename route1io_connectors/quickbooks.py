@@ -150,25 +150,38 @@ def _request_data(access_token, start_date=None, end_date=None):
 
         print(current_date.strftime("%Y-%m-%d"), "→", period_end.strftime("%Y-%m-%d"))
 
-        page = 1
-        active = True
-        while active:
-            print(f"Fetching page {page}")
-            resp = _fetch_page(
-                access_token=access_token,
-                start_date=current_date,
-                end_date=period_end,
-                page=page
-            )
-            results.append(resp["results"])
-            metadata.append(resp["supplemental_data"])
-            page += 1
-            active = resp.get("more", False)
+        current_results, current_metadata = _fetch_current_period(
+            access_token=access_token,
+            start_date=current_date,
+            end_date=period_end
+        )
+
+        results += current_results
+        metadata += current_metadata
 
         # Move to the first day of the next month
         current_date = next_month
 
     return results, metadata
+
+def _fetch_current_period(access_token, start_date, end_date):
+    current_results = []
+    current_metadata = []
+    page = 1
+    active = True
+    while active:
+        print(f"Fetching page {page}")
+        resp = _fetch_page(
+            access_token=access_token,
+            start_date=start_date,
+            end_date=end_date,
+            page=page
+        )
+        current_results.append(resp["results"])
+        current_metadata.append(resp["supplemental_data"])
+        page += 1
+        active = resp.get("more", False)
+    return current_results, current_metadata
 
 def _fetch_page(access_token, start_date, end_date, page):
     resp = requests.get(
