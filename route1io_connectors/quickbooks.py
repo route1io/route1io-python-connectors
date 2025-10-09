@@ -73,7 +73,7 @@ def _create_users_lookup(users):
     return users_df
 
 def _graph_jobcodes(jobcodes):
-    G = _graph_jobcodes(jobcodes)
+    G = _create_jobcodes_graph_edges(jobcodes)
     leaf_lookup = _get_leaf_lookup(G)
     jobcode_df = pd.DataFrame.from_dict(
         leaf_lookup,
@@ -95,7 +95,7 @@ def _get_leaf_lookup(G):
                     leaf_lookup[leaf] = path_str
     return leaf_lookup
 
-def _graph_jobcodes(jobcodes):
+def _create_jobcodes_graph_edges(jobcodes):
     G = nx.DiGraph()
     for page in jobcodes:
         for jobcode_id, jobcode in page.items():
