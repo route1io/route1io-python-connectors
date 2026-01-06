@@ -5,7 +5,7 @@ HERE = pathlib.Path(__file__).parent
 README = HERE.joinpath("README.md").read_text()
 
 setup(
-    name="route1io-connectors",
+    name="route1io_connectors",
     version="0.20.2",
     description="Connectors for interacting with popular API's used in marketing analytics using clean and concise Python code.",
     long_description=README,
