@@ -132,3 +132,5 @@ dmypy.json
 
 # Test script for sandboxing new features/bugfixes
 test.py
+etc/
+tmp/
